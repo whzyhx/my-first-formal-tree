@@ -17,8 +17,19 @@ let VERSION = {
 }
 
 let changelog = `<h1>更新记录:</h1><br>
-	<h3>v0.0 - 2022.9.10</h3><br>
-		- 普通 Tube 已完成.<br>`
+	<h3>v0.0<br><br>
+	2022.9.10 9:00</h3><br>
+		- 普通 Tube 已完成<br><br>
+	<h3>2022.9.10 16:00</h3><br>
+		- 无尽 架构 已完成<br><br>
+	<h3>2022.9.11 13:30</h3><br>
+		- 黄色 Tube 公式 log<sub>3</sub>x/3 => log</sub>10</sub>x/10 但效果从加法变成乘法<br><br>
+	<h3>2022.9.11 20:00</h3><br>
+		- 是的,我总算学会怎么使用shift了<br>
+		- 现在按下shift才可以看到公式<br>
+		- 顺便添加了第二排无尽升级 和 无尽 红色 Tube<br><br>
+	<h3>2022.9.11 20:30</h3><br>
+		- 修复了一个逻辑错误<br><br>`
 
 let winText = `恭喜通关!您已经完成了这个游戏.`
 
@@ -49,6 +60,7 @@ function addedPlayerData() { return {
 
 // Display extra things at the top of the page
 var displayThings = [
+	'<br>Shift - 查看所有公式'
 ]
 
 // Determines when the game "ends"

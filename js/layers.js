@@ -7,28 +7,33 @@ addLayer("i",
         return{
             unlocked: true,
             points: new ExpantaNum(0),
-            white_num:zero,extra_white:zero,
+            white_num:zero,extra_white:one,
             infinity_white_num:zero,
             infinity_white_energy:zero,infinity_white_power:one,
             red_num:zero,extra_red:zero,
+            infinity_red_num:zero,
+            infinity_red_energy:zero,infinity_red_power:one,
             yellow_num:zero,extra_yellow:zero,
             blue_num:zero,extra_blue:zero,
             orange_num:zero,
             purple_num:zero,
             green_num:zero,
             a:one,b:one,c:zero,d:one,e:one,f:one,
+            Ia:zero,Ib:one,Ic:one,Id:one,Ie:one,If:one,
             colorcolor:zero,
 
             infinity_unlocked:zero,
             infinity_points:zero,total_infinity_points:zero,infinity_points_power:one,
             infinity_upgrade_1_num:zero,
-            s:"#000000"
+            s:"#000000",
+            cost_infinity_1:n(30),
+            shiftAlias:0,
         }
     },
     color: "white",
     resource: "重置点",
     type: "normal", 
-    requires:new ExpantaNum(10),
+    requires:new ExpantaNum(1e308),
     exponent:1,
     baseAmount()
     {
@@ -47,6 +52,7 @@ addLayer("i",
     },
     update(diff)
     {
+	    player.i.shiftAlias=shiftDown
         if(player.points.gte(1e15))
         {
             player.i.infinity_unlocked=n(1)
@@ -73,13 +79,14 @@ addLayer("i",
 
         //infinity
 
-        player.i.infinity_white_energy=player.i.infinity_white_energy.add(layers.i.clickables["Infinity-Tube-White"].EFFECT().mul(diff))
-        player.i.infinity_white_power=player.i.infinity_white_energy.add(1).pow(0.125)
+        player.i.infinity_white_energy=player.i.infinity_white_energy.add(layers.i.clickables["Infinity-Tube-White"].PRODUCE().mul(diff))
+        player.i.infinity_red_energy=player.i.infinity_red_energy.add(layers.i.clickables["Infinity-Tube-Red"].PRODUCE().mul(diff))
+        player.i.infinity_white_power=player.i.infinity_white_energy.add(1).pow(n(0.125).add(hasUpgrade("i","Infinity-Upgrade-2-2")?0.075:0))
+        player.i.infinity_red_power=player.i.infinity_red_energy.add(1).logBase(20).div(10)
         
-        player.i.infinity_points_power=player.i.total_infinity_points.add(1).pow(0.2)
+        player.i.infinity_points_power=player.i.total_infinity_points.add(1).pow(n(0.2).add(player.i.infinity_red_power))
     },
-    tooltip(){return '我就不'
-    },
+    tooltip(){return '我就不'},
     clickables:
     {
         "Tube-White":
@@ -92,22 +99,25 @@ addLayer("i",
             },
             EFFECT()
             {
-                var eff=n(player.i.white_num).add(player.i.extra_white).pow(player.i.f).mul(player.i.c).mul(player.i.infinity_white_power)
+                var eff=n(player.i.white_num).mul(player.i.extra_white).pow(player.i.f).mul(player.i.c).mul(player.i.infinity_white_power)
                 return eff
             },
             display()
             {
-                var formula_1='10*1.1<sup>x'
+                var formula_1='<br>价格公式:10*1.1<sup>x'
                 if(hasUpgrade("i","Color-Orange"))formula_1=formula_1+'<sup>d</sup>'
-                if(hasUpgrade("i","Color-Red"))formula_1=formula_1+'*a'
-                var formula_2='x'
+                if(hasUpgrade("i","Color-Red"))formula_1=formula_1+'*a</sup>'
+                if(player.i.total_infinity_points.gte(0.5))formula_1=formula_1+'/IPP'
+                var formula_2='<br>效率公式:x'
                 if(hasUpgrade("i","Color-Green"))formula_2=formula_2+'<sup>f</sup>'
                 if(hasUpgrade("i","Color-Blue"))formula_2=formula_2+'*c'
                 if(hasUpgrade("i","Infinity-Color-White"))formula_2=formula_2+'*IWP'
                 var extra=''
-                if(hasUpgrade("i","Color-Yellow"))extra=extra+'+(额外的:'+format(player.i.extra_white)+')'
-                return '白色 Tube<br>生产基础能源<br>价格公式:'+formula_1+'<br>效率公式:'+formula_2
-                        +'<br>价格:'+format(layers.i.clickables["Tube-White"].COST())
+                if(hasUpgrade("i","Color-Yellow"))extra=extra+'+(额外 x'+format(player.i.extra_white)+')'
+                var huanhang=''
+                if(!player.i.shiftAlias)formula_1='',formula_2='',huanhang='<br>'
+                return '白色 Tube<br>生产基础能源'+formula_1+formula_2
+                        +'<br>价格:'+format(layers.i.clickables["Tube-White"].COST())+huanhang
                         +'<br>效率:'+format(layers.i.clickables["Tube-White"].EFFECT())
                         +'<br>已购买:'+format(player.i.white_num)+extra
             },
@@ -150,14 +160,17 @@ addLayer("i",
             },
             display()
             {
-                var formula_1='50*1.2<sup>x'
-                var formula_2='1/(1+x<sup>0.75'
+                var formula_1='<br>价格公式:50*1.2<sup>x</sup>'
+                if(player.i.total_infinity_points.gte(0.5))formula_1=formula_1+'/IPP'
+                var formula_2='<br>a公式:1/(1+x<sup>0.75'
                 if(hasUpgrade("i","Color-Purple"))formula_2=formula_2+'*e'
                 formula_2=formula_2+'</sup>/2)'
                 var extra=''
                 if(hasUpgrade("i","Color-Orange"))extra=extra+'+(额外的:'+format(player.i.extra_red)+')'
-                return '红色 Tube<br>降低白色 Tube 的价格<br>价格公式:'+formula_1+'<br>a公式:'+formula_2
-                        +'<br>价格:'+format(layers.i.clickables["Tube-Red"].COST())
+                var huanhang=''
+                if(!player.i.shiftAlias)formula_1='',formula_2='',huanhang='<br>'
+                return '红色 Tube<br>降低白色 Tube 的价格'+formula_1+formula_2
+                        +'<br>价格:'+format(layers.i.clickables["Tube-Red"].COST())+huanhang
                         +'<br>a='+format(layers.i.clickables["Tube-Red"].EFFECT())
                         +'<br>已购买:'+format(player.i.red_num)+extra
             },
@@ -198,18 +211,25 @@ addLayer("i",
                     return n(0)
                 }
                 let eff=n(player.i.yellow_num).add(1).add(player.i.extra_yellow)
-                eff=eff.logBase(3).div(3)
+                eff=eff.logBase(10)
+                if(hasUpgrade("i","Infinity-Upgrade-2-1"))eff=eff.div(3)
+                else eff=eff.div(10)
                 player.i.b=eff
                 return eff
             },
             display()
             {
-                var formula_1='50*1.2<sup>x'
-                var formula_2='log<sub>3</sub>x/3'
+                var formula_1='<br>价格公式:50*1.2<sup>x</sup>'
+                if(player.i.total_infinity_points.gte(0.5))formula_1=formula_1+'/IPP'
+                var formula_2='<br>b公式:log<sub>10</sub>x'
+                if(hasUpgrade("i","Infinity-Upgrade-2-1"))formula_2=formula_2+'/3'
+                else formula_2=formula_2+'/10'
                 var extra=''
                 if(hasUpgrade("i","Color-Purple"))extra=extra+'+(额外的:'+format(player.i.extra_yellow)+')'
-                return '黄色 Tube<br>缓慢生产白色 Tube<br>价格公式:'+formula_1+'<br>b公式:'+formula_2
-                        +'<br>价格:'+format(layers.i.clickables["Tube-Yellow"].COST())
+                var huanhang=''
+                if(!player.i.shiftAlias)formula_1='',formula_2='',huanhang='<br>'
+                return '黄色 Tube<br>缓慢生产白色 Tube'+formula_1+formula_2
+                        +'<br>价格:'+format(layers.i.clickables["Tube-Yellow"].COST())+huanhang
                         +'<br>b='+format(layers.i.clickables["Tube-Yellow"].EFFECT())
                         +'<br>已购买:'+format(player.i.yellow_num)+extra
             },
@@ -251,13 +271,16 @@ addLayer("i",
             },
             display()
             {
-                var formula_1='50*1.2<sup>x'
-                var formula_2='(x+1)<sup>0.5'
+                var formula_1='<br>价格公式:50*1.2<sup>x</sup>'
+                if(player.i.total_infinity_points.gte(0.5))formula_1=formula_1+'/IPP'
+                var formula_2='<br>c公式:(x+1)<sup>0.5'
                 if(hasUpgrade("i","Color-Purple"))formula_2=formula_2+'*e'
                 var extra=''
                 if(hasUpgrade("i","Color-Green"))extra=extra+'+(额外的:'+format(player.i.extra_blue)+')'
-                return '蓝色 Tube<br>增幅白色 Tube 的效率<br>价格公式:'+formula_1+'<br>c公式:'+formula_2
-                        +'<br>价格:'+format(layers.i.clickables["Tube-Blue"].COST())
+                var huanhang=''
+                if(!player.i.shiftAlias)formula_1='',formula_2='',huanhang='<br>'
+                return '蓝色 Tube<br>增幅白色 Tube 的效率'+formula_1+formula_2
+                        +'<br>价格:'+format(layers.i.clickables["Tube-Blue"].COST())+huanhang
                         +'<br>c='+format(layers.i.clickables["Tube-Blue"].EFFECT())
                         +'<br>已购买:'+format(player.i.blue_num)+extra
             },
@@ -305,11 +328,14 @@ addLayer("i",
             },
             display()
             {
-                var formula_1='100000*2<sup>x<sup>1.25'
-                var formula_2='(1+x)<sup>0.1</sup>'
-                var formula_3='0.1x'
-                return '橙色 Tube<br>缓慢生产 红色 Tube<br>减少 白色 Tube 的价格指数<br>价格公式:'+formula_1+'<br>d公式:'+formula_2+'<br>生产公式:'+formula_3
-                        +'<br>价格:'+format(layers.i.clickables["Tube-Orange"].COST())
+                var formula_1='<br>价格公式:100000*2<sup>x<sup>1.25</sup></sup>'
+                if(player.i.total_infinity_points.gte(0.5))formula_1=formula_1+'/IPP'
+                var formula_2='<br>d公式:1/((1+x)<sup>0.1</sup>)'
+                var formula_3='<br>生产公式:0.1x'
+                var huanhang=''
+                if(!player.i.shiftAlias)formula_1='',formula_2='',formula_3='',huanhang='<br>'
+                return '橙色 Tube<br>缓慢生产 红色 Tube<br>减少 白色 Tube 的价格指数'+formula_1+formula_2+formula_3
+                        +'<br>价格:'+format(layers.i.clickables["Tube-Orange"].COST())+huanhang
                         +'<br>d='+format(layers.i.clickables["Tube-Orange"].EFFECT())
                         +'<br>生产:'+format(layers.i.clickables["Tube-Orange"].PRODUCE())
                         +'<br>已购买:'+format(player.i.orange_num)
@@ -358,11 +384,14 @@ addLayer("i",
             },
             display()
             {
-                var formula_1='100000*2<sup>x<sup>1.25'
-                var formula_2='1+0.05*x'
-                var formula_3='0.1x'
-                return '紫色 Tube<br>缓慢生产 黄色 Tube<br>提高 红色和蓝色 Tube 的效率指数<br>价格公式:'+formula_1+'<br>e公式:'+formula_2+'<br>生产公式:'+formula_3
-                        +'<br>价格:'+format(layers.i.clickables["Tube-Purple"].COST())
+                var formula_1='<br>价格公式100000*2<sup>x<sup>1.25</sup></sup>'
+                if(player.i.total_infinity_points.gte(0.5))formula_1=formula_1+'/IPP'
+                var formula_2='<br>e公式:1+0.05*x'
+                var formula_3='<br>生产公式:0.1x'
+                var huanhang=''
+                if(!player.i.shiftAlias)formula_1='',formula_2='',formula_3='',huanhang='<br>'
+                return '紫色 Tube<br>缓慢生产 黄色 Tube<br>提高 红色和蓝色 Tube 的效率指数'+formula_1+formula_2+formula_3
+                        +'<br>价格:'+format(layers.i.clickables["Tube-Purple"].COST())+huanhang
                         +'<br>e='+format(layers.i.clickables["Tube-Purple"].EFFECT())
                         +'<br>生产:'+format(layers.i.clickables["Tube-Purple"].PRODUCE())
                         +'<br>已购买:'+format(player.i.purple_num)
@@ -411,11 +440,14 @@ addLayer("i",
             },
             display()
             {
-                var formula_1='100000*2<sup>x<sup>1.25'
-                var formula_2='1+log<sub>10</sub>(1+x)/5'
-                var formula_3='0.1x'
-                return '绿色 Tube<br>缓慢生产 蓝色 Tube<br>提高 白色 Tube 的效率指数<br>价格公式:'+formula_1+'<br>f公式:'+formula_2+'<br>生产公式:'+formula_3
-                        +'<br>价格:'+format(layers.i.clickables["Tube-Green"].COST())
+                var formula_1='<br>价格公式:100000*2<sup>x<sup>1.25</sup></sup>'
+                if(player.i.total_infinity_points.gte(0.5))formula_1=formula_1+'/IPP'
+                var formula_2='<br>f公式:1+log<sub>10</sub>(1+x)/5'
+                var formula_3='<br>生产公式:0.1x'
+                var huanhang=''
+                if(!player.i.shiftAlias)formula_1='',formula_2='',formula_3='',huanhang='<br>'
+                return '绿色 Tube<br>缓慢生产 蓝色 Tube<br>提高 白色 Tube 的效率指数'+formula_1+formula_2+formula_3
+                        +'<br>价格:'+format(layers.i.clickables["Tube-Green"].COST())+huanhang
                         +'<br>f='+format(layers.i.clickables["Tube-Green"].EFFECT())
                         +'<br>生产:'+format(layers.i.clickables["Tube-Green"].PRODUCE())
                         +'<br>已购买:'+format(player.i.green_num)
@@ -446,19 +478,29 @@ addLayer("i",
             GAIN(x)
             {
                 var gain=n(x)
-                gain=gain.div(1e14).logBase(10)
+                var xx=n(10)
+                if(hasUpgrade("i","Infinity-Upgrade-2-3"))xx=n(2)
+                gain=gain.div(1e14).logBase(xx).mul(layers.i.clickables["Infinity-Upgrade-1"].EFFECT())
                 gain=gain.max(0).floor()
                 return gain
             },
             NEED(x)
             {
                 var need=n(1e14)
-                need=need.mul(n(10).pow(x))
+                var xx=n(10)
+                if(hasUpgrade("i","Infinity-Upgrade-2-3"))xx=n(2)
+                need=need.mul(xx.pow(n(x).div(layers.i.clickables["Infinity-Upgrade-1"].EFFECT())))
                 return need
             },
             display()
             {
-                return '重置你的 普通 Tube<br>获得: + '+format(layers.i.clickables["Infinity"].GAIN(player.points))+' 无尽点'
+                var formula_1='无尽点 获取 公式:floor(log<sub>'
+                if(hasUpgrade("i","Infinity-Upgrade-2-3"))formula_1=formula_1+'2'
+                else formula_1=formula_1+'10'
+                formula_1=formula_1+'</sub>(p/1e14))<br><br>'
+                var huanhang=''
+                if(!player.i.shiftAlias)formula_1='',huanhang='<br>'
+                return formula_1+'重置你的 普通 Tube<br>获得: + '+format(layers.i.clickables["Infinity"].GAIN(player.points))+' 无尽点'
                         +'<br>下一个无尽点在 '+format(layers.i.clickables["Infinity"].NEED(layers.i.clickables["Infinity"].GAIN(player.points).add(1)))+' 能源'
             },
             unlocked(){return true},
@@ -469,7 +511,7 @@ addLayer("i",
                 player.i.total_infinity_points=player.i.total_infinity_points.add(layers.i.clickables["Infinity"].GAIN(player.points))
                 player.points=n(10)
                 player.i.white_num=n(0)
-                player.i.extra_white=n(0)
+                player.i.extra_white=n(1)
                 player.i.red_num=n(0)
                 player.i.extra_red=n(0)
                 player.i.yellow_num=n(0)
@@ -505,10 +547,10 @@ addLayer("i",
             COST()
             {
                 var need=n(1)
-                need=need.mul(n(1.1).pow(player.i.infinity_white_num))
+                need=need.mul(n(1.1).pow(player.i.infinity_white_num.mul(player.i.Ia)))
                 return need
             },
-            EFFECT()
+            PRODUCE()
             {
                 var eff=n(player.i.infinity_white_num)
                 eff=eff.pow(2)
@@ -516,17 +558,19 @@ addLayer("i",
             },
             display()
             {
-                var formula_1='1.1<sup>x</sup>'
-                var formula_2='x<sup>2</sup>'
-                return '无尽 白色 Tube<br>生产无尽能源-白<br>价格公式:'+formula_1+'<br>效率公式:'+formula_2
-                        +'<br>价格:'+format(layers.i.clickables["Infinity-Tube-White"].COST())
-                        +'<br>效率:'+format(layers.i.clickables["Infinity-Tube-White"].EFFECT())
+                var formula_1='<br>价格公式:1.1<sup>x</sup>'
+                var formula_2='<br>生产公式:x<sup>2</sup>'
+                var huanhang=''
+                if(!player.i.shiftAlias)formula_1='',formula_2='',huanhang='<br>'
+                return '无尽 白色 Tube<br>生产无尽能源-白'+formula_1+formula_2
+                        +'<br>价格:'+format(layers.i.clickables["Infinity-Tube-White"].COST())+huanhang
+                        +'<br>生产:'+format(layers.i.clickables["Infinity-Tube-White"].PRODUCE())
                         +'<br>已购买:'+format(player.i.infinity_white_num)
             },
             unlocked(){return hasUpgrade("i","Infinity-Color-White")},
             style(){
                 return {"width":"600px","border-radius":"0px","background-color":"white","height":"150px",
-                        "border-width":"20px","border-color":player.i.sss}},
+                        "border-width":"10px","border-color":player.i.sss}},
             canClick(){return player.i.infinity_points.gte(layers.i.clickables["Infinity-Tube-White"].COST())},
             onClick(){
                 if(player.i.infinity_points.div(layers.i.clickables["Infinity-Tube-White"].COST()).lte(100))
@@ -542,6 +586,66 @@ addLayer("i",
                     var x=player.i.infinity_points.div(1).logBase(1.1).div(player.i.a).root(player.i.d)
                     var y=x.sub(player.i.infinity_white_num).div(10).ceil()
                     player.i.infinity_white_num=player.i.infinity_white_num.add(y)
+                    player.i.infinity_points=player.i.infinity_points.div(10).mul(7)
+                }
+            }
+        },
+        "Infinity-Tube-Red":
+        {
+            COST()
+            {
+                var need=n(10)
+                need=need.mul(n(1.2).pow(player.i.infinity_red_num))
+                return need
+            },
+            PRODUCE()
+            {
+                var eff=n(player.i.infinity_red_num)
+                eff=eff.pow(1.5)
+                return eff
+            },
+            EFFECT()
+            {
+                let eff=n(player.i.infinity_red_num)
+                eff=eff.pow(n(0.6)).div(2.5).add(1)
+                eff=n(1).div(eff)
+                player.i.Ia=eff
+                return eff
+            },
+            display()
+            {
+                var formula_1='<br>价格公式:10*1.2<sup>x</sup>'
+                var formula_2='<br>生产公式:x<sup>1.5</sup>'
+                var formula_3='<br>Ia公式:1/(1+x<sup>0.6'
+                formula_3=formula_3+'</sup>/2.5)'
+                var huanhang=''
+                if(!player.i.shiftAlias)formula_1='',formula_2='',formula_3='',huanhang='<br>'
+                return '无尽 红色 Tube<br>生产无尽能源-红<br>降低 无尽 白色 Tube 的价格'+formula_1+formula_2
+                        +formula_3
+                        +'<br>价格:'+format(layers.i.clickables["Infinity-Tube-Red"].COST())+huanhang
+                        +'<br>生产:'+format(layers.i.clickables["Infinity-Tube-Red"].PRODUCE())
+                        +'<br>Ia='+format(player.i.Ia)
+                        +'<br>已购买:'+format(player.i.infinity_red_num)
+            },
+            unlocked(){return hasUpgrade("i","Infinity-Color-Red")},
+            style(){
+                return {"width":"200px","border-radius":"0px","background-color":"red","height":"200px",
+                        "border-width":"10px","border-color":player.i.sss}},
+            canClick(){return player.i.infinity_points.gte(layers.i.clickables["Infinity-Tube-Red"].COST())},
+            onClick(){
+                if(player.i.infinity_points.div(layers.i.clickables["Infinity-Tube-Red"].COST()).lte(100))
+                {
+                    while(player.i.infinity_points.gte(layers.i.clickables["Infinity-Tube-Red"].COST()))
+                    {
+                        player.i.infinity_points=player.i.infinity_points.sub(layers.i.clickables["Infinity-Tube-Red"].COST())
+                        player.i.infinity_red_num=player.i.infinity_red_num.add(1)
+                    }
+                }
+                else
+                {
+                    var x=player.i.infinity_points.div(10).logBase(1.2).div(player.i.a).root(player.i.d)
+                    var y=x.sub(player.i.infinity_red_num).div(10).ceil()
+                    player.i.infinity_red_num=player.i.infinity_red_num.add(y)
                     player.i.infinity_points=player.i.infinity_points.div(10).mul(7)
                 }
             }
@@ -567,8 +671,10 @@ addLayer("i",
             },
             unlocked(){return true},
             style(){return {"width":"300px","border-radius":"0px","background-color":"white","height":"100px",}},
-            canClick(){return layers.i.clickables["Infinity"].GAIN(player.points).gte(1)},
+            canClick(){return player.i.infinity_points.gte(layers.i.clickables["Infinity-Upgrade-1"].COST())},
             onClick(){
+                player.i.infinity_points=player.i.infinity_points.sub(layers.i.clickables["Infinity-Upgrade-1"].COST())
+                player.i.infinity_upgrade_1_num=player.i.infinity_upgrade_1_num.add(1)
             }
         },
     },
@@ -601,7 +707,7 @@ addLayer("i",
     },
     cost_2()
     {
-        var cost=n(200000)
+        var cost=n(1e7)
         var x=n(0)
         if(hasUpgrade("i","Color-Orange"))
         {
@@ -617,11 +723,11 @@ addLayer("i",
         }
         if(x.eq(1))
         {
-            cost=n(1e6)
+            cost=n(1e8)
         }
         if(x.gt(1.5))
         {
-            cost=n(1e7)
+            cost=n(5e10)
         }
         cost=cost.div(player.i.infinity_points_power)
         return cost
@@ -632,6 +738,8 @@ addLayer("i",
         {
             fullDisplay()
             {
+                if(hasUpgrade("i","Color-White"))
+                return '<img src="js/img/背刺qwq.png" alt="">'
                 return "解锁 - 白色 Tube<br><br>花费:0能源"
             },
             onPurchase()
@@ -648,6 +756,8 @@ addLayer("i",
         {
             fullDisplay()
             {
+                if(hasUpgrade("i","Color-Red"))
+                return '已解锁'
                 return "解锁 - 红色 Tube<br><br>花费:"+format(layers.i.cost_1())+"能源"
             },
             onPurchase()
@@ -666,6 +776,8 @@ addLayer("i",
         {
             fullDisplay()
             {
+                if(hasUpgrade("i","Color-Yellow"))
+                return '已解锁'
                 return "解锁 - 黄色 Tube<br><br>花费:"+format(layers.i.cost_1())+"能源"
             },
             onPurchase()
@@ -684,6 +796,8 @@ addLayer("i",
         {
             fullDisplay()
             {
+                if(hasUpgrade("i","Color-Blue"))
+                return '已解锁'
                 return "解锁 - 蓝色 Tube<br><br>花费:"+format(layers.i.cost_1())+"能源"
             },
             onPurchase()
@@ -702,6 +816,8 @@ addLayer("i",
         {
             fullDisplay()
             {
+                if(hasUpgrade("i","Color-Orange"))
+                return '已解锁'
                 return "解锁 - 橙色 Tube<br><br>花费:"+format(layers.i.cost_2())+"能源"
             },
             onPurchase()
@@ -719,6 +835,8 @@ addLayer("i",
         {
             fullDisplay()
             {
+                if(hasUpgrade("i","Color-Purple"))
+                return '已解锁'
                 return "解锁 - 紫色 Tube<br><br>花费:"+format(layers.i.cost_2())+"能源"
             },
             onPurchase()
@@ -736,6 +854,8 @@ addLayer("i",
         {
             fullDisplay()
             {
+                if(hasUpgrade("i","Color-Green"))
+                return '已解锁'
                 return "解锁 - 绿色 Tube<br><br>花费:"+format(layers.i.cost_2())+"能源"
             },
             onPurchase()
@@ -753,6 +873,8 @@ addLayer("i",
         {
             fullDisplay()
             {
+                if(hasUpgrade("i","Infinity-Color-White"))
+                return '已解锁'
                 return "解锁 - 无尽 白色 Tube<br><br>花费:0无尽点"
             },
             onPurchase()
@@ -760,66 +882,165 @@ addLayer("i",
             },
             canAfford()
             {
-                return true
+                return player.i.total_infinity_points.gte(0.5)
             },
             style(){
                 return {"width":"600px","border-radius":"0px","background-color":"white","height":"150px",
-                        "border-width":"20px","border-color":player.i.sss}},
+                        "border-width":"10px","border-color":player.i.sss}},
             unlocked(){return true},
         },
         "Infinity-Color-Red":
         {
             fullDisplay()
             {
-                return "解锁 - 无尽 红色 Tube<br><br>花费:???无尽点"
+                if(hasUpgrade("i","Infinity-Color-Red"))
+                return '已解锁'
+                return "解锁 - 无尽 红色 Tube<br><br>花费:"+format(player.i.cost_infinity_1)+"无尽点"
             },
             onPurchase()
             {
+                player.i.infinity_points=player.i.infinity_points.sub(player.i.cost_infinity_1)
+                if(player.i.cost_infinity_1.lte(200.5))
+                {
+                    player.i.cost_infinity_1=n(5000)
+                }
+                if(player.i.cost_infinity_1.lte(30.5))
+                {
+                    player.i.cost_infinity_1=n(200)
+                }
             },
             canAfford()
             {
-                return false
+                return player.i.infinity_points.gte(player.i.cost_infinity_1)
             },
             style(){
                 return {"width":"200px","border-radius":"0px","background-color":"red","height":"150px",
-                        "border-width":"20px","border-color":player.i.sss}},
+                        "border-width":"10px","border-color":player.i.sss}},
             unlocked(){return hasUpgrade("i","Infinity-Color-White")},
         },
         "Infinity-Color-Yellow":
         {
             fullDisplay()
             {
-                return "解锁 - 无尽 红色 Tube<br><br>花费:???无尽点"
+                if(hasUpgrade("i","Infinity-Color-Yellow"))
+                return '已解锁'
+                return "解锁 - 无尽 黄色 Tube<br><br>花费:"+format(player.i.cost_infinity_1)+"无尽点"
             },
             onPurchase()
             {
+                player.i.infinity_points=player.i.infinity_points.sub(player.i.cost_infinity_1)
+                if(player.i.cost_infinity_1.lte(200.5))
+                {
+                    player.i.cost_infinity_1=n(5000)
+                }
+                if(player.i.cost_infinity_1.lte(30.5))
+                {
+                    player.i.cost_infinity_1=n(200)
+                }
             },
             canAfford()
             {
-                return false
+                return player.i.infinity_points.gte(player.i.cost_infinity_1)
             },
             style(){
                 return {"width":"200px","border-radius":"0px","background-color":"yellow","height":"150px",
-                        "border-width":"20px","border-color":player.i.sss}},
+                        "border-width":"10px","border-color":player.i.sss}},
             unlocked(){return hasUpgrade("i","Infinity-Color-White")},
         },
         "Infinity-Color-Blue":
         {
             fullDisplay()
             {
-                return "解锁 - 无尽 蓝色 Tube<br><br>花费:???无尽点"
+                if(hasUpgrade("i","Infinity-Color-Blue"))
+                return '已解锁'
+                return "解锁 - 无尽 蓝色 Tube<br><br>花费:"+format(player.i.cost_infinity_1)+"无尽点"
             },
             onPurchase()
             {
+                player.i.infinity_points=player.i.infinity_points.sub(player.i.cost_infinity_1)
+                if(player.i.cost_infinity_1.lte(200.5))
+                {
+                    player.i.cost_infinity_1=n(5000)
+                }
+                if(player.i.cost_infinity_1.lte(30.5))
+                {
+                    player.i.cost_infinity_1=n(200)
+                }
             },
             canAfford()
             {
-                return false
+                return player.i.infinity_points.gte(player.i.cost_infinity_1)
             },
             style(){
                 return {"width":"200px","border-radius":"0px","background-color":"blue","height":"150px",
-                        "border-width":"20px","border-color":player.i.sss}},
+                        "border-width":"10px","border-color":player.i.sss}},
             unlocked(){return hasUpgrade("i","Infinity-Color-White")},
+        },
+        "Infinity-Upgrade-2-1":
+        {
+            fullDisplay()
+            {
+                var formula='log<sub>10</sub>x/10 => log<sub>10</sub>x/3'
+                var huanhang=''
+                if(!player.i.shiftAlias)formula='',huanhang='<br>'
+                return '无尽 升级 2-1<br>优化 黄色 Tube 公式<br>'+formula+'<br>花费:20无尽点'
+            },
+            onPurchase()
+            {
+                player.i.infinity_points=player.i.infinity_points.sub(20)
+            },
+            canAfford()
+            {
+                return player.i.infinity_points.gte(20)
+            },
+            style(){
+                return {"width":"200px","border-radius":"0px","height":"150px",
+                        "border-width":"10px","border-color":player.i.sss}},
+            unlocked(){return player.i.infinity_upgrade_1_num.gte(0.5)},
+        },
+        "Infinity-Upgrade-2-2":
+        {
+            fullDisplay()
+            {
+                var formula='(IWE+1)<sup>0.125</sup> => (IWE+1)<sup>0.2</sup>'
+                var huanhang=''
+                if(!player.i.shiftAlias)formula='',huanhang='<br>'
+                return "无尽 升级 2-2<br>优化 IWP 公式<br>"+formula+"<br>花费:30无尽点"
+            },
+            onPurchase()
+            {
+                player.i.infinity_points=player.i.infinity_points.sub(30)
+            },
+            canAfford()
+            {
+                return player.i.infinity_points.gte(30)
+            },
+            style(){
+                return {"width":"200px","border-radius":"0px","height":"150px",
+                        "border-width":"10px","border-color":player.i.sss}},
+            unlocked(){return player.i.infinity_upgrade_1_num.gte(0.5)},
+        },
+        "Infinity-Upgrade-2-3":
+        {
+            fullDisplay()
+            {
+                var formula='floor(log<sub>10</sub>(p/1e14))<br>=><br>floor(log<sub>5</sub>(p/1e14))'
+                var huanhang=''
+                if(!player.i.shiftAlias)formula='',huanhang='<br>'
+                return "无尽 升级 2-3<br>优化 无尽点获取 公式<br>"+formula+"<br>花费:50无尽点"
+            },
+            onPurchase()
+            {
+                player.i.infinity_points=player.i.infinity_points.sub(50)
+            },
+            canAfford()
+            {
+                return player.i.infinity_points.gte(50)
+            },
+            style(){
+                return {"width":"200px","border-radius":"0px","height":"150px",
+                        "border-width":"10px","border-color":player.i.sss}},
+            unlocked(){return player.i.infinity_upgrade_1_num.gte(0.5)},
         },
     },
 	microtabs:
@@ -896,6 +1117,7 @@ addLayer("i",
 				content:[
                     "blank",
                     ["row",[["clickable","Infinity-Upgrade-1"]]],
+                    ["row",[["upgrade","Infinity-Upgrade-2-1"],["upgrade","Infinity-Upgrade-2-2"],["upgrade","Infinity-Upgrade-2-3"],]],
 				]
 			},
 		},
@@ -972,18 +1194,42 @@ addLayer("i",
                 "blank",
                 ["display-text",
                     function() {
+                        var formula_2=' , IPP=(TIP+1)<sup>0.2'
+                        if(hasUpgrade("i","Infinity-Color-Red"))formula_2=formula_2+'+IRP'
+                        formula_2=formula_2+'</sup>'
+                        if(!player.i.shiftAlias)formula_2=''
                         if(player.i.total_infinity_points.gte(0.5))
                         return 'TIP='+format(player.i.total_infinity_points)
-                                +',IPP=(TIP+1)<sup>0.2</sup>'
-                                +',IPP='+format(player.i.infinity_points_power)},
+                                +formula_2
+                                +' , IPP='+format(player.i.infinity_points_power)},
                     { "color": "white", "font-size": "20px",}
                 ],
                 ["display-text",
                     function() {
+                        var formula_2=' , IWP=(IWE+1)<sup>'
+                        if(hasUpgrade("i","Infinity-Upgrade-2-2"))formula_2=formula_2+'0.2</sup>'
+                        else formula_2=formula_2+'0.125</sup>'
+                        if(!player.i.shiftAlias)formula_2=''
                         if(hasUpgrade("i","Infinity-Color-White"))
                         return 'IWE='+format(player.i.infinity_white_energy)
-                                +',IWP=(IWE+1)<sup>0.125</sup>'
-                                +',IWP='+format(player.i.infinity_white_power)},
+                                +formula_2
+                                +' , IWP='+format(player.i.infinity_white_power)},
+                    { "color": "white", "font-size": "20px",}
+                ],
+                ["display-text",
+                    function() {
+                        var formula_2=' , IRP=log<sub>20</sub>(IRE+1)/10'
+                        if(!player.i.shiftAlias)formula_2=''
+                        if(hasUpgrade("i","Infinity-Color-Red"))
+                        return 'IRE='+format(player.i.infinity_red_energy)
+                                +formula_2
+                                +' , IRP='+format(player.i.infinity_red_power)},
+                    { "color": "white", "font-size": "20px",}
+                ],
+                ["display-text",
+                    function() {
+                        if(hasUpgrade("i","Infinity-Color-Red"))
+                        return 'Ia='+format(player.i.Ia)},
                     { "color": "white", "font-size": "20px",}
                 ],
                 "blank",
