@@ -52,6 +52,7 @@ addLayer("i",
     },
     update(diff)
     {
+        player.points=player.points.max(1)
 	    player.i.shiftAlias=shiftDown
         if(player.points.gte(1e15))
         {
@@ -81,8 +82,8 @@ addLayer("i",
 
         player.i.infinity_white_energy=player.i.infinity_white_energy.add(layers.i.clickables["Infinity-Tube-White"].PRODUCE().mul(diff))
         player.i.infinity_red_energy=player.i.infinity_red_energy.add(layers.i.clickables["Infinity-Tube-Red"].PRODUCE().mul(diff))
-        player.i.infinity_white_power=player.i.infinity_white_energy.add(1).pow(n(0.125).add(hasUpgrade("i","Infinity-Upgrade-2-2")?0.075:0))
-        player.i.infinity_red_power=player.i.infinity_red_energy.add(1).logBase(20).div(10)
+        player.i.infinity_white_power=n(2).pow(player.i.infinity_white_energy.pow(n(0.2).add(hasUpgrade("i","Infinity-Upgrade-2-2")?0.05:0)))
+        player.i.infinity_red_power=n(1.2).pow(player.i.infinity_red_energy.pow(0.25)).div(10)
         
         player.i.infinity_points_power=player.i.total_infinity_points.add(1).pow(n(0.2).add(player.i.infinity_red_power))
     },
@@ -540,6 +541,9 @@ addLayer("i",
                     nwupg.push(upg[i])
                 }
                 player.i.upgrades=nwupg
+
+                player.i.infinity_white_energy=n(0)
+                player.i.infinity_red_energy=n(0)
             }
         },
         "Infinity-Tube-White":
@@ -1042,6 +1046,28 @@ addLayer("i",
                         "border-width":"10px","border-color":player.i.sss}},
             unlocked(){return player.i.infinity_upgrade_1_num.gte(0.5)},
         },
+        "Infinity-Upgrade-3-1":
+        {
+            fullDisplay()
+            {
+                // var formula='log<sub>10</sub>x/10 => log<sub>10</sub>x/3'
+                // var huanhang=''
+                // if(!player.i.shiftAlias)formula='',huanhang='<br>'
+                return '无尽 升级 3-1<br>无尽重置将不再重置你的色彩升级<br><br>花费:3000无尽点'
+            },
+            onPurchase()
+            {
+                player.i.infinity_points=player.i.infinity_points.sub(3000)
+            },
+            canAfford()
+            {
+                return player.i.infinity_points.gte(3000)
+            },
+            style(){
+                return {"width":"200px","border-radius":"0px","height":"150px",
+                        "border-width":"10px","border-color":player.i.sss}},
+            unlocked(){return hasUpgrade("i","Infinity-Upgrade-2-1") && hasUpgrade("i","Infinity-Upgrade-2-2") && hasUpgrade("i","Infinity-Upgrade-2-3")},
+        },
     },
 	microtabs:
     {
@@ -1118,10 +1144,34 @@ addLayer("i",
                     "blank",
                     ["row",[["clickable","Infinity-Upgrade-1"]]],
                     ["row",[["upgrade","Infinity-Upgrade-2-1"],["upgrade","Infinity-Upgrade-2-2"],["upgrade","Infinity-Upgrade-2-3"],]],
+                    ["row",[["upgrade","Infinity-Upgrade-3-1"],["upgrade","Infinity-Upgrade-3-2"],["upgrade","Infinity-Upgrade-3-3"],]],
 				]
 			},
 		},
 	},
+    hotkeys: [
+        {
+            key: "m", 
+            description: "m:最大购买所有 普通 Tube",
+            onPress() {
+                if(hasUpgrade("i","Color-Orange"))
+                layers.i.clickables["Tube-Orange"].onClick()
+                if(hasUpgrade("i","Color-Purple"))
+                layers.i.clickables["Tube-Purple"].onClick()
+                if(hasUpgrade("i","Color-Green"))
+                layers.i.clickables["Tube-Green"].onClick()
+                if(hasUpgrade("i","Color-Red"))
+                layers.i.clickables["Tube-Red"].onClick()
+                if(hasUpgrade("i","Color-Yellow"))
+                layers.i.clickables["Tube-Yellow"].onClick()
+                if(hasUpgrade("i","Color-Blue"))
+                layers.i.clickables["Tube-Blue"].onClick()
+                if(hasUpgrade("i","Color-White"))
+                layers.i.clickables["Tube-White"].onClick()
+            },
+            unlocked() {return true}
+        },
+    ],
     tabFormat:
     {
         "Idle Research":
@@ -1206,9 +1256,9 @@ addLayer("i",
                 ],
                 ["display-text",
                     function() {
-                        var formula_2=' , IWP=(IWE+1)<sup>'
-                        if(hasUpgrade("i","Infinity-Upgrade-2-2"))formula_2=formula_2+'0.2</sup>'
-                        else formula_2=formula_2+'0.125</sup>'
+                        var formula_2=' , IWP=2<sup>IWE<sup>'
+                        if(hasUpgrade("i","Infinity-Upgrade-2-2"))formula_2=formula_2+'0.25</sup></sup>'
+                        else formula_2=formula_2+'0.2</sup></sup>'
                         if(!player.i.shiftAlias)formula_2=''
                         if(hasUpgrade("i","Infinity-Color-White"))
                         return 'IWE='+format(player.i.infinity_white_energy)
@@ -1218,7 +1268,7 @@ addLayer("i",
                 ],
                 ["display-text",
                     function() {
-                        var formula_2=' , IRP=log<sub>20</sub>(IRE+1)/10'
+                        var formula_2=' , IRP=1.2<sup>IRE<sup>0.25</sup></sup>/10'
                         if(!player.i.shiftAlias)formula_2=''
                         if(hasUpgrade("i","Infinity-Color-Red"))
                         return 'IRE='+format(player.i.infinity_red_energy)
