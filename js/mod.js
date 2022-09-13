@@ -5,7 +5,7 @@
 	pointsName: "能源",
 	discordName: "",
 	discordLink: "",
-	initialStartPoints: new ExpantaNum (10), // Used for hard resets and new players
+	initialStartPoints: new ExpantaNum (20), // Used for hard resets and new players
 	
 	offlineLimit: 10,  // In hours
 }
@@ -32,7 +32,13 @@ let changelog = `<h1>更新记录:</h1><br>
 		- 修复了一个逻辑错误<br><br>
 	<h3>2022.9.12 17:00</h3><br>
 		- 无尽能量现在将在无尽后重置,但是效果变的无比强大<br>
-		- 增加 热键 M - 最大购买所有 普通 Tube<br><br>`
+		- 增加 热键 M - 最大购买所有 普通 Tube<br><br>
+	<h3>2022.9.12 23:00</h3><br>
+		- 增加无尽 蓝色 Tube 和 第三排的前两个无尽升级<br>
+		- 新增sub-sub-tab "Number"用于显示数值,避免过于冗余的界面<br><br>
+	<h3>2022.9.12 23:00</h3><br>
+		- 大幅修改了公式,重新调了平衡/tuu<br>
+		- 增加 无尽 黄色 Tube<br><br>`
 
 let winText = `恭喜通关!您已经完成了这个游戏.`
 
@@ -63,7 +69,8 @@ function addedPlayerData() { return {
 
 // Display extra things at the top of the page
 var displayThings = [
-	'<br>Shift - 查看所有公式'
+	`<br>Shift - 查看所有公式
+	 <br>M - 最大化 普通 Tube`
 ]
 
 // Determines when the game "ends"

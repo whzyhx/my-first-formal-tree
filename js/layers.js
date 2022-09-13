@@ -8,13 +8,17 @@ addLayer("i",
             unlocked: true,
             points: new ExpantaNum(0),
             white_num:zero,extra_white:one,
-            infinity_white_num:zero,
+            infinity_white_num:zero,extra_infinity_white:one,
             infinity_white_energy:zero,infinity_white_power:one,
             red_num:zero,extra_red:zero,
             infinity_red_num:zero,
             infinity_red_energy:zero,infinity_red_power:one,
             yellow_num:zero,extra_yellow:zero,
+            infinity_yellow_num:zero,
+            infinity_yellow_energy:zero,infinity_yellow_power:one,
             blue_num:zero,extra_blue:zero,
+            infinity_blue_num:zero,
+            infinity_blue_energy:zero,infinity_blue_power:one,
             orange_num:zero,
             purple_num:zero,
             green_num:zero,
@@ -25,9 +29,11 @@ addLayer("i",
             infinity_unlocked:zero,
             infinity_points:zero,total_infinity_points:zero,infinity_points_power:one,
             infinity_upgrade_1_num:zero,
+            points_to_points:one,
             s:"#000000",
             cost_infinity_1:n(30),
             shiftAlias:0,
+            infinity_time:zero,infinity_per_s:zero,
         }
     },
     color: "white",
@@ -58,7 +64,7 @@ addLayer("i",
         {
             player.i.infinity_unlocked=n(1)
         }
-        player.i.colorcolor=player.i.colorcolor.add(n(1).mul(diff))
+        player.i.colorcolor=player.i.colorcolor.add(n(3).mul(diff))
         if(player.i.colorcolor.gte(15))
         {
             player.i.colorcolor=player.i.colorcolor.sub(player.i.colorcolor.div(15).floor().mul(15))
@@ -81,13 +87,78 @@ addLayer("i",
         //infinity
 
         player.i.infinity_white_energy=player.i.infinity_white_energy.add(layers.i.clickables["Infinity-Tube-White"].PRODUCE().mul(diff))
+        player.i.extra_infinity_white=player.i.extra_infinity_white.add(player.i.Ib.mul(diff))
         player.i.infinity_red_energy=player.i.infinity_red_energy.add(layers.i.clickables["Infinity-Tube-Red"].PRODUCE().mul(diff))
-        player.i.infinity_white_power=n(2).pow(player.i.infinity_white_energy.pow(n(0.2).add(hasUpgrade("i","Infinity-Upgrade-2-2")?0.05:0)))
+        player.i.infinity_yellow_energy=player.i.infinity_yellow_energy.add(layers.i.clickables["Infinity-Tube-Yellow"].PRODUCE().mul(diff))
+        player.i.infinity_blue_energy=player.i.infinity_blue_energy.add(layers.i.clickables["Infinity-Tube-Blue"].PRODUCE().mul(diff))
+        player.i.infinity_white_power=n(2).mul(player.i.infinity_blue_power)
+                    .pow(player.i.infinity_white_energy.pow(n(0.2).add(hasUpgrade("i","Infinity-Upgrade-2-2")?0.05:0)
+                    .div(player.i.infinity_white_energy.add(1).logBase(10).add(1).logBase(6).max(1))))
         player.i.infinity_red_power=n(1.2).pow(player.i.infinity_red_energy.pow(0.25)).div(10)
+        player.i.infinity_yellow_power=n(10).pow(player.i.infinity_yellow_energy.pow(0.2))
+        player.i.infinity_blue_power=n(1.05).pow(player.i.infinity_blue_energy.pow(0.2))
+
+        player.i.infinity_time=player.i.infinity_time.add(n(1).mul(diff))
+        player.i.infinity_per_s=layers.i.clickables["Infinity"].GAIN(player.points).div(player.i.infinity_time)
         
         player.i.infinity_points_power=player.i.total_infinity_points.add(1).pow(n(0.2).add(player.i.infinity_red_power))
+        player.i.points_to_points=n(1.25).pow(player.points.add(1).logBase(10))
     },
     tooltip(){return '我就不'},
+    cost_1()
+    {
+        var cost=n(100)
+        var x=n(0)
+        if(hasUpgrade("i","Color-Red"))
+        {
+            x=x.add(1)
+        }
+        if(hasUpgrade("i","Color-Blue"))
+        {
+            x=x.add(1)
+        }
+        if(hasUpgrade("i","Color-Yellow"))
+        {
+            x=x.add(1)
+        }
+        if(x.eq(1))
+        {
+            cost=n(2000)
+        }
+        if(x.gt(1.5))
+        {
+            cost=n(50000)
+        }
+        cost=cost.div(player.i.infinity_points_power)
+        return cost
+    },
+    cost_2()
+    {
+        var cost=n(1e7)
+        var x=n(0)
+        if(hasUpgrade("i","Color-Orange"))
+        {
+            x=x.add(1)
+        }
+        if(hasUpgrade("i","Color-Purple"))
+        {
+            x=x.add(1)
+        }
+        if(hasUpgrade("i","Color-Green"))
+        {
+            x=x.add(1)
+        }
+        if(x.eq(1))
+        {
+            cost=n(1e8)
+        }
+        if(x.gt(1.5))
+        {
+            cost=n(5e10)
+        }
+        cost=cost.div(player.i.infinity_points_power)
+        return cost
+    },
     clickables:
     {
         "Tube-White":
@@ -100,7 +171,7 @@ addLayer("i",
             },
             EFFECT()
             {
-                var eff=n(player.i.white_num).mul(player.i.extra_white).pow(player.i.f).mul(player.i.c).mul(player.i.infinity_white_power)
+                var eff=n(player.i.white_num).mul(player.i.extra_white).pow(player.i.f).mul(player.i.c).mul(player.i.infinity_white_power).mul(player.i.points_to_points)
                 return eff
             },
             display()
@@ -113,6 +184,7 @@ addLayer("i",
                 if(hasUpgrade("i","Color-Green"))formula_2=formula_2+'<sup>f</sup>'
                 if(hasUpgrade("i","Color-Blue"))formula_2=formula_2+'*c'
                 if(hasUpgrade("i","Infinity-Color-White"))formula_2=formula_2+'*IWP'
+                if(hasUpgrade("i","Infinity-Upgrade-3-2"))formula_2=formula_2+'*PTP'
                 var extra=''
                 if(hasUpgrade("i","Color-Yellow"))extra=extra+'+(额外 x'+format(player.i.extra_white)+')'
                 var huanhang=''
@@ -206,15 +278,11 @@ addLayer("i",
             },
             EFFECT()
             {
-                if(player.i.yellow_num.lte(0.5))
-                {
-                    player.i.b=n(0)
-                    return n(0)
-                }
                 let eff=n(player.i.yellow_num).add(1).add(player.i.extra_yellow)
                 eff=eff.logBase(10)
                 if(hasUpgrade("i","Infinity-Upgrade-2-1"))eff=eff.div(3)
                 else eff=eff.div(10)
+                eff=eff.mul(player.i.infinity_yellow_power)
                 player.i.b=eff
                 return eff
             },
@@ -225,6 +293,7 @@ addLayer("i",
                 var formula_2='<br>b公式:log<sub>10</sub>x'
                 if(hasUpgrade("i","Infinity-Upgrade-2-1"))formula_2=formula_2+'/3'
                 else formula_2=formula_2+'/10'
+                if(hasUpgrade("i","Infinity-Upgrade-2-1"))formula_2=formula_2+'*IYP'
                 var extra=''
                 if(hasUpgrade("i","Color-Purple"))extra=extra+'+(额外的:'+format(player.i.extra_yellow)+')'
                 var huanhang=''
@@ -503,6 +572,7 @@ addLayer("i",
                 if(!player.i.shiftAlias)formula_1='',huanhang='<br>'
                 return formula_1+'重置你的 普通 Tube<br>获得: + '+format(layers.i.clickables["Infinity"].GAIN(player.points))+' 无尽点'
                         +'<br>下一个无尽点在 '+format(layers.i.clickables["Infinity"].NEED(layers.i.clickables["Infinity"].GAIN(player.points).add(1)))+' 能源'
+                        +'<br>当前每秒获得 : +'+format(player.i.infinity_per_s)+'无尽点'
             },
             unlocked(){return true},
             style(){return {"width":"300px","border-radius":"0px","background-color":player.i.sss,"height":"100px",}},
@@ -524,26 +594,36 @@ addLayer("i",
                 player.i.purple_num=n(0)
                 var upg=player.i.upgrades
                 var nwupg=[]
-                for(var i=0;i<upg.length;i+=1)
+                if(hasUpgrade("i","Infinity-Upgrade-3-1"))
                 {
-                    if(
-                        upg[i]=="Color-White" || 
-                        upg[i]=="Color-Red" || 
-                        upg[i]=="Color-Yellow" || 
-                        upg[i]=="Color-Blue" || 
-                        upg[i]=="Color-Orange" || 
-                        upg[i]=="Color-Purple" || 
-                        upg[i]=="Color-Green"
-                    )
+                    nwupg=upg
+                }
+                else
+                {
+                    for(var i=0;i<upg.length;i+=1)
                     {
-                        continue
+                        if(
+                            upg[i]=="Color-White" || 
+                            upg[i]=="Color-Red" || 
+                            upg[i]=="Color-Yellow" || 
+                            upg[i]=="Color-Blue" || 
+                            upg[i]=="Color-Orange" || 
+                            upg[i]=="Color-Purple" || 
+                            upg[i]=="Color-Green"
+                        )
+                        {
+                            continue
+                        }
+                        nwupg.push(upg[i])
                     }
-                    nwupg.push(upg[i])
                 }
                 player.i.upgrades=nwupg
 
                 player.i.infinity_white_energy=n(0)
                 player.i.infinity_red_energy=n(0)
+                player.i.infinity_yellow_energy=n(0)
+                player.i.infinity_blue_energy=n(0)
+                player.i.infinity_time=n(0)
             }
         },
         "Infinity-Tube-White":
@@ -556,20 +636,26 @@ addLayer("i",
             },
             PRODUCE()
             {
-                var eff=n(player.i.infinity_white_num)
-                eff=eff.pow(2)
+                var eff=n(player.i.infinity_white_num).mul(player.i.extra_infinity_white)
+                eff=eff.pow(2).mul(player.i.Ic)
                 return eff
             },
             display()
             {
                 var formula_1='<br>价格公式:1.1<sup>x</sup>'
                 var formula_2='<br>生产公式:x<sup>2</sup>'
+                if(hasUpgrade("i","Infinity-Color-Blue"))
+                formula_2=formula_2+'*Ic'
+                if(hasUpgrade("i","Infinity-Upgrade-3-2"))
+                formula_2=formula_2+'*PTIW'
                 var huanhang=''
                 if(!player.i.shiftAlias)formula_1='',formula_2='',huanhang='<br>'
+                var extra=''
+                if(hasUpgrade("i","Infinity-Color-Yellow"))extra=extra+'+(额外 x'+format(player.i.extra_infinity_white)+')'
                 return '无尽 白色 Tube<br>生产无尽能源-白'+formula_1+formula_2
                         +'<br>价格:'+format(layers.i.clickables["Infinity-Tube-White"].COST())+huanhang
                         +'<br>生产:'+format(layers.i.clickables["Infinity-Tube-White"].PRODUCE())
-                        +'<br>已购买:'+format(player.i.infinity_white_num)
+                        +'<br>已购买:'+format(player.i.infinity_white_num)+extra
             },
             unlocked(){return hasUpgrade("i","Infinity-Color-White")},
             style(){
@@ -587,7 +673,7 @@ addLayer("i",
                 }
                 else
                 {
-                    var x=player.i.infinity_points.div(1).logBase(1.1).div(player.i.a).root(player.i.d)
+                    var x=player.i.infinity_points.div(1).logBase(1.1)
                     var y=x.sub(player.i.infinity_white_num).div(10).ceil()
                     player.i.infinity_white_num=player.i.infinity_white_num.add(y)
                     player.i.infinity_points=player.i.infinity_points.div(10).mul(7)
@@ -647,9 +733,125 @@ addLayer("i",
                 }
                 else
                 {
-                    var x=player.i.infinity_points.div(10).logBase(1.2).div(player.i.a).root(player.i.d)
+                    var x=player.i.infinity_points.div(10).logBase(1.2)
                     var y=x.sub(player.i.infinity_red_num).div(10).ceil()
                     player.i.infinity_red_num=player.i.infinity_red_num.add(y)
+                    player.i.infinity_points=player.i.infinity_points.div(10).mul(7)
+                }
+            }
+        },
+        "Infinity-Tube-Yellow":
+        {
+            COST()
+            {
+                var need=n(10)
+                need=need.mul(n(1.2).pow(player.i.infinity_yellow_num))
+                return need
+            },
+            PRODUCE()
+            {
+                var eff=n(player.i.infinity_yellow_num)
+                eff=eff.pow(1.5)
+                return eff
+            },
+            EFFECT()
+            {
+                let eff=n(player.i.infinity_yellow_num).add(1)
+                eff=eff.logBase(5).div(5)
+                player.i.Ib=eff
+                return eff
+            },
+            display()
+            {
+                var formula_1='<br>价格公式:10*1.2<sup>x</sup>'
+                var formula_2='<br>生产公式:x<sup>1.5</sup>'
+                var formula_3='<br>Ib公式:log<sub>5</sub>x/5'
+                var huanhang=''
+                if(!player.i.shiftAlias)formula_1='',formula_2='',formula_3='',huanhang='<br>'
+                return '无尽 黄色 Tube<br>生产无尽能源-黄<br>缓慢生产 无尽 白色 Tube'+formula_1+formula_2
+                        +formula_3
+                        +'<br>价格:'+format(layers.i.clickables["Infinity-Tube-Yellow"].COST())+huanhang
+                        +'<br>生产:'+format(layers.i.clickables["Infinity-Tube-Yellow"].PRODUCE())
+                        +'<br>Ib='+format(player.i.Ib)
+                        +'<br>已购买:'+format(player.i.infinity_yellow_num)
+            },
+            unlocked(){return hasUpgrade("i","Infinity-Color-Yellow")},
+            style(){
+                return {"width":"200px","border-radius":"0px","background-color":"yellow","height":"200px",
+                        "border-width":"10px","border-color":player.i.sss}},
+            canClick(){return player.i.infinity_points.gte(layers.i.clickables["Infinity-Tube-Yellow"].COST())},
+            onClick(){
+                if(player.i.infinity_points.div(layers.i.clickables["Infinity-Tube-Yellow"].COST()).lte(100))
+                {
+                    while(player.i.infinity_points.gte(layers.i.clickables["Infinity-Tube-Yellow"].COST()))
+                    {
+                        player.i.infinity_points=player.i.infinity_points.sub(layers.i.clickables["Infinity-Tube-Yellow"].COST())
+                        player.i.infinity_yellow_num=player.i.infinity_yellow_num.add(1)
+                    }
+                }
+                else
+                {
+                    var x=player.i.infinity_points.div(10).logBase(1.2)
+                    var y=x.sub(player.i.infinity_yellow_num).div(10).ceil()
+                    player.i.infinity_yellow_num=player.i.infinity_yellow_num.add(y)
+                    player.i.infinity_points=player.i.infinity_points.div(10).mul(7)
+                }
+            }
+        },
+        "Infinity-Tube-Blue":
+        {
+            COST()
+            {
+                var need=n(10)
+                need=need.mul(n(1.2).pow(player.i.infinity_blue_num))
+                return need
+            },
+            PRODUCE()
+            {
+                var eff=n(player.i.infinity_blue_num)
+                eff=eff.pow(1.5)
+                return eff
+            },
+            EFFECT()
+            {
+                var eff=n(player.i.infinity_blue_num)
+                eff=eff.add(1).pow(n(0.4))
+                player.i.Ic=eff
+                return eff
+            },
+            display()
+            {
+                var formula_1='<br>价格公式:10*1.2<sup>x</sup>'
+                var formula_2='<br>生产公式:x<sup>1.5</sup>'
+                var formula_3='<br>Ic公式:(x+1)<sup>0.4'
+                var huanhang=''
+                if(!player.i.shiftAlias)formula_1='',formula_2='',formula_3='',huanhang='<br>'
+                return '无尽 蓝色 Tube<br>生产无尽能源-蓝<br>增幅 无尽 白色 Tube 的效率'+formula_1+formula_2
+                        +formula_3
+                        +'<br>价格:'+format(layers.i.clickables["Infinity-Tube-Blue"].COST())+huanhang
+                        +'<br>生产:'+format(layers.i.clickables["Infinity-Tube-Blue"].PRODUCE())
+                        +'<br>Ic='+format(player.i.Ic)
+                        +'<br>已购买:'+format(player.i.infinity_blue_num)
+            },
+            unlocked(){return hasUpgrade("i","Infinity-Color-Blue")},
+            style(){
+                return {"width":"200px","border-radius":"0px","background-color":"blue","height":"200px",
+                        "border-width":"10px","border-color":player.i.sss}},
+            canClick(){return player.i.infinity_points.gte(layers.i.clickables["Infinity-Tube-Blue"].COST())},
+            onClick(){
+                if(player.i.infinity_points.div(layers.i.clickables["Infinity-Tube-Blue"].COST()).lte(100))
+                {
+                    while(player.i.infinity_points.gte(layers.i.clickables["Infinity-Tube-Blue"].COST()))
+                    {
+                        player.i.infinity_points=player.i.infinity_points.sub(layers.i.clickables["Infinity-Tube-Blue"].COST())
+                        player.i.infinity_blue_num=player.i.infinity_blue_num.add(1)
+                    }
+                }
+                else
+                {
+                    var x=player.i.infinity_points.div(10).logBase(1.2).div(player.i.a).root(player.i.d)
+                    var y=x.sub(player.i.infinity_blue_num).div(10).ceil()
+                    player.i.infinity_blue_num=player.i.infinity_blue_num.add(y)
                     player.i.infinity_points=player.i.infinity_points.div(10).mul(7)
                 }
             }
@@ -681,60 +883,20 @@ addLayer("i",
                 player.i.infinity_upgrade_1_num=player.i.infinity_upgrade_1_num.add(1)
             }
         },
-    },
-    cost_1()
-    {
-        var cost=n(100)
-        var x=n(0)
-        if(hasUpgrade("i","Color-Red"))
+        "weiwandaixu":
         {
-            x=x.add(1)
-        }
-        if(hasUpgrade("i","Color-Blue"))
-        {
-            x=x.add(1)
-        }
-        if(hasUpgrade("i","Color-Yellow"))
-        {
-            x=x.add(1)
-        }
-        if(x.eq(1))
-        {
-            cost=n(2000)
-        }
-        if(x.gt(1.5))
-        {
-            cost=n(50000)
-        }
-        cost=cost.div(player.i.infinity_points_power)
-        return cost
-    },
-    cost_2()
-    {
-        var cost=n(1e7)
-        var x=n(0)
-        if(hasUpgrade("i","Color-Orange"))
-        {
-            x=x.add(1)
-        }
-        if(hasUpgrade("i","Color-Purple"))
-        {
-            x=x.add(1)
-        }
-        if(hasUpgrade("i","Color-Green"))
-        {
-            x=x.add(1)
-        }
-        if(x.eq(1))
-        {
-            cost=n(1e8)
-        }
-        if(x.gt(1.5))
-        {
-            cost=n(5e10)
-        }
-        cost=cost.div(player.i.infinity_points_power)
-        return cost
+            display()
+            {
+                return '未完待续'
+            },
+            unlocked(){return hasUpgrade("i","Infinity-Color-Orange") ||
+                              hasUpgrade("i","Infinity-Color-Green") ||
+                              hasUpgrade("i","Infinity-Color-Purple")},
+            style(){return {"width":"600px","border-radius":"0px","background-color":"white","height":"150px",}},
+            canClick(){return true},
+            onClick(){
+            }
+        },
     },
     upgrades:
     {
@@ -904,13 +1066,13 @@ addLayer("i",
             onPurchase()
             {
                 player.i.infinity_points=player.i.infinity_points.sub(player.i.cost_infinity_1)
-                if(player.i.cost_infinity_1.lte(200.5))
+                if(player.i.cost_infinity_1.lte(5000.5))
                 {
-                    player.i.cost_infinity_1=n(5000)
+                    player.i.cost_infinity_1=n(20000)
                 }
                 if(player.i.cost_infinity_1.lte(30.5))
                 {
-                    player.i.cost_infinity_1=n(200)
+                    player.i.cost_infinity_1=n(5000)
                 }
             },
             canAfford()
@@ -921,6 +1083,7 @@ addLayer("i",
                 return {"width":"200px","border-radius":"0px","background-color":"red","height":"150px",
                         "border-width":"10px","border-color":player.i.sss}},
             unlocked(){return hasUpgrade("i","Infinity-Color-White")},
+            branches:["Infinity-Color-Orange","Infinity-Color-Purple"],
         },
         "Infinity-Color-Yellow":
         {
@@ -933,13 +1096,13 @@ addLayer("i",
             onPurchase()
             {
                 player.i.infinity_points=player.i.infinity_points.sub(player.i.cost_infinity_1)
-                if(player.i.cost_infinity_1.lte(200.5))
+                if(player.i.cost_infinity_1.lte(5000.5))
                 {
-                    player.i.cost_infinity_1=n(5000)
+                    player.i.cost_infinity_1=n(20000)
                 }
                 if(player.i.cost_infinity_1.lte(30.5))
                 {
-                    player.i.cost_infinity_1=n(200)
+                    player.i.cost_infinity_1=n(5000)
                 }
             },
             canAfford()
@@ -950,6 +1113,7 @@ addLayer("i",
                 return {"width":"200px","border-radius":"0px","background-color":"yellow","height":"150px",
                         "border-width":"10px","border-color":player.i.sss}},
             unlocked(){return hasUpgrade("i","Infinity-Color-White")},
+            branches:["Infinity-Color-Orange","Infinity-Color-Green"],
         },
         "Infinity-Color-Blue":
         {
@@ -962,13 +1126,13 @@ addLayer("i",
             onPurchase()
             {
                 player.i.infinity_points=player.i.infinity_points.sub(player.i.cost_infinity_1)
-                if(player.i.cost_infinity_1.lte(200.5))
+                if(player.i.cost_infinity_1.lte(5000.5))
                 {
-                    player.i.cost_infinity_1=n(5000)
+                    player.i.cost_infinity_1=n(20000)
                 }
                 if(player.i.cost_infinity_1.lte(30.5))
                 {
-                    player.i.cost_infinity_1=n(200)
+                    player.i.cost_infinity_1=n(5000)
                 }
             },
             canAfford()
@@ -979,6 +1143,76 @@ addLayer("i",
                 return {"width":"200px","border-radius":"0px","background-color":"blue","height":"150px",
                         "border-width":"10px","border-color":player.i.sss}},
             unlocked(){return hasUpgrade("i","Infinity-Color-White")},
+            branches:["Infinity-Color-Green","Infinity-Color-Purple"],
+        },
+        "Infinity-Color-Orange":
+        {
+            fullDisplay()
+            {
+                return "解锁 - 无尽 橙色 Tube<h1>?</h1><br><br>Try to click it?"
+            },
+            onPurchase()
+            {
+            },
+            canAfford()
+            {
+                return true
+            },
+            style(){
+                return {"width":"200px","border-radius":"0px","background-color":"orange","height":"150px",
+                        "border-width":"10px","border-color":player.i.sss}},
+            unlocked(){return hasUpgrade("i","Infinity-Color-Red") && 
+                              hasUpgrade("i","Infinity-Color-Yellow") &&
+                              hasUpgrade("i","Infinity-Color-Blue") &&
+                              !hasUpgrade("i","Infinity-Color-Orange") &&
+                              !hasUpgrade("i","Infinity-Color-Green") &&
+                              !hasUpgrade("i","Infinity-Color-Purple")},
+        },
+        "Infinity-Color-Green":
+        {
+            fullDisplay()
+            {
+                return "解锁 - 无尽 绿色 Tube<h1>?</h1><br><br>Try to click it?"
+            },
+            onPurchase()
+            {
+            },
+            canAfford()
+            {
+                return true
+            },
+            style(){
+                return {"width":"200px","border-radius":"0px","background-color":"green","height":"150px",
+                        "border-width":"10px","border-color":player.i.sss}},
+            unlocked(){return hasUpgrade("i","Infinity-Color-Red") && 
+                              hasUpgrade("i","Infinity-Color-Yellow") &&
+                              hasUpgrade("i","Infinity-Color-Blue") &&
+                              !hasUpgrade("i","Infinity-Color-Orange") &&
+                              !hasUpgrade("i","Infinity-Color-Green") &&
+                              !hasUpgrade("i","Infinity-Color-Purple")},
+        },
+        "Infinity-Color-Purple":
+        {
+            fullDisplay()
+            {
+                return "解锁 - 无尽 紫色 Tube<h1>?</h1><br><br>Try to click it?"
+            },
+            onPurchase()
+            {
+            },
+            canAfford()
+            {
+                return true
+            },
+            style(){
+                return {"width":"200px","border-radius":"0px","background-color":"purple","height":"150px",
+                        "border-width":"10px","border-color":player.i.sss}},
+            unlocked(){return hasUpgrade("i","Infinity-Color-Red") && 
+                              hasUpgrade("i","Infinity-Color-Yellow") &&
+                              hasUpgrade("i","Infinity-Color-Blue") &&
+                              !hasUpgrade("i","Infinity-Color-Orange") &&
+                              !hasUpgrade("i","Infinity-Color-Green") &&
+                              !hasUpgrade("i","Infinity-Color-Purple")},
         },
         "Infinity-Upgrade-2-1":
         {
@@ -1006,7 +1240,7 @@ addLayer("i",
         {
             fullDisplay()
             {
-                var formula='(IWE+1)<sup>0.125</sup> => (IWE+1)<sup>0.2</sup>'
+                var formula='2<sup>IWE<sup>0.2</sup></sup> => 2<sup>IWE<sup>0.25</sup></sup>'
                 var huanhang=''
                 if(!player.i.shiftAlias)formula='',huanhang='<br>'
                 return "无尽 升级 2-2<br>优化 IWP 公式<br>"+formula+"<br>花费:30无尽点"
@@ -1068,6 +1302,28 @@ addLayer("i",
                         "border-width":"10px","border-color":player.i.sss}},
             unlocked(){return hasUpgrade("i","Infinity-Upgrade-2-1") && hasUpgrade("i","Infinity-Upgrade-2-2") && hasUpgrade("i","Infinity-Upgrade-2-3")},
         },
+        "Infinity-Upgrade-3-2":
+        {
+            fullDisplay()
+            {
+                // var formula='log<sub>10</sub>x/10 => log<sub>10</sub>x/3'
+                // var huanhang=''
+                // if(!player.i.shiftAlias)formula='',huanhang='<br>'
+                return '无尽 升级 3-2<br>能源 反向增幅 无尽能源-白 的获取<br><br>花费:5000无尽点'
+            },
+            onPurchase()
+            {
+                player.i.infinity_points=player.i.infinity_points.sub(5000)
+            },
+            canAfford()
+            {
+                return player.i.infinity_points.gte(5000)
+            },
+            style(){
+                return {"width":"200px","border-radius":"0px","height":"150px",
+                        "border-width":"10px","border-color":player.i.sss}},
+            unlocked(){return hasUpgrade("i","Infinity-Upgrade-2-1") && hasUpgrade("i","Infinity-Upgrade-2-2") && hasUpgrade("i","Infinity-Upgrade-2-3")},
+        },
     },
 	microtabs:
     {
@@ -1102,6 +1358,57 @@ addLayer("i",
                     ["row",[["upgrade","Color-Orange"],["upgrade","Color-Purple"],["upgrade","Color-Green"],]],
 				]
 			},
+            "Number":{
+                buttonStyle()
+                {
+                    return {"border-radius":"0px"}
+                },
+                content:[
+                    "blank",
+                    ["display-text",
+                    function() {
+                        if(hasUpgrade("i","Color-White"))
+                        return 'x=当前购买的个数'},
+                    { "color": "white", "font-size": "20px",}
+                    ],
+                    ["display-text",
+                        function() {
+                            if(hasUpgrade("i","Color-Red"))
+                            return 'a='+format(player.i.a)},
+                        { "color": "white", "font-size": "20px",}
+                    ],
+                    ["display-text",
+                        function() {
+                            if(hasUpgrade("i","Color-Yellow"))
+                            return 'b='+format(player.i.b)},
+                        { "color": "white", "font-size": "20px",}
+                    ],
+                    ["display-text",
+                        function() {
+                            if(hasUpgrade("i","Color-Blue"))
+                            return 'c='+format(player.i.c)},
+                        { "color": "white", "font-size": "20px",}
+                    ],
+                    ["display-text",
+                        function() {
+                            if(hasUpgrade("i","Color-Orange"))
+                            return 'd='+format(player.i.d)},
+                        { "color": "white", "font-size": "20px",}
+                    ],
+                    ["display-text",
+                        function() {
+                            if(hasUpgrade("i","Color-Purple"))
+                            return 'e='+format(player.i.e)},
+                        { "color": "white", "font-size": "20px",}
+                    ],
+                    ["display-text",
+                        function() {
+                            if(hasUpgrade("i","Color-Green"))
+                            return 'f='+format(player.i.f)},
+                        { "color": "white", "font-size": "20px",}
+                    ],
+                ]
+            }
 		},
         "Infinity":
         {
@@ -1132,6 +1439,7 @@ addLayer("i",
                     "blank",
                     "blank",
                     ["row",[["upgrade","Infinity-Color-Orange"],["upgrade","Infinity-Color-Purple"],["upgrade","Infinity-Color-Green"],]],
+                    ["row",[["clickable","weiwandaixu"],]],
 				]
 			},
 			"Upgrade":{
@@ -1147,6 +1455,103 @@ addLayer("i",
                     ["row",[["upgrade","Infinity-Upgrade-3-1"],["upgrade","Infinity-Upgrade-3-2"],["upgrade","Infinity-Upgrade-3-3"],]],
 				]
 			},
+            "Number":{
+                buttonStyle()
+                {
+                    return {"border-radius":"0px"}
+                },
+                content:[
+                    "blank",
+                    ["display-text",
+                        function() {
+                            var formula_2=' , IPP=(TIP+1)<sup>0.2'
+                            if(hasUpgrade("i","Infinity-Color-Red"))formula_2=formula_2+'+IRP'
+                            formula_2=formula_2+'</sup>'
+                            if(!player.i.shiftAlias)formula_2=''
+                            if(player.i.total_infinity_points.gte(0.5))
+                            return 'TIP='+format(player.i.total_infinity_points)
+                                    +formula_2
+                                    +' , IPP='+format(player.i.infinity_points_power)},
+                        { "color": "white", "font-size": "20px",}
+                    ],
+                    ["display-text",
+                        function() {
+                            var formula_2=' , PTP=1.25<sup>log<sub>10</sub>P</sup>'
+                            if(!player.i.shiftAlias)formula_2=''
+                            if(hasUpgrade("i","Infinity-Upgrade-3-2"))
+                            return 'P='+format(player.points)
+                                    +formula_2
+                                    +' , PTP='+format(player.i.points_to_points)},
+                        { "color": "white", "font-size": "20px",}
+                    ],
+                    ["display-text",
+                        function() {
+                            var formula_2=' , IWP='
+                            if(hasUpgrade("i","Infinity-Color-Blue"))
+                            formula_2=formula_2+'('
+                            formula_2=formula_2+'2'
+                            if(hasUpgrade("i","Infinity-Color-Blue"))
+                            formula_2=formula_2+'*IBP)'
+                            formula_2=formula_2+'<sup>IWE<sup>'
+                            if(hasUpgrade("i","Infinity-Upgrade-2-2"))formula_2=formula_2+'0.25/log<sub>6</sub>(log<sub>10</sub>IWE)</sup></sup>'
+                            else formula_2=formula_2+'0.2/log<sub>6</sub>(log<sub>10</sub>IWE)</sup></sup>'
+                            if(!player.i.shiftAlias)formula_2=''
+                            if(hasUpgrade("i","Infinity-Color-White"))
+                            return 'IWE='+format(player.i.infinity_white_energy)
+                                    +formula_2
+                                    +' , IWP='+format(player.i.infinity_white_power)},
+                        { "color": "white", "font-size": "20px",}
+                    ],
+                    ["display-text",
+                        function() {
+                            var formula_2=' , IRP=1.2<sup>IRE<sup>0.25</sup></sup>/10'
+                            if(!player.i.shiftAlias)formula_2=''
+                            if(hasUpgrade("i","Infinity-Color-Red"))
+                            return 'IRE='+format(player.i.infinity_red_energy)
+                                    +formula_2
+                                    +' , IRP='+format(player.i.infinity_red_power)},
+                        { "color": "white", "font-size": "20px",}
+                    ],
+                    ["display-text",
+                        function() {
+                            var formula_2=' , IYP=10<sup>IYE<sup>0.1</sup></sup>'
+                            if(!player.i.shiftAlias)formula_2=''
+                            if(hasUpgrade("i","Infinity-Color-Yellow"))
+                            return 'IYE='+format(player.i.infinity_yellow_energy)
+                                    +formula_2
+                                    +' , IYP='+format(player.i.infinity_yellow_power)},
+                        { "color": "white", "font-size": "20px",}
+                    ],
+                    ["display-text",
+                        function() {
+                            var formula_2=' , IBP=1.05<sup>IBE<sup>0.2</sup></sup>'
+                            if(!player.i.shiftAlias)formula_2=''
+                            if(hasUpgrade("i","Infinity-Color-Blue"))
+                            return 'IBE='+format(player.i.infinity_blue_energy)
+                                    +formula_2
+                                    +' , IBP='+format(player.i.infinity_blue_power)},
+                        { "color": "white", "font-size": "20px",}
+                    ],
+                    ["display-text",
+                        function() {
+                            if(hasUpgrade("i","Infinity-Color-Red"))
+                            return 'Ia='+format(player.i.Ia)},
+                        { "color": "white", "font-size": "20px",}
+                    ],
+                    ["display-text",
+                        function() {
+                            if(hasUpgrade("i","Infinity-Color-Yellow"))
+                            return 'Ib='+format(player.i.Ib)},
+                        { "color": "white", "font-size": "20px",}
+                    ],
+                    ["display-text",
+                        function() {
+                            if(hasUpgrade("i","Infinity-Color-Blue"))
+                            return 'Ic='+format(player.i.Ic)},
+                        { "color": "white", "font-size": "20px",}
+                    ],
+                ]
+            }
 		},
 	},
     hotkeys: [
@@ -1154,6 +1559,8 @@ addLayer("i",
             key: "m", 
             description: "m:最大购买所有 普通 Tube",
             onPress() {
+                if(hasUpgrade("i","Color-White"))
+                layers.i.clickables["Tube-White"].onClick()
                 if(hasUpgrade("i","Color-Orange"))
                 layers.i.clickables["Tube-Orange"].onClick()
                 if(hasUpgrade("i","Color-Purple"))
@@ -1166,8 +1573,6 @@ addLayer("i",
                 layers.i.clickables["Tube-Yellow"].onClick()
                 if(hasUpgrade("i","Color-Blue"))
                 layers.i.clickables["Tube-Blue"].onClick()
-                if(hasUpgrade("i","Color-White"))
-                layers.i.clickables["Tube-White"].onClick()
             },
             unlocked() {return true}
         },
@@ -1181,48 +1586,6 @@ addLayer("i",
                 return {"border-radius":"0px"}
             },
             content:[
-                ["display-text",
-                    function() {
-                        if(hasUpgrade("i","Color-White"))
-                        return 'x=当前购买的个数'},
-                    { "color": "white", "font-size": "20px",}
-                ],
-                ["display-text",
-                    function() {
-                        if(hasUpgrade("i","Color-Red"))
-                        return 'a='+format(player.i.a)},
-                    { "color": "white", "font-size": "20px",}
-                ],
-                ["display-text",
-                    function() {
-                        if(hasUpgrade("i","Color-Yellow"))
-                        return 'b='+format(player.i.b)},
-                    { "color": "white", "font-size": "20px",}
-                ],
-                ["display-text",
-                    function() {
-                        if(hasUpgrade("i","Color-Blue"))
-                        return 'c='+format(player.i.c)},
-                    { "color": "white", "font-size": "20px",}
-                ],
-                ["display-text",
-                    function() {
-                        if(hasUpgrade("i","Color-Orange"))
-                        return 'd='+format(player.i.d)},
-                    { "color": "white", "font-size": "20px",}
-                ],
-                ["display-text",
-                    function() {
-                        if(hasUpgrade("i","Color-Purple"))
-                        return 'e='+format(player.i.e)},
-                    { "color": "white", "font-size": "20px",}
-                ],
-                ["display-text",
-                    function() {
-                        if(hasUpgrade("i","Color-Green"))
-                        return 'f='+format(player.i.f)},
-                    { "color": "white", "font-size": "20px",}
-                ],
                 "blank",
                 ["microtabs","Idle Research",{'border-width':'0px'}],
             ],
@@ -1235,52 +1598,12 @@ addLayer("i",
                 return {"border-radius":"0px"}
             },
             content:[
+                "blank",
                 ["display-text",
                     function() {
                         return '无尽点 : '+format(player.i.infinity_points)
                     },
                     { "color": "white", "font-size": "24px",}
-                ],
-                "blank",
-                ["display-text",
-                    function() {
-                        var formula_2=' , IPP=(TIP+1)<sup>0.2'
-                        if(hasUpgrade("i","Infinity-Color-Red"))formula_2=formula_2+'+IRP'
-                        formula_2=formula_2+'</sup>'
-                        if(!player.i.shiftAlias)formula_2=''
-                        if(player.i.total_infinity_points.gte(0.5))
-                        return 'TIP='+format(player.i.total_infinity_points)
-                                +formula_2
-                                +' , IPP='+format(player.i.infinity_points_power)},
-                    { "color": "white", "font-size": "20px",}
-                ],
-                ["display-text",
-                    function() {
-                        var formula_2=' , IWP=2<sup>IWE<sup>'
-                        if(hasUpgrade("i","Infinity-Upgrade-2-2"))formula_2=formula_2+'0.25</sup></sup>'
-                        else formula_2=formula_2+'0.2</sup></sup>'
-                        if(!player.i.shiftAlias)formula_2=''
-                        if(hasUpgrade("i","Infinity-Color-White"))
-                        return 'IWE='+format(player.i.infinity_white_energy)
-                                +formula_2
-                                +' , IWP='+format(player.i.infinity_white_power)},
-                    { "color": "white", "font-size": "20px",}
-                ],
-                ["display-text",
-                    function() {
-                        var formula_2=' , IRP=1.2<sup>IRE<sup>0.25</sup></sup>/10'
-                        if(!player.i.shiftAlias)formula_2=''
-                        if(hasUpgrade("i","Infinity-Color-Red"))
-                        return 'IRE='+format(player.i.infinity_red_energy)
-                                +formula_2
-                                +' , IRP='+format(player.i.infinity_red_power)},
-                    { "color": "white", "font-size": "20px",}
-                ],
-                ["display-text",
-                    function() {
-                        if(hasUpgrade("i","Infinity-Color-Red"))
-                        return 'Ia='+format(player.i.Ia)},
-                    { "color": "white", "font-size": "20px",}
                 ],
                 "blank",
                 "blank",
