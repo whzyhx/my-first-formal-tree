@@ -171,7 +171,9 @@ addLayer("i",
             },
             EFFECT()
             {
-                var eff=n(player.i.white_num).mul(player.i.extra_white).pow(player.i.f).mul(player.i.c).mul(player.i.infinity_white_power).mul(player.i.points_to_points)
+                var eff=n(player.i.white_num).mul(player.i.extra_white).pow(player.i.f).mul(player.i.c).mul(player.i.infinity_white_power)
+                if(hasUpgrade("i","Infinity-Upgrade-3-2"))
+                eff=eff.mul(player.i.points_to_points)
                 return eff
             },
             display()
