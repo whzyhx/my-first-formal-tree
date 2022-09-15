@@ -8,6 +8,7 @@ addLayer("i",
             unlocked: true,
             points: new ExpantaNum(0),
             has_ins_2_1:zero,
+            cost_1:n(100),cost_2:n(1e7),
             white_num:zero,extra_white:one,
             infinity_white_num:zero,extra_infinity_white:one,
             infinity_white_energy:zero,infinity_white_power:one,
@@ -78,11 +79,12 @@ addLayer("i",
         }
         if(player.points.lte(0))
         {
+            console.log(1)
             player.i.shield_time=player.i.shield_time.sub(n(1).mul(diff))
             player.points=n(0)
             if(player.i.shield_time.lte(0))
             {
-                player.i.shield_time=player.i.explode_time
+                player.i.shield_time=player.i.explode_time.pow(0.5)
                 player.points=n(20)
                 player.i.white_num=n(0)
                 player.i.extra_white=n(1)
@@ -145,8 +147,6 @@ addLayer("i",
             player.i.best_green=player.i.best_green.max(player.i.green_num)
             player.i.best_purple=player.i.best_purple.max(player.i.purple_num)
         }
-        if(player.i.instability_unlocked.gte(0.5))
-        onoffline=false
         player.i.time=player.i.time.add(n(1).mul(diff))
         player.i.instability_power=n(Math.sin(player.i.time))
         if(player.i.instability_power.gte(0))
@@ -209,61 +209,7 @@ addLayer("i",
         player.i.infinity_points_power=player.i.total_infinity_points.add(1).pow(n(0.2).add(player.i.infinity_red_power))
         player.i.points_to_points=n(1.25).pow(player.points.add(1).logBase(10))
     },
-    tooltip(){return '我就不<br>'+(hasUpgrade("i","Instability-Upgrade-2-1")?'你的护盾还剩 : '+format(player.i.shield_time)+'s':'')},
-    cost_1()
-    {
-        var cost=n(100)
-        var x=n(0)
-        if(hasUpgrade("i","Color-Red"))
-        {
-            x=x.add(1)
-        }
-        if(hasUpgrade("i","Color-Blue"))
-        {
-            x=x.add(1)
-        }
-        if(hasUpgrade("i","Color-Yellow"))
-        {
-            x=x.add(1)
-        }
-        if(x.eq(1))
-        {
-            cost=n(2000)
-        }
-        if(x.gt(1.5))
-        {
-            cost=n(50000)
-        }
-        cost=cost.div(player.i.infinity_points_power)
-        return cost
-    },
-    cost_2()
-    {
-        var cost=n(1e7)
-        var x=n(0)
-        if(hasUpgrade("i","Color-Orange"))
-        {
-            x=x.add(1)
-        }
-        if(hasUpgrade("i","Color-Purple"))
-        {
-            x=x.add(1)
-        }
-        if(hasUpgrade("i","Color-Green"))
-        {
-            x=x.add(1)
-        }
-        if(x.eq(1))
-        {
-            cost=n(1e8)
-        }
-        if(x.gt(1.5))
-        {
-            cost=n(5e10)
-        }
-        cost=cost.div(player.i.infinity_points_power)
-        return cost
-    },
+    tooltip(){return '我就不'},
     clickables:
     {
         "Tube-White":
@@ -1080,6 +1026,7 @@ addLayer("i",
             style(){return {"width":"600px","border-radius":"0px","background-color":"#6AA121","height":"150px",}},
             canClick(){return true},
             onClick(){
+                player.i.shield_time=player.i.explode_time.pow(0.5)
                 player.points=n(20)
                 player.i.white_num=n(0)
                 player.i.extra_white=n(1)
@@ -1130,6 +1077,31 @@ addLayer("i",
                 player.i.time=n(0)
             }
         },
+        "Tube-Red":
+        {
+            COST()
+            {
+                var need=n(50)
+                need=need.mul(n(1.2).pow(player.i.red_num)).div(player.i.infinity_points_power)
+                return need
+            },
+            EFFECT()
+            {
+                let eff=n(player.i.red_num).add(player.i.extra_red)
+                eff=eff.pow(n(0.75).mul(player.i.e)).div(2).add(1)
+                eff=n(1).div(eff)
+                player.i.a=eff
+                return eff
+            },
+            display()
+            {
+            },
+            unlocked(){return hasUpgrade("i","Color-Red")},
+            style(){return {"width":"200px","border-radius":"0px","background-color":"red","height":"150px"}},
+            canClick(){return player.points.gte(layers.i.clickables["Tube-Red"].COST())},
+            onClick(){
+            }
+        },
     },
     upgrades:
     {
@@ -1157,15 +1129,23 @@ addLayer("i",
             {
                 if(hasUpgrade("i","Color-Red"))
                 return '已解锁'
-                return "解锁 - 红色 Tube<br><br>花费:"+format(layers.i.cost_1())+"能源"
+                return "解锁 - 红色 Tube<br><br>花费:"+format(player.i.cost_1.div(player.i.infinity_points_power))+"能源"
             },
             onPurchase()
             {
-                player.points=player.points.sub(layers.i.cost_1())
+                player.points=player.points.sub(player.i.cost_1.div(player.i.infinity_points_power))
+                if(player.i.cost_1.gte(300.5) && player.i.cost_1.lte(2000.5))
+                {
+                    player.i.cost_1=n(50000)
+                }
+                if(player.i.cost_1.lte(300.5))
+                {
+                    player.i.cost_1=n(2000)
+                }
             },
             canAfford()
             {
-                return player.points.gte(layers.i.cost_1())
+                return player.points.gte(player.i.cost_1.div(player.i.infinity_points_power))
             },
             style(){return {"width":"200px","border-radius":"0px","background-color":"red","height":"150px"}},
             unlocked(){return hasUpgrade("i","Color-White")},
@@ -1177,15 +1157,23 @@ addLayer("i",
             {
                 if(hasUpgrade("i","Color-Yellow"))
                 return '已解锁'
-                return "解锁 - 黄色 Tube<br><br>花费:"+format(layers.i.cost_1())+"能源"
+                return "解锁 - 黄色 Tube<br><br>花费:"+format(player.i.cost_1.div(player.i.infinity_points_power))+"能源"
             },
             onPurchase()
             {
-                player.points=player.points.sub(layers.i.cost_1())
+                player.points=player.points.sub(player.i.cost_1.div(player.i.infinity_points_power))
+                if(player.i.cost_1.gte(300.5) && player.i.cost_1.lte(2000.5))
+                {
+                    player.i.cost_1=n(50000)
+                }
+                if(player.i.cost_1.lte(300.5))
+                {
+                    player.i.cost_1=n(2000)
+                }
             },
             canAfford()
             {
-                return player.points.gte(layers.i.cost_1())
+                return player.points.gte(player.i.cost_1.div(player.i.infinity_points_power))
             },
             style(){return {"width":"200px","border-radius":"0px","background-color":"yellow","height":"150px"}},
             unlocked(){return hasUpgrade("i","Color-White")},
@@ -1197,15 +1185,23 @@ addLayer("i",
             {
                 if(hasUpgrade("i","Color-Blue"))
                 return '已解锁'
-                return "解锁 - 蓝色 Tube<br><br>花费:"+format(layers.i.cost_1())+"能源"
+                return "解锁 - 蓝色 Tube<br><br>花费:"+format(player.i.cost_1.div(player.i.infinity_points_power))+"能源"
             },
             onPurchase()
             {
-                player.points=player.points.sub(layers.i.cost_1())
+                player.points=player.points.sub(player.i.cost_1.div(player.i.infinity_points_power))
+                if(player.i.cost_1.gte(300.5) && player.i.cost_1.lte(2000.5))
+                {
+                    player.i.cost_1=n(50000)
+                }
+                if(player.i.cost_1.lte(300.5))
+                {
+                    player.i.cost_1=n(2000)
+                }
             },
             canAfford()
             {
-                return player.points.gte(layers.i.cost_1())
+                return player.points.gte(player.i.cost_1.div(player.i.infinity_points_power))
             },
             style(){return {"width":"200px","border-radius":"0px","background-color":"lightblue","height":"150px"}},
             unlocked(){return hasUpgrade("i","Color-White")},
@@ -1217,15 +1213,23 @@ addLayer("i",
             {
                 if(hasUpgrade("i","Color-Orange"))
                 return '已解锁'
-                return "解锁 - 橙色 Tube<br><br>花费:"+format(layers.i.cost_2())+"能源"
+                return "解锁 - 橙色 Tube<br><br>花费:"+format(player.i.cost_2.div(player.i.infinity_points_power))+"能源"
             },
             onPurchase()
             {
-                player.points=player.points.sub(layers.i.cost_2())
+                player.points=player.points.sub(player.i.cost_2.div(player.i.infinity_points_power))
+                if(player.i.cost_2.gte(1e7+1) && player.i.cost_2.lte(1e8+1))
+                {
+                    player.i.cost_2=n(5e10)
+                }
+                if(player.i.cost_2.lte(1e7+1))
+                {
+                    player.i.cost_2=n(1e8)
+                }
             },
             canAfford()
             {
-                return player.points.gte(layers.i.cost_2())
+                return player.points.gte(player.i.cost_2.div(player.i.infinity_points_power))
             },
             style(){return {"width":"200px","border-radius":"0px","background-color":"orange","height":"150px"}},
             unlocked(){return hasUpgrade("i","Color-Red") && hasUpgrade("i","Color-Yellow")},
@@ -1236,15 +1240,23 @@ addLayer("i",
             {
                 if(hasUpgrade("i","Color-Purple"))
                 return '已解锁'
-                return "解锁 - 紫色 Tube<br><br>花费:"+format(layers.i.cost_2())+"能源"
+                return "解锁 - 紫色 Tube<br><br>花费:"+format(player.i.cost_2.div(player.i.infinity_points_power))+"能源"
             },
             onPurchase()
             {
-                player.points=player.points.sub(layers.i.cost_2())
+                player.points=player.points.sub(player.i.cost_2.div(player.i.infinity_points_power))
+                if(player.i.cost_2.gte(1e7+1) && player.i.cost_2.lte(1e8+1))
+                {
+                    player.i.cost_2=n(5e10)
+                }
+                if(player.i.cost_2.lte(1e7+1))
+                {
+                    player.i.cost_2=n(1e8)
+                }
             },
             canAfford()
             {
-                return player.points.gte(layers.i.cost_2())
+                return player.points.gte(player.i.cost_2.div(player.i.infinity_points_power))
             },
             style(){return {"width":"200px","border-radius":"0px","background-color":"purple","height":"150px"}},
             unlocked(){return hasUpgrade("i","Color-Red") && hasUpgrade("i","Color-Blue")},
@@ -1255,15 +1267,23 @@ addLayer("i",
             {
                 if(hasUpgrade("i","Color-Green"))
                 return '已解锁'
-                return "解锁 - 绿色 Tube<br><br>花费:"+format(layers.i.cost_2())+"能源"
+                return "解锁 - 绿色 Tube<br><br>花费:"+format(player.i.cost_2.div(player.i.infinity_points_power))+"能源"
             },
             onPurchase()
             {
-                player.points=player.points.sub(layers.i.cost_2())
+                player.points=player.points.sub(player.i.cost_2.div(player.i.infinity_points_power))
+                if(player.i.cost_2.gte(1e7+1) && player.i.cost_2.lte(1e8+1))
+                {
+                    player.i.cost_2=n(5e10)
+                }
+                if(player.i.cost_2.lte(1e7+1))
+                {
+                    player.i.cost_2=n(1e8)
+                }
             },
             canAfford()
             {
-                return player.points.gte(layers.i.cost_2())
+                return player.points.gte(player.i.cost_2.div(player.i.infinity_points_power))
             },
             style(){return {"width":"200px","border-radius":"0px","background-color":"green","height":"150px"}},
             unlocked(){return hasUpgrade("i","Color-Blue") && hasUpgrade("i","Color-Yellow")},
@@ -1299,7 +1319,7 @@ addLayer("i",
             onPurchase()
             {
                 player.i.infinity_points=player.i.infinity_points.sub(player.i.cost_infinity_1)
-                if(player.i.cost_infinity_1.lte(5000.5))
+                if(player.i.cost_infinity_1.gte(30.5) && player.i.cost_infinity_1.lte(5000.5))
                 {
                     player.i.cost_infinity_1=n(20000)
                 }
@@ -1329,7 +1349,7 @@ addLayer("i",
             onPurchase()
             {
                 player.i.infinity_points=player.i.infinity_points.sub(player.i.cost_infinity_1)
-                if(player.i.cost_infinity_1.lte(5000.5))
+                if(player.i.cost_infinity_1.gte(30.5) && player.i.cost_infinity_1.lte(5000.5))
                 {
                     player.i.cost_infinity_1=n(20000)
                 }
@@ -1359,7 +1379,7 @@ addLayer("i",
             onPurchase()
             {
                 player.i.infinity_points=player.i.infinity_points.sub(player.i.cost_infinity_1)
-                if(player.i.cost_infinity_1.lte(5000.5))
+                if(player.i.cost_infinity_1.gte(30.5) && player.i.cost_infinity_1.lte(5000.5))
                 {
                     player.i.cost_infinity_1=n(20000)
                 }
@@ -1625,6 +1645,24 @@ addLayer("i",
             canAfford()
             {
                 return player.i.explode_time.gte(19.5)
+            },
+            style(){return {"width":"300px","border-radius":"0px","height":"150px",}},
+            unlocked(){return true},
+        },
+        "Instability-Upgrade-2-2":
+        {
+            fullDisplay()
+            {
+                if(player.i.best_points.lte(50000))
+                return '解锁于 最佳能源 50000点'
+                return '可恶,它的力量太强了,我难以掌控<br>我需要一个护盾防止可能的危机<br><br>获得一个护盾,持续时间基于你的爆炸次数<br>当你的能源为负数时,会优先消耗护盾<br>如果你的护盾也破了,你的实验室仍然会爆炸'
+            },
+            onPurchase()
+            {
+            },
+            canAfford()
+            {
+                return player.i.best_points.gte(50000)
             },
             style(){return {"width":"300px","border-radius":"0px","height":"150px",}},
             unlocked(){return true},

@@ -41,7 +41,9 @@ let changelog = `<h1>更新记录:</h1><br>
 		- 增加 无尽 黄色 Tube<br><br>
 	<h3>2022.9.15 21:00</h3><br>
 		- 更多新内容<br>
-		- 增加 不稳定性-Instability<br><br>`
+		- 增加 不稳定性-Instability<br><br>
+	<h3>2022.9.15 22:30</h3><br>
+		- 修了几个bug<br><br>`
 
 let winText = `恭喜通关!您已经完成了这个游戏.`
 
