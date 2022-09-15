@@ -1077,31 +1077,6 @@ addLayer("i",
                 player.i.time=n(0)
             }
         },
-        "Tube-Red":
-        {
-            COST()
-            {
-                var need=n(50)
-                need=need.mul(n(1.2).pow(player.i.red_num)).div(player.i.infinity_points_power)
-                return need
-            },
-            EFFECT()
-            {
-                let eff=n(player.i.red_num).add(player.i.extra_red)
-                eff=eff.pow(n(0.75).mul(player.i.e)).div(2).add(1)
-                eff=n(1).div(eff)
-                player.i.a=eff
-                return eff
-            },
-            display()
-            {
-            },
-            unlocked(){return hasUpgrade("i","Color-Red")},
-            style(){return {"width":"200px","border-radius":"0px","background-color":"red","height":"150px"}},
-            canClick(){return player.points.gte(layers.i.clickables["Tube-Red"].COST())},
-            onClick(){
-            }
-        },
     },
     upgrades:
     {
