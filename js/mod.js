@@ -7,7 +7,7 @@
 	discordLink: "",
 	initialStartPoints: new ExpantaNum (20), // Used for hard resets and new players
 	
-	offlineLimit: 10,  // In hours
+	offlineLimit: 0,  // In hours
 }
 
 // Set your version in num and name
@@ -38,7 +38,10 @@ let changelog = `<h1>更新记录:</h1><br>
 		- 新增sub-sub-tab "Number"用于显示数值,避免过于冗余的界面<br><br>
 	<h3>2022.9.12 23:00</h3><br>
 		- 大幅修改了公式,重新调了平衡/tuu<br>
-		- 增加 无尽 黄色 Tube<br><br>`
+		- 增加 无尽 黄色 Tube<br><br>
+	<h3>2022.9.15 21:00</h3><br>
+		- 更多新内容<br>
+		- 增加 不稳定性-Instability<br><br>`
 
 let winText = `恭喜通关!您已经完成了这个游戏.`
 
@@ -66,11 +69,10 @@ function getPointGen() {
 // You can add non-layer related variables that should to into "player" and be saved here, along with default values
 function addedPlayerData() { return {
 }}
-
 // Display extra things at the top of the page
+var s=''
 var displayThings = [
-	`<br>Shift - 查看所有公式
-	 <br>M - 最大化 普通 Tube`
+	s,'<br>Shift - 查看所有公式<br>M - 最大化 普通 Tube'
 ]
 
 // Determines when the game "ends"

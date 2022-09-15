@@ -7,6 +7,7 @@ addLayer("i",
         return{
             unlocked: true,
             points: new ExpantaNum(0),
+            has_ins_2_1:zero,
             white_num:zero,extra_white:one,
             infinity_white_num:zero,extra_infinity_white:one,
             infinity_white_energy:zero,infinity_white_power:one,
@@ -34,6 +35,19 @@ addLayer("i",
             cost_infinity_1:n(30),
             shiftAlias:0,
             infinity_time:zero,infinity_per_s:zero,
+
+            button_click_time:zero,instability_unlocked:zero,
+            time:zero,instability_power:one,
+            best_points:zero,
+            best_white:zero,
+            best_red:zero,
+            best_yellow:zero,
+            best_blue:zero,
+            best_orange:zero,
+            best_purple:zero,
+            best_green:zero,
+            explode_time:zero,
+            shield_time:zero,
         }
     },
     color: "white",
@@ -58,7 +72,98 @@ addLayer("i",
     },
     update(diff)
     {
-        player.points=player.points.max(1)
+        if(hasUpgrade("i","Instability-Upgrade-2-1"))
+        {
+            player.i.has_ins_2_1=n(1)
+        }
+        if(player.points.lte(0))
+        {
+            player.i.shield_time=player.i.shield_time.sub(n(1).mul(diff))
+            player.points=n(0)
+            if(player.i.shield_time.lte(0))
+            {
+                player.i.shield_time=player.i.explode_time
+                player.points=n(20)
+                player.i.white_num=n(0)
+                player.i.extra_white=n(1)
+                player.i.red_num=n(0)
+                player.i.extra_red=n(0)
+                player.i.yellow_num=n(0)
+                player.i.extra_yellow=n(0)
+                player.i.blue_num=n(0)
+                player.i.extra_blue=n(0)
+                player.i.orange_num=n(0)
+                player.i.green_num=n(0)
+                player.i.purple_num=n(0)
+                player.i.infinity_white_energy=n(0)
+                player.i.infinity_red_energy=n(0)
+                player.i.infinity_yellow_energy=n(0)
+                player.i.infinity_blue_energy=n(0)
+                player.i.infinity_time=n(0)
+                player.i.infinity_white_num=n(0)
+                player.i.extra_infinity_white=n(0)
+                player.i.infinity_red_num=n(0)
+                player.i.infinity_yellow_num=n(0)
+                player.i.infinity_blue_num=n(0)
+                player.i.total_infinity_points=n(0)
+                player.i.infinity_points=n(0)
+                player.i.infinity_upgrade_1_num=n(0)
+                player.i.infinity_unlocked=n(0)
+                var upg=player.i.upgrades
+                var nwupg=[]
+                for(var i=0;i<upg.length;i++)
+                {
+                    if(
+                        upg[i]=='Instability-Upgrade-1-1' ||
+                        upg[i]=='Instability-Upgrade-1-2' ||
+                        upg[i]=='Instability-Upgrade-1-3' ||
+                        upg[i]=='Instability-Upgrade-2-1' ||
+                        upg[i]=='Instability-Upgrade-2-2' ||
+                        upg[i]=='Instability-Upgrade-2-3' ||
+                        upg[i]=='Instability-Upgrade-3-1' ||
+                        upg[i]=='Instability-Upgrade-3-2' ||
+                        upg[i]=='Instability-Upgrade-3-3'
+                    )
+                    {
+                        nwupg.push(upg[i])
+                    }
+                }
+                player.i.upgrades=nwupg
+
+                player.i.explode_time=player.i.explode_time.add(1)
+                player.i.time=n(0)
+            }
+        }
+        if(player.i.instability_unlocked.gte(0.5))
+        {
+            player.i.best_points=player.i.best_points.max(player.points)
+            player.i.best_white=player.i.best_white.max(player.i.white_num)
+            player.i.best_red=player.i.best_red.max(player.i.red_num)
+            player.i.best_yellow=player.i.best_yellow.max(player.i.yellow_num)
+            player.i.best_blue=player.i.best_blue.max(player.i.blue_num)
+            player.i.best_orange=player.i.best_orange.max(player.i.orange_num)
+            player.i.best_green=player.i.best_green.max(player.i.green_num)
+            player.i.best_purple=player.i.best_purple.max(player.i.purple_num)
+        }
+        if(player.i.instability_unlocked.gte(0.5))
+        onoffline=false
+        player.i.time=player.i.time.add(n(1).mul(diff))
+        player.i.instability_power=n(Math.sin(player.i.time))
+        if(player.i.instability_power.gte(0))
+        {
+            if(hasUpgrade("i","Instability-Upgrade-1-1"))
+            player.i.instability_power=player.i.instability_power.mul(1.5)
+            if(hasUpgrade("i","Instability-Upgrade-1-3"))
+            player.i.instability_power=player.i.instability_power.mul(player.i.time.pow(0.5))
+        }
+        if(player.i.instability_power.lte(0))
+        {
+            if(hasUpgrade("i","Instability-Upgrade-1-2"))
+            player.i.instability_power=player.i.instability_power.div(1.5)
+            if(hasUpgrade("i","Instability-Upgrade-1-3"))
+            player.i.instability_power=player.i.instability_power.mul(player.i.time.pow(0.5))
+        }
+
 	    player.i.shiftAlias=shiftDown
         if(player.points.gte(1e15))
         {
@@ -104,7 +209,7 @@ addLayer("i",
         player.i.infinity_points_power=player.i.total_infinity_points.add(1).pow(n(0.2).add(player.i.infinity_red_power))
         player.i.points_to_points=n(1.25).pow(player.points.add(1).logBase(10))
     },
-    tooltip(){return '我就不'},
+    tooltip(){return '我就不<br>'+(hasUpgrade("i","Instability-Upgrade-2-1")?'你的护盾还剩 : '+format(player.i.shield_time)+'s':'')},
     cost_1()
     {
         var cost=n(100)
@@ -174,6 +279,10 @@ addLayer("i",
                 var eff=n(player.i.white_num).mul(player.i.extra_white).pow(player.i.f).mul(player.i.c).mul(player.i.infinity_white_power)
                 if(hasUpgrade("i","Infinity-Upgrade-3-2"))
                 eff=eff.mul(player.i.points_to_points)
+                if(player.i.instability_unlocked.gte(0.5))
+                {
+                    eff=eff.mul(player.i.instability_power)
+                }
                 return eff
             },
             display()
@@ -357,7 +466,7 @@ addLayer("i",
                         +'<br>已购买:'+format(player.i.blue_num)+extra
             },
             unlocked(){return hasUpgrade("i","Color-Blue")},
-            style(){return {"width":"200px","border-radius":"0px","background-color":"blue","height":"150px"}},
+            style(){return {"width":"200px","border-radius":"0px","background-color":"lightblue","height":"150px"}},
             canClick(){return player.points.gte(layers.i.clickables["Tube-Blue"].COST())},
             onClick(){
                 if(player.points.div(layers.i.clickables["Tube-Blue"].COST()).lte(100))
@@ -582,7 +691,7 @@ addLayer("i",
             onClick(){
                 player.i.infinity_points=player.i.infinity_points.add(layers.i.clickables["Infinity"].GAIN(player.points))
                 player.i.total_infinity_points=player.i.total_infinity_points.add(layers.i.clickables["Infinity"].GAIN(player.points))
-                player.points=n(10)
+                player.points=n(20)
                 player.i.white_num=n(0)
                 player.i.extra_white=n(1)
                 player.i.red_num=n(0)
@@ -837,7 +946,7 @@ addLayer("i",
             },
             unlocked(){return hasUpgrade("i","Infinity-Color-Blue")},
             style(){
-                return {"width":"200px","border-radius":"0px","background-color":"blue","height":"200px",
+                return {"width":"200px","border-radius":"0px","background-color":"lightblue","height":"200px",
                         "border-width":"10px","border-color":player.i.sss}},
             canClick(){return player.i.infinity_points.gte(layers.i.clickables["Infinity-Tube-Blue"].COST())},
             onClick(){
@@ -885,18 +994,140 @@ addLayer("i",
                 player.i.infinity_upgrade_1_num=player.i.infinity_upgrade_1_num.add(1)
             }
         },
-        "weiwandaixu":
+        "BUTTON!!!":
         {
             display()
             {
-                return '未完待续'
+                if(player.i.button_click_time.gte(18.5))return '<h2>Do you understand?<br>(HAHA)I will keep my eyes on you<br>And,Good Luck<br>Hope you will not let me down'
+                if(player.i.button_click_time.gte(17.5))return '<h2>Do you understand?<br>(HAHA)I will keep my eyes on you'
+                if(player.i.button_click_time.gte(16.5))return '<h2>Do you understand?'
+                if(player.i.button_click_time.gte(15.5))return "<h2>You won't receive the things that you want<br>Now,listen to me<br>You can add _____________"
+                if(player.i.button_click_time.gte(14.5))return "<h2>You won't receive the things that you want<br>Now,listen to me"
+                if(player.i.button_click_time.gte(13.5))return "<h2>You won't receive the things that you want"
+                if(player.i.button_click_time.gte(12.5))return "<h2>So,If you keep doing your tree like this<br>Then it's just another shit"
+                if(player.i.button_click_time.gte(11.5))return '<h2>So,If you keep doing your tree like this'
+                if(player.i.button_click_time.gte(10.5))return '<h2>So,'
+                if(player.i.button_click_time.gte(9.5))return '<h2>You know,kid?<br>People like new things<br>Not the similar things over and over again!'
+                if(player.i.button_click_time.gte(8.5))return '<h2>You know,kid?<br>People like new things.'
+                if(player.i.button_click_time.gte(7.5))return '<h2>You know,kid?'
+                if(player.i.button_click_time.gte(6.5))return '<h2>And I tell you that your game is too NORMAL!<br>Nobody wants to play it!'
+                if(player.i.button_click_time.gte(5.5))return '<h2>And I tell you that your game is too NORMAL!'
+                if(player.i.button_click_time.gte(4.5))return '<h2>Do you hear me?<br>I AM THE GOD!!'
+                if(player.i.button_click_time.gte(3.5))return '<h2>Do you hear me?'
+                if(player.i.button_click_time.gte(2.5))return '<h1>HEY!!!!!!!!!!!!!!!!!!!!'
+                if(player.i.button_click_time.gte(1.5))return '<h2>Hey!Hey!Hey!'
+                if(player.i.button_click_time.gte(0.5))return '<h3>Hey!Hey!'
+                return '<h4>Hey!'
             },
             unlocked(){return hasUpgrade("i","Infinity-Color-Orange") ||
                               hasUpgrade("i","Infinity-Color-Green") ||
-                              hasUpgrade("i","Infinity-Color-Purple")},
+                              hasUpgrade("i","Infinity-Color-Purple") && player.i.button_click_time.lte(19)},
             style(){return {"width":"600px","border-radius":"0px","background-color":"white","height":"150px",}},
             canClick(){return true},
             onClick(){
+                player.i.button_click_time=player.i.button_click_time.add(1)
+            }
+        },
+        "Button-to-unlock":
+        {
+            display()
+            {
+                return '解锁 Instability-不稳定性<br><br>注意:这会重置你之前所有的东西但是<br>你会解锁更多很有趣的玩法'
+            },
+            unlocked(){return player.i.button_click_time.gte(19) && player.i.instability_unlocked.lte(0.5)},
+            style(){return {"width":"600px","border-radius":"0px","background-color":"#6AA121","height":"150px",}},
+            canClick(){return true},
+            onClick(){
+                player.points=n(20)
+                player.i.white_num=n(0)
+                player.i.extra_white=n(1)
+                player.i.red_num=n(0)
+                player.i.extra_red=n(0)
+                player.i.yellow_num=n(0)
+                player.i.extra_yellow=n(0)
+                player.i.blue_num=n(0)
+                player.i.extra_blue=n(0)
+                player.i.orange_num=n(0)
+                player.i.green_num=n(0)
+                player.i.purple_num=n(0)
+                player.i.infinity_white_energy=n(0)
+                player.i.infinity_red_energy=n(0)
+                player.i.infinity_yellow_energy=n(0)
+                player.i.infinity_blue_energy=n(0)
+                player.i.infinity_time=n(0)
+                player.i.infinity_white_num=n(0)
+                player.i.extra_infinity_white=n(0)
+                player.i.infinity_red_num=n(0)
+                player.i.infinity_yellow_num=n(0)
+                player.i.infinity_blue_num=n(0)
+                player.i.total_infinity_points=n(0)
+                player.i.infinity_points=n(0)
+                player.i.infinity_upgrade_1_num=n(0)
+                player.i.infinity_unlocked=n(0)
+                player.i.upgrades=[]
+
+                player.i.instability_unlocked=n(1)
+                player.i.time=n(0)
+            }
+        },
+        "Button-To-Reset":
+        {
+            display()
+            {
+                return '强制重置<br><br>注:没有任何收益'
+            },
+            unlocked(){return true},
+            style(){return {"width":"600px","border-radius":"0px","background-color":"#6AA121","height":"150px",}},
+            canClick(){return true},
+            onClick(){
+                player.points=n(20)
+                player.i.white_num=n(0)
+                player.i.extra_white=n(1)
+                player.i.red_num=n(0)
+                player.i.extra_red=n(0)
+                player.i.yellow_num=n(0)
+                player.i.extra_yellow=n(0)
+                player.i.blue_num=n(0)
+                player.i.extra_blue=n(0)
+                player.i.orange_num=n(0)
+                player.i.green_num=n(0)
+                player.i.purple_num=n(0)
+                player.i.infinity_white_energy=n(0)
+                player.i.infinity_red_energy=n(0)
+                player.i.infinity_yellow_energy=n(0)
+                player.i.infinity_blue_energy=n(0)
+                player.i.infinity_time=n(0)
+                player.i.infinity_white_num=n(0)
+                player.i.extra_infinity_white=n(0)
+                player.i.infinity_red_num=n(0)
+                player.i.infinity_yellow_num=n(0)
+                player.i.infinity_blue_num=n(0)
+                player.i.total_infinity_points=n(0)
+                player.i.infinity_points=n(0)
+                player.i.infinity_upgrade_1_num=n(0)
+                player.i.infinity_unlocked=n(0)
+                var upg=player.i.upgrades
+                var nwupg=[]
+                for(var i=0;i<upg.length;i++)
+                {
+                    if(
+                        upg[i]=='Instability-Upgrade-1-1' ||
+                        upg[i]=='Instability-Upgrade-1-2' ||
+                        upg[i]=='Instability-Upgrade-1-3' ||
+                        upg[i]=='Instability-Upgrade-2-1' ||
+                        upg[i]=='Instability-Upgrade-2-2' ||
+                        upg[i]=='Instability-Upgrade-2-3' ||
+                        upg[i]=='Instability-Upgrade-3-1' ||
+                        upg[i]=='Instability-Upgrade-3-2' ||
+                        upg[i]=='Instability-Upgrade-3-3'
+                    )
+                    {
+                        nwupg.push(upg[i])
+                    }
+                }
+                player.i.upgrades=nwupg
+
+                player.i.time=n(0)
             }
         },
     },
@@ -976,7 +1207,7 @@ addLayer("i",
             {
                 return player.points.gte(layers.i.cost_1())
             },
-            style(){return {"width":"200px","border-radius":"0px","background-color":"blue","height":"150px"}},
+            style(){return {"width":"200px","border-radius":"0px","background-color":"lightblue","height":"150px"}},
             unlocked(){return hasUpgrade("i","Color-White")},
             branches:["Color-Green","Color-Purple"],
         },
@@ -1142,7 +1373,7 @@ addLayer("i",
                 return player.i.infinity_points.gte(player.i.cost_infinity_1)
             },
             style(){
-                return {"width":"200px","border-radius":"0px","background-color":"blue","height":"150px",
+                return {"width":"200px","border-radius":"0px","background-color":"lightblue","height":"150px",
                         "border-width":"10px","border-color":player.i.sss}},
             unlocked(){return hasUpgrade("i","Infinity-Color-White")},
             branches:["Infinity-Color-Green","Infinity-Color-Purple"],
@@ -1326,6 +1557,78 @@ addLayer("i",
                         "border-width":"10px","border-color":player.i.sss}},
             unlocked(){return hasUpgrade("i","Infinity-Upgrade-2-1") && hasUpgrade("i","Infinity-Upgrade-2-2") && hasUpgrade("i","Infinity-Upgrade-2-3")},
         },
+        "Instability-Upgrade-1-1":
+        {
+            fullDisplay()
+            {
+                if(player.i.explode_time.lte(1.5))
+                return '解锁于 爆炸次数2次'
+                return '哦天,这不稳定试剂几乎吃掉了我的所有能源<br>我的实验室已经被弄的一团糟<br>是时候优化一下了<br><br>当你的不稳定能量为正数时,额外获得一个1.5倍数'
+            },
+            onPurchase()
+            {
+            },
+            canAfford()
+            {
+                return player.i.explode_time.gte(1.5)
+            },
+            style(){return {"width":"200px","border-radius":"0px","height":"150px",}},
+            unlocked(){return true},
+        },
+        "Instability-Upgrade-1-2":
+        {
+            fullDisplay()
+            {
+                if(player.i.best_white.lte(3.5))
+                return '解锁于 最好 白色 Tube 大于4'
+                return '嗯...<br>它已经能为我提供增益了<br>但是我想继续优化,它吃的太多了<br><br>当你的不稳定能量为负数时,将除以1.5'
+            },
+            onPurchase()
+            {
+            },
+            canAfford()
+            {
+                return player.i.best_white.gte(3.5)
+            },
+            style(){return {"width":"200px","border-radius":"0px","height":"150px",}},
+            unlocked(){return true},
+        },
+        "Instability-Upgrade-1-3":
+        {
+            fullDisplay()
+            {
+                if(player.i.best_white.lte(9.5))
+                return '解锁于 最好 白色 Tube 大于10'
+                return '膨大<br>随着时间的流逝,不稳定试剂的力量逐渐强大<br><br>不稳定力量乘以时间的平方根'
+            },
+            onPurchase()
+            {
+            },
+            canAfford()
+            {
+                return player.i.best_white.gte(9.5)
+            },
+            style(){return {"width":"200px","border-radius":"0px","height":"150px",}},
+            unlocked(){return true},
+        },
+        "Instability-Upgrade-2-1":
+        {
+            fullDisplay()
+            {
+                if(player.i.explode_time.lte(19.5))
+                return '解锁于 爆炸次数20次'
+                return '可恶,它的力量太强了,我难以掌控<br>我需要一个护盾防止可能的危机<br><br>获得一个护盾,持续时间基于你的爆炸次数<br>当你的能源为负数时,会优先消耗护盾<br>如果你的护盾也破了,你的实验室仍然会爆炸'
+            },
+            onPurchase()
+            {
+            },
+            canAfford()
+            {
+                return player.i.explode_time.gte(19.5)
+            },
+            style(){return {"width":"300px","border-radius":"0px","height":"150px",}},
+            unlocked(){return true},
+        },
     },
 	microtabs:
     {
@@ -1441,7 +1744,8 @@ addLayer("i",
                     "blank",
                     "blank",
                     ["row",[["upgrade","Infinity-Color-Orange"],["upgrade","Infinity-Color-Purple"],["upgrade","Infinity-Color-Green"],]],
-                    ["row",[["clickable","weiwandaixu"],]],
+                    ["row",[["clickable","BUTTON!!!"],]],
+                    ["row",[["clickable","Button-to-unlock"],]],
 				]
 			},
 			"Upgrade":{
@@ -1555,6 +1859,100 @@ addLayer("i",
                 ]
             }
 		},
+        "Instability":
+        {
+            "Upgrade":{
+                buttonStyle()
+                {
+                    return {"border-radius":"0px","border-color":"#6AA121"}
+                },
+                content:[
+                    "blank",
+                    ["row",[["upgrade","Instability-Upgrade-1-1"],
+                            ["upgrade","Instability-Upgrade-1-2"],
+                            ["upgrade","Instability-Upgrade-1-3"],]],
+                    ["row",[["upgrade","Instability-Upgrade-2-1"],
+                            ["upgrade","Instability-Upgrade-2-2"],
+                            ["upgrade","Instability-Upgrade-2-3"],]],
+                    ["row",[["upgrade","Instability-Upgrade-3-1"],
+                            ["upgrade","Instability-Upgrade-3-2"],
+                            ["upgrade","Instability-Upgrade-3-3"],]],
+                ]
+            },
+            "Number":{
+                buttonStyle()
+                {
+                    return {"border-radius":"0px","border-color":"#6AA121"}
+                },
+                content:[
+                    "blank",
+                    ["display-text",
+                        function() {
+                            return '你的实验室已经爆炸了 '+format(player.i.explode_time)+' 次'
+                        },
+                        { "color": "white", "font-size": "24px",}
+                    ],
+                    ["display-text",
+                        function() {
+                            return '你最好的能源是 '+format(player.i.best_points)+' 点'
+                        },
+                        { "color": "white", "font-size": "24px",}
+                    ],
+                    ["display-text",
+                        function() {
+                            return '你最好的 白色 Tube 是 '+format(player.i.best_white)+' 个'
+                        },
+                        { "color": "white", "font-size": "24px",}
+                    ],
+                    ["display-text",
+                        function() {
+                            return '你最好的 红色 Tube 是 '+format(player.i.best_red)+' 个'
+                        },
+                        { "color": "white", "font-size": "24px",}
+                    ],
+                    ["display-text",
+                        function() {
+                            return '你最好的 黄色 Tube 是 '+format(player.i.best_yellow)+' 个'
+                        },
+                        { "color": "white", "font-size": "24px",}
+                    ],
+                    ["display-text",
+                        function() {
+                            return '你最好的 蓝色 Tube 是 '+format(player.i.best_blue)+' 个'
+                        },
+                        { "color": "white", "font-size": "24px",}
+                    ],
+                    ["display-text",
+                        function() {
+                            return '你最好的 橙色 Tube 是 '+format(player.i.best_orange)+' 个'
+                        },
+                        { "color": "white", "font-size": "24px",}
+                    ],
+                    ["display-text",
+                        function() {
+                            return '你最好的 紫色 Tube 是 '+format(player.i.best_purple)+' 个'
+                        },
+                        { "color": "white", "font-size": "24px",}
+                    ],
+                    ["display-text",
+                        function() {
+                            return '你最好的 绿色 Tube 是 '+format(player.i.best_green)+' 个'
+                        },
+                        { "color": "white", "font-size": "24px",}
+                    ],
+                ]
+            },
+            "Reset":{
+                buttonStyle()
+                {
+                    return {"border-radius":"0px","border-color":"#6AA121"}
+                },
+                content:[
+                    "blank",
+                    ["row",[["clickable","Button-To-Reset"]]],
+                ]
+            },
+		},
 	},
     hotkeys: [
         {
@@ -1612,6 +2010,51 @@ addLayer("i",
                 ["row",[["clickable","Infinity"]]],
                 "blank",
                 ["microtabs","Infinity",{'border-width':'0px'}],
+            ],
+        },
+        "Instability":
+        {
+            unlocked(){return player.i.instability_unlocked.gte(0.5)},
+            buttonStyle()
+            {
+                return {"border-radius":"0px","border-color":"#6AA121"}
+            },
+            content:[
+                "blank",
+                ["display-text",
+                    function() {
+                        return '到现在,已经过去了 T = '+format(player.i.time)+' s'
+                    },
+                    { "color": "white", "font-size": "24px",}
+                ],
+                ["display-text",
+                    function() {
+                        return '因为<text style="color:#6AA121">不稳定</text>,你的能源生产获得一个倍数<br>当前 : x'+format(player.i.instability_power)
+                    },
+                    { "color": "white", "font-size": "24px",}
+                ],
+                "blank",
+                ["display-text",
+                    function() {
+                        var formula_1='sin(T)',formula_2='sin(T)'
+                        if(hasUpgrade("i","Instability-Upgrade-1-1"))formula_1=formula_1+'*1.5'
+                        if(hasUpgrade("i","Instability-Upgrade-1-3"))formula_1=formula_1+'*T<sup>0.5</sup>'
+                        if(hasUpgrade("i","Instability-Upgrade-1-2"))formula_2=formula_2+'/1.5'
+                        if(hasUpgrade("i","Instability-Upgrade-1-3"))formula_2=formula_2+'*T<sup>0.5</sup>'
+                        return     '当你的不稳定能量为正数时 , 公式 : '+formula_1
+                              +'<br>当你的不稳定能量为负数时 , 公式 : '+formula_2
+                    },
+                    { "color": "white", "font-size": "24px",}
+                ],
+                "blank",
+                ["display-text",
+                    function() {
+                        return '如果,你的能源变成了负数,那么...'
+                    },
+                    { "color": "red", "font-size": "24px",}
+                ],
+                "blank",
+                ["microtabs","Instability",{'border-width':'0px'}],
             ],
         },
         'Image':
