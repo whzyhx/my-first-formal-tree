@@ -8,7 +8,7 @@ addLayer("i",
             unlocked: true,
             points: new ExpantaNum(0),
             has_ins_2_1:zero,
-            cost_1:n(100),cost_2:n(1e7),
+            cost_1:n(50),cost_2:n(1e7),
             white_num:zero,extra_white:one,
             infinity_white_num:zero,extra_infinity_white:one,
             infinity_white_energy:zero,infinity_white_power:one,
@@ -77,11 +77,21 @@ addLayer("i",
         {
             player.i.has_ins_2_1=n(1)
         }
-        if(player.points.lte(0))
+        if(player.points.lte(-0.001) || player.i.infinity_points.lte(-0.001) || player.i.total_infinity_points.lte(-0.001)
+        || player.i.infinity_white_energy.lte(-0.001)
+        || player.i.infinity_red_energy.lte(-0.001)
+        || player.i.infinity_yellow_energy.lte(-0.001)
+        || player.i.infinity_blue_energy.lte(-0.001)
+        )
         {
-            console.log(1)
             player.i.shield_time=player.i.shield_time.sub(n(1).mul(diff))
-            player.points=n(0)
+            player.points=player.points.max(0)
+            player.i.infinity_points=player.i.infinity_points.max(0)
+            player.i.total_infinity_points=player.i.total_infinity_points.max(0)
+            player.i.infinity_white_energy=player.i.infinity_white_energy.max(0)
+            player.i.infinity_red_energy=player.i.infinity_red_energy.max(0)
+            player.i.infinity_yellow_energy=player.i.infinity_yellow_energy.max(0)
+            player.i.infinity_blue_energy=player.i.infinity_blue_energy.max(0)
             if(player.i.shield_time.lte(0))
             {
                 player.i.shield_time=player.i.explode_time.pow(0.5)
@@ -97,6 +107,9 @@ addLayer("i",
                 player.i.orange_num=n(0)
                 player.i.green_num=n(0)
                 player.i.purple_num=n(0)
+                player.i.cost_1=n(50)
+                player.i.cost_2=n(5e6)
+                player.i.cost_infinity_1=n(30)
                 player.i.infinity_white_energy=n(0)
                 player.i.infinity_red_energy=n(0)
                 player.i.infinity_yellow_energy=n(0)
@@ -111,6 +124,7 @@ addLayer("i",
                 player.i.infinity_points=n(0)
                 player.i.infinity_upgrade_1_num=n(0)
                 player.i.infinity_unlocked=n(0)
+                player.i.extra_infinity_white=n(1)
                 var upg=player.i.upgrades
                 var nwupg=[]
                 for(var i=0;i<upg.length;i++)
@@ -151,17 +165,27 @@ addLayer("i",
         player.i.instability_power=n(Math.sin(player.i.time))
         if(player.i.instability_power.gte(0))
         {
+            var pw=n(0.5)
+            if(hasUpgrade("i","Instability-Upgrade-2-2"))
+            {
+                pw=pw.add(layers.i.upgrades["Instability-Upgrade-2-2"].EFFECT())
+            }
             if(hasUpgrade("i","Instability-Upgrade-1-1"))
             player.i.instability_power=player.i.instability_power.mul(1.5)
             if(hasUpgrade("i","Instability-Upgrade-1-3"))
-            player.i.instability_power=player.i.instability_power.mul(player.i.time.pow(0.5))
+            player.i.instability_power=player.i.instability_power.mul(player.i.time.pow(pw))
         }
         if(player.i.instability_power.lte(0))
         {
+            var pw=n(0.5)
+            if(hasUpgrade("i","Instability-Upgrade-2-2"))
+            {
+                pw=pw.sub(layers.i.upgrades["Instability-Upgrade-2-2"].EFFECT())
+            }
             if(hasUpgrade("i","Instability-Upgrade-1-2"))
             player.i.instability_power=player.i.instability_power.div(1.5)
             if(hasUpgrade("i","Instability-Upgrade-1-3"))
-            player.i.instability_power=player.i.instability_power.mul(player.i.time.pow(0.5))
+            player.i.instability_power=player.i.instability_power.mul(player.i.time.pow(pw))
         }
 
 	    player.i.shiftAlias=shiftDown
@@ -604,11 +628,19 @@ addLayer("i",
         {
             GAIN(x)
             {
+                if(n(x).lte(1e15))
+                {
+                    return n(0)
+                }
                 var gain=n(x)
                 var xx=n(10)
                 if(hasUpgrade("i","Infinity-Upgrade-2-3"))xx=n(2)
                 gain=gain.div(1e14).logBase(xx).mul(layers.i.clickables["Infinity-Upgrade-1"].EFFECT())
-                gain=gain.max(0).floor()
+                if(player.i.instability_unlocked.gte(0.5))
+                gain=gain.mul(player.i.instability_power)
+                if(player.i.instability_unlocked.lte(0.5))
+                gain=gain.max(0)
+                gain=gain.floor()
                 return gain
             },
             NEED(x)
@@ -616,7 +648,8 @@ addLayer("i",
                 var need=n(1e14)
                 var xx=n(10)
                 if(hasUpgrade("i","Infinity-Upgrade-2-3"))xx=n(2)
-                need=need.mul(xx.pow(n(x).div(layers.i.clickables["Infinity-Upgrade-1"].EFFECT())))
+                need=need.mul(xx.pow(n(x).div(layers.i.clickables["Infinity-Upgrade-1"].EFFECT())
+                                         .div(player.i.instability_unlocked.gte(0.5)?player.i.instability_power:n(1))))
                 return need
             },
             display()
@@ -695,6 +728,8 @@ addLayer("i",
             {
                 var eff=n(player.i.infinity_white_num).mul(player.i.extra_infinity_white)
                 eff=eff.pow(2).mul(player.i.Ic)
+                if(player.i.instability_unlocked.gte(0.5))
+                eff=eff.mul(player.i.instability_power)
                 return eff
             },
             display()
@@ -749,6 +784,8 @@ addLayer("i",
             {
                 var eff=n(player.i.infinity_red_num)
                 eff=eff.pow(1.5)
+                if(player.i.instability_unlocked.gte(0.5))
+                eff=eff.mul(player.i.instability_power)
                 return eff
             },
             EFFECT()
@@ -809,6 +846,8 @@ addLayer("i",
             {
                 var eff=n(player.i.infinity_yellow_num)
                 eff=eff.pow(1.5)
+                if(player.i.instability_unlocked.gte(0.5))
+                eff=eff.mul(player.i.instability_power)
                 return eff
             },
             EFFECT()
@@ -867,6 +906,8 @@ addLayer("i",
             {
                 var eff=n(player.i.infinity_blue_num)
                 eff=eff.pow(1.5)
+                if(player.i.instability_unlocked.gte(0.5))
+                eff=eff.mul(player.i.instability_power)
                 return eff
             },
             EFFECT()
@@ -984,6 +1025,10 @@ addLayer("i",
             style(){return {"width":"600px","border-radius":"0px","background-color":"#6AA121","height":"150px",}},
             canClick(){return true},
             onClick(){
+                player.i.extra_infinity_white=n(1)
+                player.i.cost_1=n(50)
+                player.i.cost_2=n(5e6)
+                player.i.cost_infinity_1=n(30)
                 player.points=n(20)
                 player.i.white_num=n(0)
                 player.i.extra_white=n(1)
@@ -1026,6 +1071,10 @@ addLayer("i",
             style(){return {"width":"600px","border-radius":"0px","background-color":"#6AA121","height":"150px",}},
             canClick(){return true},
             onClick(){
+                player.i.extra_infinity_white=n(1)
+                player.i.cost_1=n(50)
+                player.i.cost_2=n(5e6)
+                player.i.cost_infinity_1=n(30)
                 player.i.shield_time=player.i.explode_time.pow(0.5)
                 player.points=n(20)
                 player.i.white_num=n(0)
@@ -1109,13 +1158,13 @@ addLayer("i",
             onPurchase()
             {
                 player.points=player.points.sub(player.i.cost_1.div(player.i.infinity_points_power))
-                if(player.i.cost_1.gte(300.5) && player.i.cost_1.lte(2000.5))
+                if(player.i.cost_1.gte(50.5) && player.i.cost_1.lte(1000.5))
                 {
-                    player.i.cost_1=n(50000)
+                    player.i.cost_1=n(25000)
                 }
-                if(player.i.cost_1.lte(300.5))
+                if(player.i.cost_1.lte(50.5))
                 {
-                    player.i.cost_1=n(2000)
+                    player.i.cost_1=n(1000)
                 }
             },
             canAfford()
@@ -1137,13 +1186,13 @@ addLayer("i",
             onPurchase()
             {
                 player.points=player.points.sub(player.i.cost_1.div(player.i.infinity_points_power))
-                if(player.i.cost_1.gte(300.5) && player.i.cost_1.lte(2000.5))
+                if(player.i.cost_1.gte(50.5) && player.i.cost_1.lte(1000.5))
                 {
-                    player.i.cost_1=n(50000)
+                    player.i.cost_1=n(25000)
                 }
-                if(player.i.cost_1.lte(300.5))
+                if(player.i.cost_1.lte(50.5))
                 {
-                    player.i.cost_1=n(2000)
+                    player.i.cost_1=n(1000)
                 }
             },
             canAfford()
@@ -1165,13 +1214,13 @@ addLayer("i",
             onPurchase()
             {
                 player.points=player.points.sub(player.i.cost_1.div(player.i.infinity_points_power))
-                if(player.i.cost_1.gte(300.5) && player.i.cost_1.lte(2000.5))
+                if(player.i.cost_1.gte(50.5) && player.i.cost_1.lte(1000.5))
                 {
-                    player.i.cost_1=n(50000)
+                    player.i.cost_1=n(25000)
                 }
-                if(player.i.cost_1.lte(300.5))
+                if(player.i.cost_1.lte(50.5))
                 {
-                    player.i.cost_1=n(2000)
+                    player.i.cost_1=n(1000)
                 }
             },
             canAfford()
@@ -1193,13 +1242,13 @@ addLayer("i",
             onPurchase()
             {
                 player.points=player.points.sub(player.i.cost_2.div(player.i.infinity_points_power))
-                if(player.i.cost_2.gte(1e7+1) && player.i.cost_2.lte(1e8+1))
+                if(player.i.cost_2.gte(5e6+1) && player.i.cost_2.lte(5e7+1))
                 {
-                    player.i.cost_2=n(5e10)
+                    player.i.cost_2=n(2.5e10)
                 }
-                if(player.i.cost_2.lte(1e7+1))
+                if(player.i.cost_2.lte(5e6+1))
                 {
-                    player.i.cost_2=n(1e8)
+                    player.i.cost_2=n(5e7)
                 }
             },
             canAfford()
@@ -1220,13 +1269,13 @@ addLayer("i",
             onPurchase()
             {
                 player.points=player.points.sub(player.i.cost_2.div(player.i.infinity_points_power))
-                if(player.i.cost_2.gte(1e7+1) && player.i.cost_2.lte(1e8+1))
+                if(player.i.cost_2.gte(5e6+1) && player.i.cost_2.lte(5e7+1))
                 {
-                    player.i.cost_2=n(5e10)
+                    player.i.cost_2=n(2.5e10)
                 }
-                if(player.i.cost_2.lte(1e7+1))
+                if(player.i.cost_2.lte(5e6+1))
                 {
-                    player.i.cost_2=n(1e8)
+                    player.i.cost_2=n(5e7)
                 }
             },
             canAfford()
@@ -1247,13 +1296,13 @@ addLayer("i",
             onPurchase()
             {
                 player.points=player.points.sub(player.i.cost_2.div(player.i.infinity_points_power))
-                if(player.i.cost_2.gte(1e7+1) && player.i.cost_2.lte(1e8+1))
+                if(player.i.cost_2.gte(5e6+1) && player.i.cost_2.lte(5e7+1))
                 {
-                    player.i.cost_2=n(5e10)
+                    player.i.cost_2=n(2.5e10)
                 }
-                if(player.i.cost_2.lte(1e7+1))
+                if(player.i.cost_2.lte(5e6+1))
                 {
-                    player.i.cost_2=n(1e8)
+                    player.i.cost_2=n(5e7)
                 }
             },
             canAfford()
@@ -1626,11 +1675,25 @@ addLayer("i",
         },
         "Instability-Upgrade-2-2":
         {
+            EFFECT()
+            {
+                var eff=player.i.best_points
+                eff=eff.add(1).logBase(10).div(100)
+                eff=eff.min(0.1)
+                return eff
+            },
             fullDisplay()
             {
                 if(player.i.best_points.lte(50000))
                 return '解锁于 最佳能源 50000点'
-                return '可恶,它的力量太强了,我难以掌控<br>我需要一个护盾防止可能的危机<br><br>获得一个护盾,持续时间基于你的爆炸次数<br>当你的能源为负数时,会优先消耗护盾<br>如果你的护盾也破了,你的实验室仍然会爆炸'
+                var s=''
+                if(layers.i.upgrades["Instability-Upgrade-2-2"].EFFECT().gte(0.099))
+                {
+                    s='(已达硬上限)'
+                }
+                var formula=''
+                if(player.i.shiftAlias)formula='FT = min(0.1,log<sub>10</sub>BP/100)'
+                return '指数偏移<br>强大的能源似乎可以压制住不稳定试剂<br>我可以进一步控制它了<br><br>一部分负面因子被转移到正面因子上(基于你的最好能源)<br>'+formula+'<br>当前 FT = '+format(layers.i.upgrades["Instability-Upgrade-2-2"].EFFECT())+s
             },
             onPurchase()
             {
@@ -2051,9 +2114,13 @@ addLayer("i",
                     function() {
                         var formula_1='sin(T)',formula_2='sin(T)'
                         if(hasUpgrade("i","Instability-Upgrade-1-1"))formula_1=formula_1+'*1.5'
-                        if(hasUpgrade("i","Instability-Upgrade-1-3"))formula_1=formula_1+'*T<sup>0.5</sup>'
+                        if(hasUpgrade("i","Instability-Upgrade-1-3"))formula_1=formula_1+'*T<sup>0.5'
+                        if(hasUpgrade("i","Instability-Upgrade-2-2"))formula_1=formula_1+'+FT'
+                        formula_1=formula_1+'</sup>'
                         if(hasUpgrade("i","Instability-Upgrade-1-2"))formula_2=formula_2+'/1.5'
-                        if(hasUpgrade("i","Instability-Upgrade-1-3"))formula_2=formula_2+'*T<sup>0.5</sup>'
+                        if(hasUpgrade("i","Instability-Upgrade-1-3"))formula_2=formula_2+'*T<sup>0.5'
+                        if(hasUpgrade("i","Instability-Upgrade-2-2"))formula_2=formula_2+'-FT'
+                        formula_2=formula_2+'</sup>'
                         return     '当你的不稳定能量为正数时 , 公式 : '+formula_1
                               +'<br>当你的不稳定能量为负数时 , 公式 : '+formula_2
                     },
