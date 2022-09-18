@@ -43,7 +43,13 @@ let changelog = `<h1>更新记录:</h1><br>
 		- 更多新内容<br>
 		- 增加 不稳定性-Instability<br><br>
 	<h3>2022.9.15 22:30</h3><br>
-		- 修了几个bug<br><br>`
+		- 修了几个bug<br><br>
+	<h3>2022.9.17 21:00</h3><br>
+		- 不稳定性不再重置无尽<br>
+		- 为不稳定性增加更多内容<br><br>
+	<h3>2022.9.18 23:00</h3><br>
+		- 增加 不稳定 Tube<br>
+		- 增加6个不稳定能源升级<br><br>`
 
 let winText = `恭喜通关!您已经完成了这个游戏.`
 
@@ -72,9 +78,12 @@ function getPointGen() {
 function addedPlayerData() { return {
 }}
 // Display extra things at the top of the page
-var s=''
+var s=()=>{
+	return '<br><h2>'+(hasUpgrade("i","Instability-Upgrade-2-1")?'你的护盾还剩 : '+format(player.i.shield_time)+'s':'')
+	+'</h2><br><br>Shift - 查看所有公式<br>M - 最大化 普通 Tube'
+}
 var displayThings = [
-	s,'<br>Shift - 查看所有公式<br>M - 最大化 普通 Tube'
+	s
 ]
 
 // Determines when the game "ends"
