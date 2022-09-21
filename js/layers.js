@@ -199,11 +199,11 @@ addLayer("i",
         player.i.extra_blue=player.i.extra_blue.add(layers.i.clickables["Tube-Green"].PRODUCE().mul(diff))
 
         //infinity
-
+        var x=
         player.i.infinity_white_power=n(2).mul(player.i.infinity_blue_power)
                     .pow(player.i.infinity_white_energy.pow(n(0.2).add(hasUpgrade("i","Infinity-Upgrade-2-2")?0.05:0)
-                    .div(player.i.infinity_white_energy.add(10).logBase(10).add(1).logBase(6).max(1))))
-        player.i.infinity_red_power=n(1).add(n(0.2).div(player.i.infinity_red_energy.add(1).logBase(100))).pow(player.i.infinity_red_energy.pow(0.25)).div(10)
+                    .div(player.i.infinity_white_energy.add(1).logBase(100).max(1))))
+        player.i.infinity_red_power=n(1.5).pow(player.i.infinity_red_energy.add(1).logBase(10)).div(3)
         player.i.infinity_yellow_power=n(10).pow(player.i.infinity_yellow_energy.pow(0.2))
         player.i.infinity_blue_power=n(1.05).pow(player.i.infinity_blue_energy.pow(0.2))
 
@@ -221,7 +221,7 @@ addLayer("i",
             COST()
             {
                 var need=n(10)
-                need=need.mul(n(1.1).pow(player.i.white_num.pow(player.i.d).mul(player.i.a))).div(player.i.infinity_points_power)
+                need=need.mul(n(1.1).pow(player.i.white_num.pow(player.i.d).div(player.i.a))).div(player.i.infinity_points_power)
                 return need
             },
             EFFECT()
@@ -241,7 +241,7 @@ addLayer("i",
             {
                 var formula_1='<br>价格公式:10*1.1<sup>x'
                 if(hasUpgrade("i","Color-Orange"))formula_1=formula_1+'<sup>d</sup>'
-                if(hasUpgrade("i","Color-Red"))formula_1=formula_1+'*a</sup>'
+                if(hasUpgrade("i","Color-Red"))formula_1=formula_1+'/a</sup>'
                 if(player.i.total_infinity_points.gte(0.5))formula_1=formula_1+'/IPP'
                 var formula_2='<br>效率公式:x'
                 if(hasUpgrade("i","Color-Green"))formula_2=formula_2+'<sup>f</sup>'
@@ -271,7 +271,7 @@ addLayer("i",
                 }
                 else
                 {
-                    var x=player.points.mul(player.i.infinity_points_power).div(10).logBase(1.1).div(player.i.a).root(player.i.d)
+                    var x=player.points.mul(player.i.infinity_points_power).div(10).logBase(1.1).mul(player.i.a).root(player.i.d)
                     var y=x.sub(player.i.white_num).div(10).ceil()
                     player.i.white_num=player.i.white_num.add(y)
                     player.points=player.points.div(10).mul(7)
@@ -290,7 +290,7 @@ addLayer("i",
             {
                 let eff=n(player.i.red_num).add(player.i.extra_red)
                 eff=eff.pow(n(0.75).mul(player.i.e)).div(2).add(1)
-                eff=n(1).div(eff)
+                // eff=n(1).div(eff)
                 player.i.a=eff
                 return eff
             },
@@ -298,9 +298,9 @@ addLayer("i",
             {
                 var formula_1='<br>价格公式:50*1.2<sup>x</sup>'
                 if(player.i.total_infinity_points.gte(0.5))formula_1=formula_1+'/IPP'
-                var formula_2='<br>a公式:1/(1+x<sup>0.75'
+                var formula_2='<br>a公式:1+x<sup>0.75'
                 if(hasUpgrade("i","Color-Purple"))formula_2=formula_2+'*e'
-                formula_2=formula_2+'</sup>/2)'
+                formula_2=formula_2+'</sup>/2'
                 var extra=''
                 if(hasUpgrade("i","Color-Orange"))extra=extra+'+(额外的:'+format(player.i.extra_red)+')'
                 var huanhang=''
@@ -530,7 +530,7 @@ addLayer("i",
                         +'<br>已购买:'+format(player.i.purple_num)
             },
             unlocked(){return hasUpgrade("i","Color-Purple")},
-            style(){return {"width":"200px","border-radius":"0px","background-color":"purple","height":"250px"}},
+            style(){return {"width":"200px","border-radius":"0px","background-color":"#D462FF","height":"250px"}},
             canClick(){return player.points.gte(layers.i.clickables["Tube-Purple"].COST())},
             onClick(){
                 if(player.points.div(layers.i.clickables["Tube-Purple"].COST()).lte(100))
@@ -586,7 +586,7 @@ addLayer("i",
                         +'<br>已购买:'+format(player.i.green_num)
             },
             unlocked(){return hasUpgrade("i","Color-Green")},
-            style(){return {"width":"200px","border-radius":"0px","background-color":"green","height":"250px"}},
+            style(){return {"width":"200px","border-radius":"0px","background-color":"lime","height":"250px"}},
             canClick(){return player.points.gte(layers.i.clickables["Tube-Green"].COST())},
             onClick(){
                 if(player.points.div(layers.i.clickables["Tube-Green"].COST()).lte(100))
@@ -668,6 +668,8 @@ addLayer("i",
                 player.i.orange_num=n(0)
                 player.i.green_num=n(0)
                 player.i.purple_num=n(0)
+                player.i.cost_1=n(50)
+                player.i.cost_2=n(5e6)
                 var upg=player.i.upgrades
                 var nwupg=[]
                 if(hasUpgrade("i","Infinity-Upgrade-3-1"))
@@ -720,7 +722,10 @@ addLayer("i",
             },
             display()
             {
-                var formula_1='<br>价格公式:1.1<sup>x</sup>'
+                var formula_1='<br>价格公式:1.1<sup>x'
+                if(hasUpgrade("i","Infinity-Color-Red"))
+                formula_1=formula_1+'*Ia'
+                formula_1=formula_1+'</sup>'
                 var formula_2='<br>生产公式:x<sup>2</sup>'
                 if(hasUpgrade("i","Infinity-Color-Blue"))
                 formula_2=formula_2+'*Ic'
@@ -1406,7 +1411,7 @@ addLayer("i",
             {
                 return player.points.gte(player.i.cost_2.div(player.i.infinity_points_power))
             },
-            style(){return {"width":"200px","border-radius":"0px","background-color":"purple","height":"150px"}},
+            style(){return {"width":"200px","border-radius":"0px","background-color":"#D462FF","height":"150px"}},
             unlocked(){return hasUpgrade("i","Color-Red") && hasUpgrade("i","Color-Blue")},
         },
         "Color-Green":
@@ -1433,7 +1438,7 @@ addLayer("i",
             {
                 return player.points.gte(player.i.cost_2.div(player.i.infinity_points_power))
             },
-            style(){return {"width":"200px","border-radius":"0px","background-color":"green","height":"150px"}},
+            style(){return {"width":"200px","border-radius":"0px","background-color":"lime","height":"150px"}},
             unlocked(){return hasUpgrade("i","Color-Blue") && hasUpgrade("i","Color-Yellow")},
         },
         "Infinity-Color-White":
@@ -1583,7 +1588,7 @@ addLayer("i",
                 return true
             },
             style(){
-                return {"width":"200px","border-radius":"0px","background-color":"green","height":"150px",
+                return {"width":"200px","border-radius":"0px","background-color":"lime","height":"150px",
                         "border-width":"10px","border-color":player.i.sss}},
             unlocked(){return hasUpgrade("i","Infinity-Color-Red") && 
                               hasUpgrade("i","Infinity-Color-Yellow") &&
@@ -1606,7 +1611,7 @@ addLayer("i",
                 return true
             },
             style(){
-                return {"width":"200px","border-radius":"0px","background-color":"purple","height":"150px",
+                return {"width":"200px","border-radius":"0px","background-color":"#D462FF","height":"150px",
                         "border-width":"10px","border-color":player.i.sss}},
             unlocked(){return hasUpgrade("i","Infinity-Color-Red") && 
                               hasUpgrade("i","Infinity-Color-Yellow") &&
@@ -2131,7 +2136,7 @@ addLayer("i",
                     ],
                     ["display-text",
                         function() {
-                            var formula_2=' , IRP=(1+0.2/log<sub>100</sub>IRE)<sup>IRE<sup>0.25</sup></sup>/10'
+                            var formula_2=' , IRP=1.5<sup>log<sub>10</sub>IRE</sup>/3'
                             if(!player.i.shiftAlias)formula_2=''
                             if(hasUpgrade("i","Infinity-Color-Red"))
                             return 'IRE='+format(player.i.infinity_red_energy)
