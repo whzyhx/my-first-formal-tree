@@ -51,7 +51,11 @@ let changelog = `<h1>更新记录:</h1><br>
 		- 增加 不稳定 Tube<br>
 		- 增加6个不稳定能源升级<br><br>
 	<h3>2022.9.19 22:00</h3><br>
-		- 修bug,修公式,调平衡<br><br>`
+		- 修bug,修公式,调平衡<br><br>
+	<h3>2022.9.19 22:00</h3><br>
+		- 蚌埠住了<br>
+		- 挑战太没意思了<br>
+		- 提前引入现实环节<br><br>`
 
 let winText = `恭喜通关!您已经完成了这个游戏.`
 
@@ -73,6 +77,20 @@ function getPointGen() {
 	if(!canGenPoints()) return new ExpantaNum(0)
 	let gain = new ExpantaNum(0)
 	gain=gain.add(layers.i.clickables["Tube-White"].EFFECT())
+	var x=n(1)
+	if(gain.lte(-0.001))
+	x=n(-1),gain=n(0).sub(gain)
+	if(player.i.player_in_challenge.gte(0.5))
+	{
+		if(player.i.player_energy_challenge.gte(0.5) && player.i.player_energy_challenge.lte(1.5))gain=gain.pow(0.5)
+		if(player.i.player_energy_challenge.gte(1.5) && player.i.player_energy_challenge.lte(2.5))gain=gain.pow(0.25)
+		if(player.i.player_energy_challenge.gte(2.5) && player.i.player_energy_challenge.lte(3.5))gain=gain.pow(0.1)
+	}
+	gain=gain.mul(x)
+	if(player.r.in_day.eq(1))
+	{
+		gain=n(0)
+	}
 	return gain
 }
 
@@ -81,8 +99,8 @@ function addedPlayerData() { return {
 }}
 // Display extra things at the top of the page
 var s=()=>{
-	return '<br><h2>'+(hasUpgrade("i","Instability-Upgrade-2-1")?'你的护盾还剩 : '+format(player.i.shield_time)+'s':'')
-	+'</h2><br><br>Shift - 查看所有公式<br>M - 最大化 普通 Tube'
+	return ((player.r.in_night.gte(0.5) && hasUpgrade("i","Instability-Upgrade-2-1"))?'<br><h2>你的护盾还剩 : '+format(player.i.shield_time)+'s</h2><br><br>':'')
+	+'Shift - 查看所有公式<br>M - 最大化 普通 Tube'
 }
 var displayThings = [
 	s

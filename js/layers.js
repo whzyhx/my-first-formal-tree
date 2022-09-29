@@ -52,6 +52,13 @@ addLayer("i",
             instability_num:zero,real_instability_num:zero,instability_energy:zero,
             instability_state:zero,instability_time:zero,
             real_instability_points:zero,
+
+            //challenge
+
+            player_energy_challenge:zero,
+            player_disable_red:zero,player_disable_yellow:zero,player_disable_blue:zero,
+            player_in_challenge:zero,
+            complete_times:[zero,zero,zero,zero,zero,zero,zero,zero],
         }
     },
     color: "white",
@@ -61,7 +68,7 @@ addLayer("i",
     exponent:1,
     baseAmount()
     {
-        return player.points
+        return zero
     },
     baseResource:"点数",
     gainMult()
@@ -76,6 +83,20 @@ addLayer("i",
     },
     update(diff)
     {
+        if(player.points.gte(n('1e3080')))
+        {
+            if(player.r.reality_unlocked.lte(0.5))
+            {
+                showTab('none')
+                player.r.in_night=n(0)
+                player.r.in_day=n(1)
+                player.r.reality_unlocked=n(1)
+            }
+        }
+        if(player.r.in_day.eq(1))
+        {
+            player.points=n(0)
+        }
         player.i.infinity_white_energy=player.i.infinity_white_energy.add(layers.i.clickables["Infinity-Tube-White"].PRODUCE().mul(diff))
         player.i.extra_infinity_white=player.i.extra_infinity_white.add(player.i.Ib.mul(diff))
         player.i.infinity_red_energy=player.i.infinity_red_energy.add(layers.i.clickables["Infinity-Tube-Red"].PRODUCE().mul(diff))
@@ -113,7 +134,7 @@ addLayer("i",
         || player.i.infinity_blue_energy.lte(-0.001)
         )
         {
-            // player.i.shield_time=player.i.shield_time.sub(n(1).mul(diff))
+            player.i.shield_time=player.i.shield_time.sub(n(1).mul(diff))
             player.points=player.points.max(0.001)
             player.i.infinity_points=player.i.infinity_points.max(0.001)
             player.i.total_infinity_points=player.i.total_infinity_points.max(0.001)
@@ -201,11 +222,10 @@ addLayer("i",
         //infinity
         var x=
         player.i.infinity_white_power=n(2).mul(player.i.infinity_blue_power)
-                    .pow(player.i.infinity_white_energy.pow(n(0.2).add(hasUpgrade("i","Infinity-Upgrade-2-2")?0.05:0)
-                    .div(player.i.infinity_white_energy.add(1).logBase(100).max(1))))
+                    .pow(player.i.infinity_white_energy.add(1).logBase(n(1.2).sub(hasUpgrade("i","Infinity-Upgrade-2-2")?0.1:0)))
         player.i.infinity_red_power=n(1.5).pow(player.i.infinity_red_energy.add(1).logBase(10)).div(3)
         player.i.infinity_yellow_power=n(10).pow(player.i.infinity_yellow_energy.pow(0.2))
-        player.i.infinity_blue_power=n(1.05).pow(player.i.infinity_blue_energy.pow(0.2))
+        player.i.infinity_blue_power=n(1.2).pow(player.i.infinity_blue_energy.add(1).logBase(2))
 
         player.i.infinity_time=player.i.infinity_time.add(n(1).mul(diff))
         player.i.infinity_per_s=layers.i.clickables["Infinity"].GAIN(player.points).div(player.i.infinity_time)
@@ -229,12 +249,13 @@ addLayer("i",
                 var eff=n(player.i.white_num).mul(player.i.extra_white).pow(player.i.f).mul(player.i.c).mul(player.i.infinity_white_power)
                 if(hasUpgrade("i","Infinity-Upgrade-3-2"))
                 eff=eff.mul(player.i.points_to_points)
+                if(hasUpgrade("i","Instability-Upgrade-3-2"))
+                eff=eff.mul(layers.i.upgrades["Instability-Upgrade-3-2"].EFFECT())
+                eff=eff.pow(n(1).add(n(0.125).mul(player.i.complete_times[0])))
                 if(player.i.instability_unlocked.gte(0.5))
                 {
                     eff=eff.mul(player.i.instability_power)
                 }
-                if(hasUpgrade("i","Instability-Upgrade-3-2"))
-                eff=eff.mul(layers.i.upgrades["Instability-Upgrade-3-2"].EFFECT())
                 return eff
             },
             display()
@@ -291,6 +312,7 @@ addLayer("i",
                 let eff=n(player.i.red_num).add(player.i.extra_red)
                 eff=eff.pow(n(0.75).mul(player.i.e)).div(2).add(1)
                 // eff=n(1).div(eff)
+                eff=eff.pow(n(1).add(n(0.25).mul(player.i.complete_times[1])))
                 player.i.a=eff
                 return eff
             },
@@ -346,6 +368,7 @@ addLayer("i",
                 if(hasUpgrade("i","Infinity-Upgrade-2-1"))eff=eff.div(3)
                 else eff=eff.div(10)
                 eff=eff.mul(player.i.infinity_yellow_power)
+                eff=eff.pow(n(1).add(n(0.1875).mul(player.i.complete_times[2])))
                 player.i.b=eff
                 return eff
             },
@@ -399,6 +422,7 @@ addLayer("i",
             {
                 let eff=n(player.i.blue_num).add(player.i.extra_blue)
                 eff=eff.add(1).pow(n(0.5).mul(player.i.e))
+                eff=eff.pow(n(1).add(n(0.5).mul(player.i.complete_times[4])))
                 player.i.c=eff
                 return eff
             },
@@ -504,7 +528,7 @@ addLayer("i",
             },
             EFFECT()
             {
-                let eff=n(player.i.purple_num)
+                let eff=n(player.i.purple_num).pow(0.8)
                 eff=eff.div(20).add(1)
                 player.i.e=eff
                 return eff
@@ -519,7 +543,7 @@ addLayer("i",
             {
                 var formula_1='<br>价格公式100000*2<sup>x<sup>1.25</sup></sup>'
                 if(player.i.total_infinity_points.gte(0.5))formula_1=formula_1+'/IPP'
-                var formula_2='<br>e公式:1+0.05*x'
+                var formula_2='<br>e公式:1+0.05*x<sup>0.8</sup>'
                 var formula_3='<br>生产公式:0.1x'
                 var huanhang=''
                 if(!player.i.shiftAlias)formula_1='',formula_2='',formula_3='',huanhang='<br>'
@@ -716,6 +740,7 @@ addLayer("i",
             {
                 var eff=n(player.i.infinity_white_num).mul(player.i.extra_infinity_white)
                 eff=eff.pow(2).mul(player.i.Ic)
+                eff=eff.pow(n(1).add(n(0.025).mul(player.i.complete_times[0])))
                 if(player.i.instability_unlocked.gte(0.5))
                 eff=eff.mul(player.i.instability_power)
                 return eff
@@ -775,6 +800,7 @@ addLayer("i",
             {
                 var eff=n(player.i.infinity_red_num)
                 eff=eff.pow(1.5)
+                eff=eff.pow(n(1).add(n(0.025).mul(player.i.complete_times[1])))
                 if(player.i.instability_unlocked.gte(0.5))
                 eff=eff.mul(player.i.instability_power)
                 return eff
@@ -837,6 +863,7 @@ addLayer("i",
             {
                 var eff=n(player.i.infinity_yellow_num)
                 eff=eff.pow(1.5)
+                eff=eff.pow(n(1).add(n(0.025).mul(player.i.complete_times[2])))
                 if(player.i.instability_unlocked.gte(0.5))
                 eff=eff.mul(player.i.instability_power)
                 return eff
@@ -897,6 +924,7 @@ addLayer("i",
             {
                 var eff=n(player.i.infinity_blue_num)
                 eff=eff.pow(1.5)
+                eff=eff.pow(n(1).add(n(0.025).mul(player.i.complete_times[4])))
                 if(player.i.instability_unlocked.gte(0.5))
                 eff=eff.mul(player.i.instability_power)
                 return eff
@@ -1237,10 +1265,192 @@ addLayer("i",
             canClick(){return player.i.real_instability_points.gte(layers.i.clickables["Instability-Tube"].COST())},
             onClick(){
                 var baifenbi=n(1).sub(layers.i.clickables["Instability-Tube"].COST().div(player.i.real_instability_points))
-                player.i.real_instability_points=player.i.real_instability_points.mul(baifenbi)
-                player.i.instability_points=player.i.instability_points.mul(baifenbi)
+                player.i.real_instability_points=player.i.real_instability_points.mul(baifenbi).max(0)
+                player.i.instability_points=player.i.instability_points.mul(baifenbi).max(0)
                 player.i.instability_num=player.i.instability_num.add(1)
                 player.i.real_instability_num=player.i.real_instability_num.add(1)
+            }
+        },
+        "Energy_C":
+        {
+            display()
+            {
+                return '能源 难度 - C<br>能源产量变为0.5次方<br><br>以此难度完成 , 将增加 1 次挑战完成次数'
+            },
+            unlocked(){return true},
+            style(){
+                if(player.i.player_energy_challenge.gte(0.5) && player.i.player_energy_challenge.lte(1.5))
+                return {"width":"200px","border-radius":"0px","background-color":"#6AA121","height":"100px",}
+                return {"width":"200px","border-radius":"0px","height":"100px",}},
+            canClick(){return (player.i.player_energy_challenge.lte(0.5) || player.i.player_energy_challenge.gte(1.5))
+                && player.i.player_in_challenge.lte(0.5)
+            },
+            onClick(){
+                player.i.player_energy_challenge=n(1)
+            }
+        },
+        "Energy_B":
+        {
+            display()
+            {
+                return '能源 难度 - B<br>能源产量变为0.25次方<br><br>以此难度完成 , 将增加 2 次挑战完成次数'
+            },
+            unlocked(){return true},
+            style(){
+                if(player.i.player_energy_challenge.gte(1.5) && player.i.player_energy_challenge.lte(2.5))
+                return {"width":"200px","border-radius":"0px","background-color":"#6AA121","height":"100px",}
+                return {"width":"200px","border-radius":"0px","height":"100px",}},
+            canClick(){return (player.i.player_energy_challenge.lte(1.5) || player.i.player_energy_challenge.gte(2.5))
+                && player.i.player_in_challenge.lte(0.5)},
+            onClick(){
+                player.i.player_energy_challenge=n(2)
+            }
+        },
+        "Energy_A":
+        {
+            display()
+            {
+                return '能源 难度 - <br>能源产量变为0.1次方<br><br>以此难度完成 , 将增加 5 次挑战完成次数'
+            },
+            unlocked(){return true},
+            style(){
+                if(player.i.player_energy_challenge.gte(2.5) && player.i.player_energy_challenge.lte(3.5))
+                return {"width":"200px","border-radius":"0px","background-color":"#6AA121","height":"100px",}
+                return {"width":"200px","border-radius":"0px","height":"100px",}},
+            canClick(){return (player.i.player_energy_challenge.lte(2.5) || player.i.player_energy_challenge.gte(3.5))
+                && player.i.player_in_challenge.lte(0.5)},
+            onClick(){
+                player.i.player_energy_challenge=n(3)
+            }
+        },
+        "Disable_Red":
+        {
+            display()
+            {
+                return '把 红色 Tube 扔进 不稳定 Tube<br>禁用 红色 Tube'
+            },
+            unlocked(){return true},
+            style(){
+                if(player.i.player_disable_red.gte(0.5))
+                return {"width":"200px","border-radius":"0px","background-color":"#6AA121","border-width":"10px","border-color":"red","height":"125px"}
+                return {"width":"200px","border-radius":"0px","height":"125px",}},
+            canClick(){return player.i.player_in_challenge.lte(0.5)},
+            onClick(){
+                player.i.player_disable_red=n(1).sub(player.i.player_disable_red)
+            }
+        },
+        "Disable_Yellow":
+        {
+            display()
+            {
+                return '把 黄色 Tube 扔进 不稳定 Tube<br>禁用 黄色 Tube'
+            },
+            unlocked(){return true},
+            style(){
+                if(player.i.player_disable_yellow.gte(0.5))
+                return {"width":"200px","border-radius":"0px","background-color":"#6AA121","border-width":"10px","border-color":"yellow","height":"125px",}
+                return {"width":"200px","border-radius":"0px","height":"125px",}},
+            canClick(){return player.i.player_in_challenge.lte(0.5)},
+            onClick(){
+                player.i.player_disable_yellow=n(1).sub(player.i.player_disable_yellow)
+            }
+        },
+        "Disable_Blue":
+        {
+            display()
+            {
+                return '把 蓝色 Tube 扔进 不稳定 Tube<br>禁用 蓝色 Tube'
+            },
+            unlocked(){return true},
+            style(){
+                if(player.i.player_disable_blue.gte(0.5))
+                return {"width":"200px","border-radius":"0px","background-color":"#6AA121","border-width":"10px","border-color":"blue","height":"125px",}
+                return {"width":"200px","border-radius":"0px","height":"125px",}},
+            canClick(){return player.i.player_in_challenge.lte(0.5)},
+            onClick(){
+                player.i.player_disable_blue=n(1).sub(player.i.player_disable_blue)
+            }
+        },
+        "Enter":
+        {
+            display()
+            {
+                return '进入挑战<br><br>注意:这会重置你的不稳定能源'
+            },
+            unlocked(){return true},
+            style(){
+                return {"width":"200px","border-radius":"0px","height":"100px","min-height":"100px"}},
+            canClick(){return player.i.player_energy_challenge.gte(0.5) && player.i.player_in_challenge.lte(0.5)},
+            onClick(){
+                player.i.player_in_challenge=n(1)
+                player.i.real_instability_num=player.i.instability_num
+                player.i.instability_energy=n(0)
+                layers.i.clickables["Button-To-Reset"].onClick()
+            }
+        },
+        "Quit":
+        {
+            display()
+            {
+                return '退出挑战'
+            },
+            unlocked(){return true},
+            style(){
+                return {"width":"100px","border-radius":"0px","height":"100px","min-height":"100px"}},
+            canClick(){return player.i.player_in_challenge.gte(0.5)},
+            onClick(){
+                player.i.player_in_challenge=n(0)
+                layers.i.clickables["Button-To-Reset"].onClick()
+            }
+        },
+        "Complete":
+        {
+            display()
+            {
+                var x=0
+                if(player.i.player_disable_red.gte(0.5))x+=1
+                if(player.i.player_disable_yellow.gte(0.5))x+=2
+                if(player.i.player_disable_blue.gte(0.5))x+=4
+                var goal=n('1e500')
+                if(x==1)goal=n(1e200)
+                if(x==2)goal=n(1e120)
+                if(x==3)goal=n(1e200)
+                if(x==4)goal=n(1e100)
+                if(x==5)goal=n(1e200)
+                if(x==6)goal=n(1e200)
+                if(x==7)goal=n(1e200)
+                return '完成挑战<br>目标 : '+format(goal)
+            },
+            unlocked(){return true},
+            style(){
+                if(layers.i.clickables["Complete"].canClick())
+                return {"background-color":"gold","width":"100px","border-radius":"0px","height":"100px","min-height":"100px"}
+                return {"width":"100px","border-radius":"0px","height":"100px","min-height":"100px"}},
+            canClick(){
+                var x=0
+                if(player.i.player_disable_red.gte(0.5))x+=1
+                if(player.i.player_disable_yellow.gte(0.5))x+=2
+                if(player.i.player_disable_blue.gte(0.5))x+=4
+                var goal=n('1e500')
+                if(x==1)goal=n(1e200)
+                if(x==2)goal=n(1e120)
+                if(x==3)goal=n(1e200)
+                if(x==4)goal=n(1e100)
+                if(x==5)goal=n(1e200)
+                if(x==6)goal=n(1e200)
+                if(x==7)goal=n(1e200)
+                return player.points.gte(goal) && player.i.player_in_challenge.gte(0.5)},
+            onClick(){
+                player.i.player_in_challenge=n(0)
+                var x=0
+                if(player.i.player_disable_red.gte(0.5))x+=1
+                if(player.i.player_disable_yellow.gte(0.5))x+=2
+                if(player.i.player_disable_blue.gte(0.5))x+=4
+                var y=n(1)
+                if(player.i.player_energy_challenge.gte(1.5))y=n(2)
+                if(player.i.player_energy_challenge.gte(2.5))y=n(5)
+                player.i.complete_times[x]=player.i.complete_times[x].add(y)
+                layers.i.clickables["Button-To-Reset"].onClick()
             }
         },
         "weiwandaixu":
@@ -1301,7 +1511,7 @@ addLayer("i",
                 return player.points.gte(player.i.cost_1.div(player.i.infinity_points_power))
             },
             style(){return {"width":"200px","border-radius":"0px","background-color":"red","height":"150px"}},
-            unlocked(){return hasUpgrade("i","Color-White")},
+            unlocked(){return hasUpgrade("i","Color-White") && (player.i.player_in_challenge.lte(0.5) || player.i.player_disable_red.lte(0.5))},
             branches:["Color-Orange","Color-Purple"],
         },
         "Color-Yellow":
@@ -1329,7 +1539,7 @@ addLayer("i",
                 return player.points.gte(player.i.cost_1.div(player.i.infinity_points_power))
             },
             style(){return {"width":"200px","border-radius":"0px","background-color":"yellow","height":"150px"}},
-            unlocked(){return hasUpgrade("i","Color-White")},
+            unlocked(){return hasUpgrade("i","Color-White") && (player.i.player_in_challenge.lte(0.5) || player.i.player_disable_yellow.lte(0.5))},
             branches:["Color-Orange","Color-Green"],
         },
         "Color-Blue":
@@ -1357,7 +1567,7 @@ addLayer("i",
                 return player.points.gte(player.i.cost_1.div(player.i.infinity_points_power))
             },
             style(){return {"width":"200px","border-radius":"0px","background-color":"lightblue","height":"150px"}},
-            unlocked(){return hasUpgrade("i","Color-White")},
+            unlocked(){return hasUpgrade("i","Color-White") && (player.i.player_in_challenge.lte(0.5) || player.i.player_disable_blue.lte(0.5))},
             branches:["Color-Green","Color-Purple"],
         },
         "Color-Orange":
@@ -1488,7 +1698,7 @@ addLayer("i",
             style(){
                 return {"width":"200px","border-radius":"0px","background-color":"red","height":"150px",
                         "border-width":"10px","border-color":player.i.sss}},
-            unlocked(){return hasUpgrade("i","Infinity-Color-White")},
+            unlocked(){return hasUpgrade("i","Infinity-Color-White") && (player.i.player_in_challenge.lte(0.5) || player.i.player_disable_red.lte(0.5))},
             branches:["Infinity-Color-Orange","Infinity-Color-Purple"],
         },
         "Infinity-Color-Yellow":
@@ -1518,7 +1728,7 @@ addLayer("i",
             style(){
                 return {"width":"200px","border-radius":"0px","background-color":"yellow","height":"150px",
                         "border-width":"10px","border-color":player.i.sss}},
-            unlocked(){return hasUpgrade("i","Infinity-Color-White")},
+            unlocked(){return hasUpgrade("i","Infinity-Color-White") && (player.i.player_in_challenge.lte(0.5) || player.i.player_disable_yellow.lte(0.5))},
             branches:["Infinity-Color-Orange","Infinity-Color-Green"],
         },
         "Infinity-Color-Blue":
@@ -1548,7 +1758,7 @@ addLayer("i",
             style(){
                 return {"width":"200px","border-radius":"0px","background-color":"lightblue","height":"150px",
                         "border-width":"10px","border-color":player.i.sss}},
-            unlocked(){return hasUpgrade("i","Infinity-Color-White")},
+            unlocked(){return hasUpgrade("i","Infinity-Color-White") && (player.i.player_in_challenge.lte(0.5) || player.i.player_disable_blue.lte(0.5))},
             branches:["Infinity-Color-Green","Infinity-Color-Purple"],
         },
         "Infinity-Color-Orange":
@@ -2125,8 +2335,8 @@ addLayer("i",
                             if(hasUpgrade("i","Infinity-Color-Blue"))
                             formula_2=formula_2+'*IBP)'
                             formula_2=formula_2+'<sup>IWE<sup>'
-                            if(hasUpgrade("i","Infinity-Upgrade-2-2"))formula_2=formula_2+'0.25/log<sub>6</sub>(log<sub>10</sub>IWE)</sup></sup>'
-                            else formula_2=formula_2+'0.2/log<sub>6</sub>(log<sub>10</sub>IWE)</sup></sup>'
+                            if(hasUpgrade("i","Infinity-Upgrade-2-2"))formula_2=formula_2+'log<sub>1.1</sub>IWE</sup></sup>'
+                            else formula_2=formula_2+'log<sub>1.2</sub>IWE</sup></sup>'
                             if(!player.i.shiftAlias)formula_2=''
                             if(hasUpgrade("i","Infinity-Color-White"))
                             return 'IWE='+format(player.i.infinity_white_energy)
@@ -2156,7 +2366,7 @@ addLayer("i",
                     ],
                     ["display-text",
                         function() {
-                            var formula_2=' , IBP=1.05<sup>IBE<sup>0.2</sup></sup>'
+                            var formula_2=' , IBP=1.2<sup>log<sub>2</sub>IBE</sup>'
                             if(!player.i.shiftAlias)formula_2=''
                             if(hasUpgrade("i","Infinity-Color-Blue"))
                             return 'IBE='+format(player.i.infinity_blue_energy)
@@ -2243,7 +2453,65 @@ addLayer("i",
                 },
                 content:[
                     "blank",
-                    ["row",[["clickable","weiwandaixu"],]],
+                    ["display-text",
+                        function() {
+                            var s=""
+                            if(player.i.player_energy_challenge.lte(0.5))s=s+'D'
+                            else if(player.i.player_energy_challenge.lte(1.5))s=s+'C'
+                            else if(player.i.player_energy_challenge.lte(2.5))s=s+'B'
+                            else if(player.i.player_energy_challenge.lte(3.5))s=s+'A'
+                            s=s+' - '
+                            if(player.i.player_disable_red.gte(0.5))s=s+'_'
+                            else s=s+'R'
+                            if(player.i.player_disable_yellow.gte(0.5))s=s+'_'
+                            else s=s+'Y'
+                            if(player.i.player_disable_blue.gte(0.5))s=s+'_'
+                            else s=s+'B'
+                            return '挑战模式 : '+s
+                        },
+                        { "color": "white", "font-size": "24px",}
+                    ],
+                    "blank",
+                    ["row",[["clickable","Energy_C"],["clickable","Energy_B"],["clickable","Energy_A"],]],
+                    ["row",[["clickable","Disable_Red"],["clickable","Disable_Yellow"],["clickable","Disable_Blue"],]],
+                    ["row",[["clickable","Enter"],["clickable","Quit"],["clickable","Complete"],]],
+                    ["display-text",
+                        function() {
+                            var x=0
+                            if(player.i.player_disable_red.gte(0.5))x+=1
+                            if(player.i.player_disable_yellow.gte(0.5))x+=2
+                            if(player.i.player_disable_blue.gte(0.5))x+=4
+                            var a1='<text style="color:grey">C</text>',a2='<text style="color:grey">B</text>',a3='<text style="color:grey">A</text>'
+                            if(player.i.complete_times[x].eq(1) || player.i.complete_times[x].eq(3) || player.i.complete_times[x].eq(6) || player.i.complete_times[x].eq(8))
+                            {
+                                a1='<text style="color:gold">C</text>'
+                            }
+                            if(player.i.complete_times[x].eq(2) || player.i.complete_times[x].eq(3) || player.i.complete_times[x].eq(7) || player.i.complete_times[x].eq(8))
+                            {
+                                a2='<text style="color:gold">B</text>'
+                            }
+                            if(player.i.complete_times[x].eq(5) || player.i.complete_times[x].eq(6) || player.i.complete_times[x].eq(7) || player.i.complete_times[x].eq(8))
+                            {
+                                a3='<text style="color:gold">A</text>'
+                            }
+                            var eff=''
+                            if(x==0)eff='白色 Tube 生产变为 '+format(n(1).add(n(0.125).mul(player.i.complete_times[x])))+' 次方'
+                                       +'<br>无尽 白色 Tube 生产变为 '+format(n(1).add(n(0.025).mul(player.i.complete_times[x])))+' 次方'
+                            if(x==1)eff='a 变为 '+format(n(1).add(n(0.25).mul(player.i.complete_times[x])))+' 次方'
+                                       +'<br>无尽 红色 Tube 生产变为 '+format(n(1).add(n(0.025).mul(player.i.complete_times[x])))+' 次方'
+                            if(x==2)eff='b 变为 '+format(n(1).add(n(0.1875).mul(player.i.complete_times[x])))+' 次方'
+                                        +'<br>无尽 黄色 Tube 生产变为 '+format(n(1).add(n(0.025).mul(player.i.complete_times[x])))+' 次方'
+                            if(x==3)eff=''
+                            if(x==4)eff='c 变为 '+format(n(1).add(n(0.5).mul(player.i.complete_times[x])))+' 次方'
+                                       +'<br>无尽 蓝色 Tube 生产变为 '+format(n(1).add(n(0.025).mul(player.i.complete_times[x])))+' 次方'
+                            if(x==5)eff=''
+                            if(x==6)eff=''
+                            if(x==7)eff=''
+                            return '<br>你当前已完成该种挑战 : '+a1+' + '+a2+' + '+a3+' = '+format(player.i.complete_times[x])+' 次'
+                            +'<br>'+eff
+                        },
+                        { "color": "white", "font-size": "24px",}
+                    ],
                 ]
             },
             "Number":{
@@ -2468,6 +2736,6 @@ addLayer("i",
     row: 1,
     layerShown()
     {
-        return true
+        return player.r.in_night.gte(0.5)
     },
 })
