@@ -222,10 +222,10 @@ addLayer("i",
         //infinity
         var x=
         player.i.infinity_white_power=n(2).mul(player.i.infinity_blue_power)
-                    .pow(player.i.infinity_white_energy.add(1).logBase(n(1.2).sub(hasUpgrade("i","Infinity-Upgrade-2-2")?0.1:0)))
+                    .pow(player.i.infinity_white_energy.add(1).logBase(n(5).sub(hasUpgrade("i","Infinity-Upgrade-2-2")?2:0)))
         player.i.infinity_red_power=n(1.5).pow(player.i.infinity_red_energy.add(1).logBase(10)).div(3)
         player.i.infinity_yellow_power=n(10).pow(player.i.infinity_yellow_energy.pow(0.2))
-        player.i.infinity_blue_power=n(1.2).pow(player.i.infinity_blue_energy.add(1).logBase(2))
+        player.i.infinity_blue_power=n(1.35).pow(player.i.infinity_blue_energy.add(1).logBase(3))
 
         player.i.infinity_time=player.i.infinity_time.add(n(1).mul(diff))
         player.i.infinity_per_s=layers.i.clickables["Infinity"].GAIN(player.points).div(player.i.infinity_time)
@@ -2335,8 +2335,8 @@ addLayer("i",
                             if(hasUpgrade("i","Infinity-Color-Blue"))
                             formula_2=formula_2+'*IBP)'
                             formula_2=formula_2+'<sup>IWE<sup>'
-                            if(hasUpgrade("i","Infinity-Upgrade-2-2"))formula_2=formula_2+'log<sub>1.1</sub>IWE</sup></sup>'
-                            else formula_2=formula_2+'log<sub>1.2</sub>IWE</sup></sup>'
+                            if(hasUpgrade("i","Infinity-Upgrade-2-2"))formula_2=formula_2+'log<sub>3</sub>IWE</sup></sup>'
+                            else formula_2=formula_2+'log<sub>5</sub>IWE</sup></sup>'
                             if(!player.i.shiftAlias)formula_2=''
                             if(hasUpgrade("i","Infinity-Color-White"))
                             return 'IWE='+format(player.i.infinity_white_energy)
@@ -2366,7 +2366,7 @@ addLayer("i",
                     ],
                     ["display-text",
                         function() {
-                            var formula_2=' , IBP=1.2<sup>log<sub>2</sub>IBE</sup>'
+                            var formula_2=' , IBP=1.35<sup>log<sub>3</sub>IBE</sup>'
                             if(!player.i.shiftAlias)formula_2=''
                             if(hasUpgrade("i","Infinity-Color-Blue"))
                             return 'IBE='+format(player.i.infinity_blue_energy)
