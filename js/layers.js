@@ -11,13 +11,13 @@ addLayer("i",
             white_num:zero,extra_white:one,
             infinity_white_num:zero,extra_infinity_white:one,
             infinity_white_energy:zero,infinity_white_power:one,
-            red_num:zero,extra_red:zero,
+            red_num:zero,extra_red:one,
             infinity_red_num:zero,
             infinity_red_energy:zero,infinity_red_power:one,
-            yellow_num:zero,extra_yellow:zero,
+            yellow_num:zero,extra_yellow:one,
             infinity_yellow_num:zero,
             infinity_yellow_energy:zero,infinity_yellow_power:one,
-            blue_num:zero,extra_blue:zero,
+            blue_num:zero,extra_blue:one,
             infinity_blue_num:zero,
             infinity_blue_energy:zero,infinity_blue_power:one,
             orange_num:zero,
@@ -83,7 +83,7 @@ addLayer("i",
     },
     update(diff)
     {
-        if(player.points.gte(n('1e3080')))
+        if(player.points.gte(n('1e3080')) && player.i.complete_times[1].add(player.i.complete_times[2].add(player.i.complete_times[4])).gte(3))
         {
             if(player.r.reality_unlocked.lte(0.5))
             {
@@ -150,6 +150,7 @@ addLayer("i",
                 layers.i.clickables["Infinity"].onClick(1)
             }
         }
+        player.points=player.points.max(0.001)
         if(player.i.instability_unlocked.gte(0.5))
         {
             player.i.best_points=player.i.best_points.max(player.points)
@@ -220,17 +221,23 @@ addLayer("i",
         player.i.extra_blue=player.i.extra_blue.add(layers.i.clickables["Tube-Green"].PRODUCE().mul(diff))
 
         //infinity
-        var x=
         player.i.infinity_white_power=n(2).mul(player.i.infinity_blue_power)
                     .pow(player.i.infinity_white_energy.add(1).logBase(n(5).sub(hasUpgrade("i","Infinity-Upgrade-2-2")?2:0)))
-        player.i.infinity_red_power=n(1.5).pow(player.i.infinity_red_energy.add(1).logBase(10)).div(3)
+        if(hasUpgrade("i","Infinity-Color-Red"))
+        {
+            player.i.infinity_red_power=n(1.2).pow(player.i.infinity_red_energy.add(1).logBase(2)).div(5)
+        }
+        else
+        {
+            player.i.infinity_red_power=n(0)
+        }
         player.i.infinity_yellow_power=n(10).pow(player.i.infinity_yellow_energy.pow(0.2))
         player.i.infinity_blue_power=n(1.35).pow(player.i.infinity_blue_energy.add(1).logBase(3))
 
         player.i.infinity_time=player.i.infinity_time.add(n(1).mul(diff))
         player.i.infinity_per_s=layers.i.clickables["Infinity"].GAIN(player.points).div(player.i.infinity_time)
         
-        player.i.infinity_points_power=player.i.total_infinity_points.add(1).pow(n(0.2).add(player.i.infinity_red_power))
+        player.i.infinity_points_power=player.i.total_infinity_points.add(1).pow(n(0.1).add(player.i.infinity_red_power))
         player.i.points_to_points=n(1.25).pow(player.points.add(1).logBase(10))
     },
     tooltip(){return '我就不'},
@@ -241,7 +248,8 @@ addLayer("i",
             COST()
             {
                 var need=n(10)
-                need=need.mul(n(1.1).pow(player.i.white_num.pow(player.i.d).div(player.i.a))).div(player.i.infinity_points_power)
+                need=need.mul(n(1.1).pow(player.i.white_num.pow(player.i.d).div(player.i.a).div(player.i.infinity_points_power)))
+                console.log(need)
                 return need
             },
             EFFECT()
@@ -262,7 +270,7 @@ addLayer("i",
             {
                 var formula_1='<br>价格公式:10*1.1<sup>x'
                 if(hasUpgrade("i","Color-Orange"))formula_1=formula_1+'<sup>d</sup>'
-                if(hasUpgrade("i","Color-Red"))formula_1=formula_1+'/a</sup>'
+                if(hasUpgrade("i","Color-Red"))formula_1=formula_1+'/a'
                 if(player.i.total_infinity_points.gte(0.5))formula_1=formula_1+'/IPP'
                 var formula_2='<br>效率公式:x'
                 if(hasUpgrade("i","Color-Green"))formula_2=formula_2+'<sup>f</sup>'
@@ -292,7 +300,7 @@ addLayer("i",
                 }
                 else
                 {
-                    var x=player.points.mul(player.i.infinity_points_power).div(10).logBase(1.1).mul(player.i.a).root(player.i.d)
+                    var x=player.points.div(10).logBase(1.1).mul(player.i.a).root(player.i.d).mul(player.i.infinity_points_power)
                     var y=x.sub(player.i.white_num).div(10).ceil()
                     player.i.white_num=player.i.white_num.add(y)
                     player.points=player.points.div(10).mul(7)
@@ -309,7 +317,7 @@ addLayer("i",
             },
             EFFECT()
             {
-                let eff=n(player.i.red_num).add(player.i.extra_red)
+                let eff=n(player.i.red_num).mul(player.i.extra_red)
                 eff=eff.pow(n(0.75).mul(player.i.e)).div(2).add(1)
                 // eff=n(1).div(eff)
                 eff=eff.pow(n(1).add(n(0.25).mul(player.i.complete_times[1])))
@@ -324,7 +332,7 @@ addLayer("i",
                 if(hasUpgrade("i","Color-Purple"))formula_2=formula_2+'*e'
                 formula_2=formula_2+'</sup>/2'
                 var extra=''
-                if(hasUpgrade("i","Color-Orange"))extra=extra+'+(额外的:'+format(player.i.extra_red)+')'
+                if(hasUpgrade("i","Color-Orange"))extra=extra+'+(额外的 x'+format(player.i.extra_red)+')'
                 var huanhang=''
                 if(!player.i.shiftAlias)formula_1='',formula_2='',huanhang='<br>'
                 return '红色 Tube<br>降低白色 Tube 的价格'+formula_1+formula_2
@@ -363,7 +371,7 @@ addLayer("i",
             },
             EFFECT()
             {
-                let eff=n(player.i.yellow_num).add(1).add(player.i.extra_yellow)
+                let eff=n(player.i.yellow_num).add(1).mul(player.i.extra_yellow)
                 eff=eff.logBase(10)
                 if(hasUpgrade("i","Infinity-Upgrade-2-1"))eff=eff.div(3)
                 else eff=eff.div(10)
@@ -381,7 +389,7 @@ addLayer("i",
                 else formula_2=formula_2+'/10'
                 if(hasUpgrade("i","Infinity-Upgrade-2-1"))formula_2=formula_2+'*IYP'
                 var extra=''
-                if(hasUpgrade("i","Color-Purple"))extra=extra+'+(额外的:'+format(player.i.extra_yellow)+')'
+                if(hasUpgrade("i","Color-Purple"))extra=extra+'+(额外的 x'+format(player.i.extra_yellow)+')'
                 var huanhang=''
                 if(!player.i.shiftAlias)formula_1='',formula_2='',huanhang='<br>'
                 return '黄色 Tube<br>缓慢生产白色 Tube'+formula_1+formula_2
@@ -420,7 +428,7 @@ addLayer("i",
             },
             EFFECT()
             {
-                let eff=n(player.i.blue_num).add(player.i.extra_blue)
+                let eff=n(player.i.blue_num).mul(player.i.extra_blue)
                 eff=eff.add(1).pow(n(0.5).mul(player.i.e))
                 eff=eff.pow(n(1).add(n(0.5).mul(player.i.complete_times[4])))
                 player.i.c=eff
@@ -433,7 +441,7 @@ addLayer("i",
                 var formula_2='<br>c公式:(x+1)<sup>0.5'
                 if(hasUpgrade("i","Color-Purple"))formula_2=formula_2+'*e'
                 var extra=''
-                if(hasUpgrade("i","Color-Green"))extra=extra+'+(额外的:'+format(player.i.extra_blue)+')'
+                if(hasUpgrade("i","Color-Green"))extra=extra+'+(额外的 x'+format(player.i.extra_blue)+')'
                 var huanhang=''
                 if(!player.i.shiftAlias)formula_1='',formula_2='',huanhang='<br>'
                 return '蓝色 Tube<br>增幅白色 Tube 的效率'+formula_1+formula_2
@@ -480,7 +488,7 @@ addLayer("i",
             PRODUCE()
             {
                 var eff=player.i.orange_num
-                eff=eff.div(10)
+                eff=eff.div(100)
                 return eff
             },
             display()
@@ -488,7 +496,7 @@ addLayer("i",
                 var formula_1='<br>价格公式:100000*2<sup>x<sup>1.25</sup></sup>'
                 if(player.i.total_infinity_points.gte(0.5))formula_1=formula_1+'/IPP'
                 var formula_2='<br>d公式:1/((1+x)<sup>0.1</sup>)'
-                var formula_3='<br>生产公式:0.1x'
+                var formula_3='<br>生产公式:0.01x'
                 var huanhang=''
                 if(!player.i.shiftAlias)formula_1='',formula_2='',formula_3='',huanhang='<br>'
                 return '橙色 Tube<br>缓慢生产 红色 Tube<br>减少 白色 Tube 的价格指数'+formula_1+formula_2+formula_3
@@ -536,7 +544,7 @@ addLayer("i",
             PRODUCE()
             {
                 var eff=player.i.purple_num
-                eff=eff.div(10)
+                eff=eff.div(100)
                 return eff
             },
             display()
@@ -544,7 +552,7 @@ addLayer("i",
                 var formula_1='<br>价格公式100000*2<sup>x<sup>1.25</sup></sup>'
                 if(player.i.total_infinity_points.gte(0.5))formula_1=formula_1+'/IPP'
                 var formula_2='<br>e公式:1+0.05*x<sup>0.8</sup>'
-                var formula_3='<br>生产公式:0.1x'
+                var formula_3='<br>生产公式:0.01x'
                 var huanhang=''
                 if(!player.i.shiftAlias)formula_1='',formula_2='',formula_3='',huanhang='<br>'
                 return '紫色 Tube<br>缓慢生产 黄色 Tube<br>提高 红色和蓝色 Tube 的效率指数'+formula_1+formula_2+formula_3
@@ -592,7 +600,7 @@ addLayer("i",
             PRODUCE()
             {
                 var eff=player.i.green_num
-                eff=eff.div(10)
+                eff=eff.div(100)
                 return eff
             },
             display()
@@ -600,7 +608,7 @@ addLayer("i",
                 var formula_1='<br>价格公式:100000*2<sup>x<sup>1.25</sup></sup>'
                 if(player.i.total_infinity_points.gte(0.5))formula_1=formula_1+'/IPP'
                 var formula_2='<br>f公式:1+log<sub>10</sub>(1+x)/5'
-                var formula_3='<br>生产公式:0.1x'
+                var formula_3='<br>生产公式:0.01x'
                 var huanhang=''
                 if(!player.i.shiftAlias)formula_1='',formula_2='',formula_3='',huanhang='<br>'
                 return '绿色 Tube<br>缓慢生产 蓝色 Tube<br>提高 白色 Tube 的效率指数'+formula_1+formula_2+formula_3
@@ -634,7 +642,7 @@ addLayer("i",
         {
             GAIN(x)
             {
-                if(n(x).lte(1e15))
+                if(n(x).lte(1e16))
                 {
                     return n(0)
                 }
@@ -651,7 +659,7 @@ addLayer("i",
             },
             NEED(x)
             {
-                var need=n(1e14)
+                var need=n(1e15)
                 var xx=n(10)
                 if(hasUpgrade("i","Infinity-Upgrade-2-3"))xx=n(2)
                 need=need.mul(xx.pow(n(x).div(layers.i.clickables["Infinity-Upgrade-1"].EFFECT())
@@ -686,9 +694,9 @@ addLayer("i",
                 player.i.red_num=n(0)
                 player.i.extra_red=n(0)
                 player.i.yellow_num=n(0)
-                player.i.extra_yellow=n(0)
+                player.i.extra_yellow=n(1)
                 player.i.blue_num=n(0)
-                player.i.extra_blue=n(0)
+                player.i.extra_blue=n(1)
                 player.i.orange_num=n(0)
                 player.i.green_num=n(0)
                 player.i.purple_num=n(0)
@@ -1052,12 +1060,12 @@ addLayer("i",
                 player.i.white_num=n(0)
                 player.i.extra_white=n(1)
                 player.i.red_num=n(0)
-                player.i.extra_red=n(0)
+                player.i.extra_red=n(1)
                 player.i.yellow_num=n(0)
-                player.i.extra_yellow=n(0)
+                player.i.extra_yellow=n(1)
                 player.i.blue_num=n(0)
                 player.i.extra_blue=n(0)
-                player.i.orange_num=n(0)
+                player.i.orange_num=n(1)
                 player.i.green_num=n(0)
                 player.i.purple_num=n(0)
                 player.i.infinity_white_energy=n(0)
@@ -1098,11 +1106,11 @@ addLayer("i",
                 player.i.white_num=n(0)
                 player.i.extra_white=n(1)
                 player.i.red_num=n(0)
-                player.i.extra_red=n(0)
+                player.i.extra_red=n(1)
                 player.i.yellow_num=n(0)
-                player.i.extra_yellow=n(0)
+                player.i.extra_yellow=n(1)
                 player.i.blue_num=n(0)
-                player.i.extra_blue=n(0)
+                player.i.extra_blue=n(1)
                 player.i.orange_num=n(0)
                 player.i.green_num=n(0)
                 player.i.purple_num=n(0)
@@ -1167,11 +1175,11 @@ addLayer("i",
                 player.i.white_num=n(0)
                 player.i.extra_white=n(1)
                 player.i.red_num=n(0)
-                player.i.extra_red=n(0)
+                player.i.extra_red=n(1)
                 player.i.yellow_num=n(0)
-                player.i.extra_yellow=n(0)
+                player.i.extra_yellow=n(1)
                 player.i.blue_num=n(0)
-                player.i.extra_blue=n(0)
+                player.i.extra_blue=n(1)
                 player.i.orange_num=n(0)
                 player.i.green_num=n(0)
                 player.i.purple_num=n(0)
@@ -1492,11 +1500,11 @@ addLayer("i",
             {
                 if(hasUpgrade("i","Color-Red"))
                 return '已解锁'
-                return "解锁 - 红色 Tube<br><br>花费:"+format(player.i.cost_1.div(player.i.infinity_points_power))+"能源"
+                return "解锁 - 红色 Tube<br><br>花费:"+format(player.i.cost_1)+"能源"
             },
             onPurchase()
             {
-                player.points=player.points.sub(player.i.cost_1.div(player.i.infinity_points_power))
+                player.points=player.points.sub(player.i.cost_1)
                 if(player.i.cost_1.gte(50.5) && player.i.cost_1.lte(1000.5))
                 {
                     player.i.cost_1=n(25000)
@@ -1508,7 +1516,7 @@ addLayer("i",
             },
             canAfford()
             {
-                return player.points.gte(player.i.cost_1.div(player.i.infinity_points_power))
+                return player.points.gte(player.i.cost_1)
             },
             style(){return {"width":"200px","border-radius":"0px","background-color":"red","height":"150px"}},
             unlocked(){return hasUpgrade("i","Color-White") && (player.i.player_in_challenge.lte(0.5) || player.i.player_disable_red.lte(0.5))},
@@ -1520,11 +1528,11 @@ addLayer("i",
             {
                 if(hasUpgrade("i","Color-Yellow"))
                 return '已解锁'
-                return "解锁 - 黄色 Tube<br><br>花费:"+format(player.i.cost_1.div(player.i.infinity_points_power))+"能源"
+                return "解锁 - 黄色 Tube<br><br>花费:"+format(player.i.cost_1)+"能源"
             },
             onPurchase()
             {
-                player.points=player.points.sub(player.i.cost_1.div(player.i.infinity_points_power))
+                player.points=player.points.sub(player.i.cost_1)
                 if(player.i.cost_1.gte(50.5) && player.i.cost_1.lte(1000.5))
                 {
                     player.i.cost_1=n(25000)
@@ -1536,7 +1544,7 @@ addLayer("i",
             },
             canAfford()
             {
-                return player.points.gte(player.i.cost_1.div(player.i.infinity_points_power))
+                return player.points.gte(player.i.cost_1)
             },
             style(){return {"width":"200px","border-radius":"0px","background-color":"yellow","height":"150px"}},
             unlocked(){return hasUpgrade("i","Color-White") && (player.i.player_in_challenge.lte(0.5) || player.i.player_disable_yellow.lte(0.5))},
@@ -1548,11 +1556,11 @@ addLayer("i",
             {
                 if(hasUpgrade("i","Color-Blue"))
                 return '已解锁'
-                return "解锁 - 蓝色 Tube<br><br>花费:"+format(player.i.cost_1.div(player.i.infinity_points_power))+"能源"
+                return "解锁 - 蓝色 Tube<br><br>花费:"+format(player.i.cost_1)+"能源"
             },
             onPurchase()
             {
-                player.points=player.points.sub(player.i.cost_1.div(player.i.infinity_points_power))
+                player.points=player.points.sub(player.i.cost_1)
                 if(player.i.cost_1.gte(50.5) && player.i.cost_1.lte(1000.5))
                 {
                     player.i.cost_1=n(25000)
@@ -1564,7 +1572,7 @@ addLayer("i",
             },
             canAfford()
             {
-                return player.points.gte(player.i.cost_1.div(player.i.infinity_points_power))
+                return player.points.gte(player.i.cost_1)
             },
             style(){return {"width":"200px","border-radius":"0px","background-color":"lightblue","height":"150px"}},
             unlocked(){return hasUpgrade("i","Color-White") && (player.i.player_in_challenge.lte(0.5) || player.i.player_disable_blue.lte(0.5))},
@@ -1576,23 +1584,23 @@ addLayer("i",
             {
                 if(hasUpgrade("i","Color-Orange"))
                 return '已解锁'
-                return "解锁 - 橙色 Tube<br><br>花费:"+format(player.i.cost_2.div(player.i.infinity_points_power))+"能源"
+                return "解锁 - 橙色 Tube<br><br>花费:"+format(player.i.cost_2)+"能源"
             },
             onPurchase()
             {
-                player.points=player.points.sub(player.i.cost_2.div(player.i.infinity_points_power))
-                if(player.i.cost_2.gte(5e6+1) && player.i.cost_2.lte(5e7+1))
+                player.points=player.points.sub(player.i.cost_2)
+                if(player.i.cost_2.gte(5e6+1) && player.i.cost_2.lte(2e8+1))
                 {
-                    player.i.cost_2=n(2.5e10)
+                    player.i.cost_2=n(2e11)
                 }
                 if(player.i.cost_2.lte(5e6+1))
                 {
-                    player.i.cost_2=n(5e7)
+                    player.i.cost_2=n(2e8)
                 }
             },
             canAfford()
             {
-                return player.points.gte(player.i.cost_2.div(player.i.infinity_points_power))
+                return player.points.gte(player.i.cost_2)
             },
             style(){return {"width":"200px","border-radius":"0px","background-color":"orange","height":"150px"}},
             unlocked(){return hasUpgrade("i","Color-Red") && hasUpgrade("i","Color-Yellow")},
@@ -1603,23 +1611,23 @@ addLayer("i",
             {
                 if(hasUpgrade("i","Color-Purple"))
                 return '已解锁'
-                return "解锁 - 紫色 Tube<br><br>花费:"+format(player.i.cost_2.div(player.i.infinity_points_power))+"能源"
+                return "解锁 - 紫色 Tube<br><br>花费:"+format(player.i.cost_2)+"能源"
             },
             onPurchase()
             {
-                player.points=player.points.sub(player.i.cost_2.div(player.i.infinity_points_power))
-                if(player.i.cost_2.gte(5e6+1) && player.i.cost_2.lte(5e7+1))
+                player.points=player.points.sub(player.i.cost_2)
+                if(player.i.cost_2.gte(5e6+1) && player.i.cost_2.lte(2e8+1))
                 {
-                    player.i.cost_2=n(2.5e10)
+                    player.i.cost_2=n(2e11)
                 }
                 if(player.i.cost_2.lte(5e6+1))
                 {
-                    player.i.cost_2=n(5e7)
+                    player.i.cost_2=n(2e8)
                 }
             },
             canAfford()
             {
-                return player.points.gte(player.i.cost_2.div(player.i.infinity_points_power))
+                return player.points.gte(player.i.cost_2)
             },
             style(){return {"width":"200px","border-radius":"0px","background-color":"#D462FF","height":"150px"}},
             unlocked(){return hasUpgrade("i","Color-Red") && hasUpgrade("i","Color-Blue")},
@@ -1630,23 +1638,23 @@ addLayer("i",
             {
                 if(hasUpgrade("i","Color-Green"))
                 return '已解锁'
-                return "解锁 - 绿色 Tube<br><br>花费:"+format(player.i.cost_2.div(player.i.infinity_points_power))+"能源"
+                return "解锁 - 绿色 Tube<br><br>花费:"+format(player.i.cost_2)+"能源"
             },
             onPurchase()
             {
-                player.points=player.points.sub(player.i.cost_2.div(player.i.infinity_points_power))
-                if(player.i.cost_2.gte(5e6+1) && player.i.cost_2.lte(5e7+1))
+                player.points=player.points.sub(player.i.cost_2)
+                if(player.i.cost_2.gte(5e6+1) && player.i.cost_2.lte(2e8+1))
                 {
-                    player.i.cost_2=n(2.5e10)
+                    player.i.cost_2=n(2e11)
                 }
                 if(player.i.cost_2.lte(5e6+1))
                 {
-                    player.i.cost_2=n(5e7)
+                    player.i.cost_2=n(2e8)
                 }
             },
             canAfford()
             {
-                return player.points.gte(player.i.cost_2.div(player.i.infinity_points_power))
+                return player.points.gte(player.i.cost_2)
             },
             style(){return {"width":"200px","border-radius":"0px","background-color":"lime","height":"150px"}},
             unlocked(){return hasUpgrade("i","Color-Blue") && hasUpgrade("i","Color-Yellow")},
@@ -1682,13 +1690,13 @@ addLayer("i",
             onPurchase()
             {
                 player.i.infinity_points=player.i.infinity_points.sub(player.i.cost_infinity_1)
-                if(player.i.cost_infinity_1.gte(30.5) && player.i.cost_infinity_1.lte(5000.5))
+                if(player.i.cost_infinity_1.gte(30.5) && player.i.cost_infinity_1.lte(3000.5))
                 {
-                    player.i.cost_infinity_1=n(20000)
+                    player.i.cost_infinity_1=n(10000)
                 }
                 if(player.i.cost_infinity_1.lte(30.5))
                 {
-                    player.i.cost_infinity_1=n(5000)
+                    player.i.cost_infinity_1=n(3000)
                 }
             },
             canAfford()
@@ -1712,13 +1720,13 @@ addLayer("i",
             onPurchase()
             {
                 player.i.infinity_points=player.i.infinity_points.sub(player.i.cost_infinity_1)
-                if(player.i.cost_infinity_1.gte(30.5) && player.i.cost_infinity_1.lte(5000.5))
+                if(player.i.cost_infinity_1.gte(30.5) && player.i.cost_infinity_1.lte(3000.5))
                 {
-                    player.i.cost_infinity_1=n(20000)
+                    player.i.cost_infinity_1=n(10000)
                 }
                 if(player.i.cost_infinity_1.lte(30.5))
                 {
-                    player.i.cost_infinity_1=n(5000)
+                    player.i.cost_infinity_1=n(3000)
                 }
             },
             canAfford()
@@ -1742,13 +1750,13 @@ addLayer("i",
             onPurchase()
             {
                 player.i.infinity_points=player.i.infinity_points.sub(player.i.cost_infinity_1)
-                if(player.i.cost_infinity_1.gte(30.5) && player.i.cost_infinity_1.lte(5000.5))
+                if(player.i.cost_infinity_1.gte(30.5) && player.i.cost_infinity_1.lte(3000.5))
                 {
-                    player.i.cost_infinity_1=n(20000)
+                    player.i.cost_infinity_1=n(10000)
                 }
                 if(player.i.cost_infinity_1.lte(30.5))
                 {
-                    player.i.cost_infinity_1=n(5000)
+                    player.i.cost_infinity_1=n(3000)
                 }
             },
             canAfford()
@@ -2077,12 +2085,15 @@ addLayer("i",
         {
             EFFECT()
             {
-                var eff=n(1).add(n(0.01).div(player.i.instability_energy.add(1).logBase(10).add(1).logBase(10).max(1))).pow(player.i.instability_energy.add(1).logBase(10))
+                var x=n(10)
+                if(hasUpgrade("i","Instability-Upgrade-4-3"))x=n(100)
+                var eff=n(1).add(n(0.01).div(player.i.instability_energy.add(1).logBase(x).add(1).logBase(x).max(1))).pow(player.i.instability_energy.add(1).logBase(10))
                 return eff
             },
             fullDisplay()
             {
                 var formula_1='效果公式 : (1+0.01/log<sub>10</sub>log<sub>10</sub>(IE))<sup>log<sub>10</sub>IE</sup>'
+                if(hasUpgrade("i","Instability-Upgrade-4-3"))formula_1='效果公式 : (1+0.01/log<sub>100</sub>log<sub>100</sub>(IE))<sup>log<sub>10</sub>IE</sup>'
                 if(!player.i.shiftAlias)formula_1=''
                 return '<h2>大膨胀</h2><br>不稳定能源以缓慢的速度增幅能源获取<br>'+formula_1+'<br>当前:'+format(this.EFFECT())+'<br>花费:1e200不稳定能源'
             },
@@ -2152,7 +2163,7 @@ addLayer("i",
         {
             fullDisplay()
             {
-                return 'UNLOCK<br>解锁 不稳定-挑战<br><br>花费:1e50000不稳定能源'
+                return 'UNLOCK<br>削弱 不稳定能源增益的软上限<br>解锁 不稳定-挑战<br><br>花费:1e50000不稳定能源'
             },
             onPurchase()
             {

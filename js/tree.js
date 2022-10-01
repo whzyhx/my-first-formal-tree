@@ -49,8 +49,8 @@ addLayer("tree-tab", {
                 player.r.in_night=n(0)
                 player.r.reality_unlocked=n(1)
                 player.r.days=x.add(1)
-                // player.r.player_x=n(10)
-                // player.r.player_y=n(11)
+                player.r.player_x=n(10)
+                player.r.player_y=n(11)
                 showTab('none')
             }   
         },
