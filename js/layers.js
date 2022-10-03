@@ -249,7 +249,6 @@ addLayer("i",
             {
                 var need=n(10)
                 need=need.mul(n(1.1).pow(player.i.white_num.pow(player.i.d).div(player.i.a).div(player.i.infinity_points_power)))
-                console.log(need)
                 return need
             },
             EFFECT()
@@ -1048,7 +1047,7 @@ addLayer("i",
             {
                 return '解锁 Instability-不稳定性<br><br>注意:这会重置你之前所有的东西但是<br>你会解锁更多很有趣的玩法'
             },
-            unlocked(){return player.i.button_click_time.gte(19) && player.i.instability_unlocked.lte(0.5)},
+            unlocked(){return player.i.button_click_time.gte(20) && player.i.instability_unlocked.lte(0.5)},
             style(){return {"width":"600px","border-radius":"0px","background-color":"#6AA121","height":"150px",}},
             canClick(){return true},
             onClick(){
@@ -1160,9 +1159,9 @@ addLayer("i",
             {
                 return '<h1>坍缩</h1><br><br>但是你会获得不稳定点作为回报'
             },
-            unlocked(){return hasUpgrade("i","Infinity-Color-Orange") || hasUpgrade("i","Infinity-Color-Green") || hasUpgrade("i","Infinity-Color-Purple")},
+            unlocked(){return player.i.instability_unlocked.gte(0.5) && (hasUpgrade("i","Infinity-Color-Orange") || hasUpgrade("i","Infinity-Color-Green") || hasUpgrade("i","Infinity-Color-Purple"))},
             style(){return {"width":"600px","border-radius":"0px","background-color":"#6AA121","height":"150px",}},
-            canClick(){return hasUpgrade("i","Infinity-Color-Orange") || hasUpgrade("i","Infinity-Color-Green") || hasUpgrade("i","Infinity-Color-Purple")},
+            canClick(){return player.i.instability_unlocked.gte(0.5) && (hasUpgrade("i","Infinity-Color-Orange") || hasUpgrade("i","Infinity-Color-Green") || hasUpgrade("i","Infinity-Color-Purple"))},
             onClick(){
                 player.i.instability_points=player.i.instability_points.add(1)
                 player.i.total_instability_points=player.i.total_instability_points.add(1)
@@ -1911,15 +1910,15 @@ addLayer("i",
                 // var formula='log<sub>10</sub>x/10 => log<sub>10</sub>x/3'
                 // var huanhang=''
                 // if(!player.i.shiftAlias)formula='',huanhang='<br>'
-                return '无尽 升级 3-1<br>无尽重置将不再重置你的色彩升级<br><br>花费:3000无尽点'
+                return '无尽 升级 3-1<br>无尽重置将不再重置你的色彩升级<br><br>花费:1000无尽点'
             },
             onPurchase()
             {
-                player.i.infinity_points=player.i.infinity_points.sub(3000)
+                player.i.infinity_points=player.i.infinity_points.sub(1000)
             },
             canAfford()
             {
-                return player.i.infinity_points.gte(3000)
+                return player.i.infinity_points.gte(1000)
             },
             style(){
                 return {"width":"200px","border-radius":"0px","height":"150px",
@@ -2408,6 +2407,27 @@ addLayer("i",
 		},
         "Instability":
         {
+            "Upgrade":{
+                buttonStyle()
+                {
+                    return {"border-radius":"0px","border-color":"#6AA121"}
+                },
+                content:[
+                    "blank",
+                    ["row",[["upgrade","Instability-Upgrade-1-1"],
+                            ["upgrade","Instability-Upgrade-1-2"],
+                            ["upgrade","Instability-Upgrade-1-3"],]],
+                    ["row",[["upgrade","Instability-Upgrade-2-1"],
+                            ["upgrade","Instability-Upgrade-2-2"],
+                            ["upgrade","Instability-Upgrade-2-3"],]],
+                    ["row",[["upgrade","Instability-Upgrade-3-1"],
+                            ["upgrade","Instability-Upgrade-3-2"],
+                            ["upgrade","Instability-Upgrade-3-3"],]],
+                    ["row",[["upgrade","Instability-Upgrade-4-1"],
+                            ["upgrade","Instability-Upgrade-4-2"],
+                            ["upgrade","Instability-Upgrade-4-3"],]],
+                ]
+            },
             "Tube":{
                 unlocked(){return player.i.total_instability_points.gte(0.5)},
                 buttonStyle()
@@ -2433,27 +2453,6 @@ addLayer("i",
                         },
                         { "color": "white", "font-size": "20px",}
                     ],
-                ]
-            },
-            "Upgrade":{
-                buttonStyle()
-                {
-                    return {"border-radius":"0px","border-color":"#6AA121"}
-                },
-                content:[
-                    "blank",
-                    ["row",[["upgrade","Instability-Upgrade-1-1"],
-                            ["upgrade","Instability-Upgrade-1-2"],
-                            ["upgrade","Instability-Upgrade-1-3"],]],
-                    ["row",[["upgrade","Instability-Upgrade-2-1"],
-                            ["upgrade","Instability-Upgrade-2-2"],
-                            ["upgrade","Instability-Upgrade-2-3"],]],
-                    ["row",[["upgrade","Instability-Upgrade-3-1"],
-                            ["upgrade","Instability-Upgrade-3-2"],
-                            ["upgrade","Instability-Upgrade-3-3"],]],
-                    ["row",[["upgrade","Instability-Upgrade-4-1"],
-                            ["upgrade","Instability-Upgrade-4-2"],
-                            ["upgrade","Instability-Upgrade-4-3"],]],
                 ]
             },
             "Chanllenge":{
@@ -2534,6 +2533,7 @@ addLayer("i",
                     "blank",
                     ["display-text",
                         function() {
+                            if(player.i.total_instability_points.gte(0.5))
                             return '你总共有 '+format(player.i.total_instability_points)+' 点不稳定点'
                         },
                         { "color": "white", "font-size": "24px",}
@@ -2706,16 +2706,22 @@ addLayer("i",
                     function() {
                         var formula_1='sin(T)',formula_2='sin(T)'
                         if(hasUpgrade("i","Instability-Upgrade-1-1"))formula_1=formula_1+'*1.5'
-                        if(hasUpgrade("i","Instability-Upgrade-1-3"))formula_1=formula_1+'*T<sup>'
-                        if(hasUpgrade("i","Instability-Upgrade-4-2"))formula_1=formula_1+'1'
-                        else formula_1=formula_1+'0.5'
-                        if(hasUpgrade("i","Instability-Upgrade-2-2"))formula_1=formula_1+'+FT'
+                        if(hasUpgrade("i","Instability-Upgrade-1-3"))
+                        {
+                            formula_1=formula_1+'*T<sup>'
+                            if(hasUpgrade("i","Instability-Upgrade-4-2"))formula_1=formula_1+'1'
+                            else formula_1=formula_1+'0.5'
+                            if(hasUpgrade("i","Instability-Upgrade-2-2"))formula_1=formula_1+'+FT'
+                        }
                         formula_1=formula_1+'</sup>'
                         if(hasUpgrade("i","Instability-Upgrade-1-2"))formula_2=formula_2+'/1.5'
-                        if(hasUpgrade("i","Instability-Upgrade-1-3"))formula_2=formula_2+'*T<sup>'
-                        if(hasUpgrade("i","Instability-Upgrade-4-2"))formula_2=formula_2+'1'
-                        else formula_2=formula_2+'0.5'
-                        if(hasUpgrade("i","Instability-Upgrade-2-2"))formula_2=formula_2+'-FT'
+                        if(hasUpgrade("i","Instability-Upgrade-1-3"))
+                        {
+                            formula_2=formula_2+'*T<sup>'
+                            if(hasUpgrade("i","Instability-Upgrade-4-2"))formula_2=formula_2+'1'
+                            else formula_2=formula_2+'0.5'
+                            if(hasUpgrade("i","Instability-Upgrade-2-2"))formula_2=formula_2+'-FT'
+                        }
                         formula_2=formula_2+'</sup>'
                         return     '当你的不稳定能量为正数时 , 公式 : '+formula_1
                               +'<br>当你的不稳定能量为负数时 , 公式 : '+formula_2

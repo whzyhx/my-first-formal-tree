@@ -38,7 +38,7 @@ addLayer("r",
             [1,1,1,1,1,1,1,1,1,1],
             ],
             map_City_1_0:[
-            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,35,1,1],
             [1,14,14,14,14,14,1,1,1,1],
             [1,14,15,15,15,18,1,1,1,28],
             [1,14,15,16,15,14,1,1,1,1],
@@ -58,20 +58,80 @@ addLayer("r",
             [1,1,1,1,1,1,1,1,1,1],
             [1,1,1,1,1,1,1,1,1,1],
             [1,1,1,1,1,1,1,1,1,1],
-            [13,1,1,1,1,1,1,1,1,1],
+            [13,1,1,1,1,1,1,1,1,41],
             [1,1,1,1,1,1,1,1,1,1],
             ],
             map_City_1_1:[
-            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,39,1,1,1,1,1,1,1],
             [1,1,1,1,1,1,1,1,1,1],
             [29,1,1,1,1,1,1,1,1,1],
             [1,1,1,1,1,1,1,1,1,1],
             [1,1,1,1,1,1,1,1,1,1],
             [1,1,1,32,1,1,1,1,1,1],
             [1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,45],
             [1,1,1,1,1,1,1,1,1,1],
             [1,31,1,1,1,1,1,1,1,1],
+            ],
+            map_City_2_0:[
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,37],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,36,1,1],
+            ],
+            map_City_0_2:[
+            [1,1,1,1,1,1,1,1,43,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [42,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            ],
+            map_City_1_2:[
+            [1,1,1,1,1,1,1,1,49,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [46,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,44,1],
+            ],
+            map_City_2_1:[
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [38,1,1,1,1,1,1,1,1,47],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,40,1,1,1,1,1,1,1],
+            ],
+            map_City_2_2:[
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [48,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1,50,1],
             ],
             map_Andy_Burg_Home:[
             [0,0,0,0,0,0],
@@ -546,584 +606,6 @@ addLayer("City_0_0",//1
         return player.r.player_in_map.eq(1) && player.r.in_day.gte(0.5)
     },
 })
-addLayer("City_1_0",//3
-{
-    symbol: "R", 
-    position: 0,
-    startData()
-    {
-        return{
-            unlocked: true,
-            points: new ExpantaNum(0),
-
-        }
-    },
-    color: "pink",
-    resource: "重置点",
-    type: "normal", 
-    requires:new ExpantaNum(1e308),
-    exponent:1,
-    baseAmount()
-    {
-        return zero
-    },
-    baseResource:"点数",
-    gainMult()
-    {
-        var mult=new ExpantaNum(1)
-        return mult
-    },
-    gainExp()
-    {
-        var exp=new ExpantaNum(1)
-        return exp
-    },
-    tooltip(){return ''},
-    row: 1,
-    grid: {
-        rows: 10,
-        cols: 10,
-        getStartData(id) {
-            return 0
-        },
-        getUnlocked(id) { // Default
-            return player.r.player_in_map.eq(3)
-        },
-        getCanClick(data, id) {
-            var xx=n((id-id%100)/100).sub(1)
-            var yy=n(id%100).sub(1)
-            if(player.r.map_City_1_0[xx][yy]==14)
-            {
-                return false
-            }
-            var chax=player.r.player_x.sub(xx),chay=player.r.player_y.sub(yy)
-            chax=chax.abs()
-            chay=chay.abs()
-            return chax.add(chay).gte(0.001) && chax.add(chay).lte(1.001)
-        },
-        getStyle(data,id){
-            const jss={
-                borderRadius:'0px',
-                backgroundColor:'white',
-                height:'50px',
-                width:'50px',
-                transitionDuration:'0s'
-            }
-            var xx=n((id-id%100)/100).sub(1)
-            var yy=n(id%100).sub(1)
-            var tmpcolor=''
-            var chax=player.r.player_x.sub(xx),chay=player.r.player_y.sub(yy)
-            chax=chax.abs()
-            chay=chay.abs()
-            // if(xx==6 && yy==3)
-            // {
-            //     console.log(chax.add(chay))
-            // }
-            if(chax.add(chay).lte(0.001))
-            {
-                tmpcolor='#FFA500'
-            }
-            else
-            {
-                if(player.r.map_City_1_0[xx][yy]==1)
-                {
-                    if(layers.City_1_0.grid.getCanClick(data,id))
-                    {
-                        tmpcolor='#FFFFFF'
-                    }
-                    else
-                    {
-                        tmpcolor='#808080'
-                    }
-                }
-                if(player.r.map_City_1_0[xx][yy]==12)
-                {
-                    tmpcolor='#ADD8E6'
-                }
-                if(player.r.map_City_1_0[xx][yy]==14)
-                {
-                    tmpcolor='#973A28'
-                }
-                if(player.r.map_City_1_0[xx][yy]==15)
-                {
-                    tmpcolor='#973A2895'
-                }
-                if(player.r.map_City_1_0[xx][yy]==16)
-                {
-                    tmpcolor='#973A2880'
-                }
-                if(player.r.map_City_1_0[xx][yy]==17)
-                {
-                    tmpcolor='#973A28'
-                }
-                if(player.r.map_City_1_0[xx][yy]==18)
-                {
-                    tmpcolor='#973A28'
-                }
-                if(player.r.map_City_1_0[xx][yy]==28)
-                {
-                    tmpcolor='#ADD8E6'
-                }
-                // if(xx==6 && yy==3)
-                // {
-                //     console.log(player.r.map_City_1_0[xx][yy])
-                //     console.log(tmpcolor)
-                // }
-            }
-            jss.backgroundColor=`${tmpcolor}`
-            // if(xx==6 && yy==3)
-            // {
-            //     console.log(jss.backgroundColor)
-            // }
-            return jss
-        },
-        onClick(data, id) { 
-            var xx=n((id-id%100)/100).sub(1)
-            var yy=n(id%100).sub(1)
-            if(xx.eq(9) && yy.eq(1))
-            {
-                player.r.player_in_map=one
-                player.r.player_x=n(1)
-                player.r.player_y=n(1)
-                showTab('City_0_0')
-                return
-            }
-            if(xx.eq(7) && yy.eq(3))
-            {
-                player.r.player_in_map=five
-                player.r.player_x=n(15)
-                player.r.player_y=n(4)
-                showTab('Office_1F')
-                return
-            }
-            if(xx.eq(2) && yy.eq(5))
-            {
-                player.r.player_in_map=five
-                player.r.player_x=n(3)
-                player.r.player_y=n(7)
-                showTab('Office_1F')
-                return
-            }
-            if(player.r.map_City_1_0[xx][yy]==28)
-            {
-                player.r.player_in_map=n(7)
-                player.r.player_x=n(2)
-                player.r.player_y=n(1)
-                showTab('City_1_1')
-                return
-            }
-            player.r.player_x=xx
-            player.r.player_y=yy
-        },
-        getDisplay(data, id) {
-            var xx=n((id-id%100)/100).sub(1)
-            var yy=n(id%100).sub(1)
-            if(player.r.map_City_1_0[xx][yy]==1)
-            {
-                return ''
-            }
-            if(player.r.map_City_1_0[xx][yy]==12)
-            {
-                return '<h1>↓</h1>'
-            }
-            if(player.r.map_City_1_0[xx][yy]==17)
-            {
-                return '<h1>↑</h1>'
-            }
-            if(player.r.map_City_1_0[xx][yy]==18)
-            {
-                return '<h1>←</h1>'
-            }
-            if(player.r.map_City_1_0[xx][yy]==28)
-            {
-                return '<h1>→</h1>'
-            }
-            return ''
-        },
-    },
-    tabFormat:{
-        "City_1_0":{
-            buttonStyle()
-            {
-                return {"border-radius":"0px"}
-            },
-            content:[
-                "blank",
-                ["layer-proxy",['City_1_0',["grid"]]],
-            ],
-        },
-    },
-    layerShown()
-    {
-        return player.r.player_in_map.eq(3) && player.r.in_day.gte(0.5)
-    },
-})
-addLayer("City_0_1",//4
-{
-    symbol: "R", 
-    position: 0,
-    startData()
-    {
-        return{
-            unlocked: true,
-            points: new ExpantaNum(0),
-
-        }
-    },
-    color: "pink",
-    resource: "重置点",
-    type: "normal", 
-    requires:new ExpantaNum(1e308),
-    exponent:1,
-    baseAmount()
-    {
-        return zero
-    },
-    baseResource:"点数",
-    gainMult()
-    {
-        var mult=new ExpantaNum(1)
-        return mult
-    },
-    gainExp()
-    {
-        var exp=new ExpantaNum(1)
-        return exp
-    },
-    tooltip(){return ''},
-    row: 1,
-    grid: {
-        rows: 10,
-        cols: 10,
-        getStartData(id) {
-            return 0
-        },
-        getUnlocked(id) { // Default
-            return player.r.player_in_map.eq(4)
-        },
-        getCanClick(data, id) {
-            var xx=n((id-id%100)/100).sub(1)
-            var yy=n(id%100).sub(1)
-            // if(player.r.map_City_0_1[xx][yy]==0)
-            // {
-            //     return false
-            // }
-            var chax=player.r.player_x.sub(xx),chay=player.r.player_y.sub(yy)
-            chax=chax.abs()
-            chay=chay.abs()
-            return chax.add(chay).gte(0.001) && chax.add(chay).lte(1.001)
-        },
-        getStyle(data,id){
-            const jss={
-                borderRadius:'0px',
-                backgroundColor:'white',
-                height:'50px',
-                width:'50px',
-                transitionDuration:'0s'
-            }
-            var xx=n((id-id%100)/100).sub(1)
-            var yy=n(id%100).sub(1)
-            var tmpcolor=''
-            var chax=player.r.player_x.sub(xx),chay=player.r.player_y.sub(yy)
-            chax=chax.abs()
-            chay=chay.abs()
-            // if(xx==6 && yy==3)
-            // {
-            //     console.log(chax.add(chay))
-            // }
-            if(chax.add(chay).lte(0.001))
-            {
-                tmpcolor='#FFA500'
-            }
-            else
-            {
-                if(player.r.map_City_0_1[xx][yy]==1)
-                {
-                    if(layers.City_0_1.grid.getCanClick(data,id))
-                    {
-                        tmpcolor='#FFFFFF'
-                    }
-                    else
-                    {
-                        tmpcolor='#808080'
-                    }
-                }
-                if(player.r.map_City_0_1[xx][yy]==13)
-                {
-                    tmpcolor='#ADD8E6'
-                }
-                if(player.r.map_City_0_1[xx][yy]==30)
-                {
-                    tmpcolor='#ADD8E6'
-                }
-                // if(xx==6 && yy==3)
-                // {
-                //     console.log(player.r.map_City_0_1[xx][yy])
-                //     console.log(tmpcolor)
-                // }
-            }
-            jss.backgroundColor=`${tmpcolor}`
-            // if(xx==6 && yy==3)
-            // {
-            //     console.log(jss.backgroundColor)
-            // }
-            return jss
-        },
-        onClick(data, id) { 
-            var xx=n((id-id%100)/100).sub(1)
-            var yy=n(id%100).sub(1)
-            if(xx.eq(8) && yy.eq(0))
-            {
-                player.r.player_in_map=one
-                player.r.player_x=n(8)
-                player.r.player_y=n(8)
-                showTab('City_0_0')
-                return
-            }
-            if(player.r.map_City_0_1[xx][yy]==30)
-            {
-                player.r.player_in_map=n(7)
-                player.r.player_x=n(8)
-                player.r.player_y=n(1)
-                showTab('City_1_1')
-                return
-            }
-            player.r.player_x=xx
-            player.r.player_y=yy
-        },
-        getDisplay(data, id) {
-            var xx=n((id-id%100)/100).sub(1)
-            var yy=n(id%100).sub(1)
-            if(player.r.map_City_0_1[xx][yy]==1)
-            {
-                return ''
-            }
-            if(player.r.map_City_0_1[xx][yy]==13)
-            {
-                return '<h1>←</h1>'
-            }
-            if(player.r.map_City_0_1[xx][yy]==30)
-            {
-                return '<h1>↑</h1>'
-            }
-        },
-    },
-    tabFormat:{
-        "City_0_1":{
-            buttonStyle()
-            {
-                return {"border-radius":"0px"}
-            },
-            content:[
-                "blank",
-                ["layer-proxy",['City_0_1',["grid"]]],
-            ],
-        },
-    },
-    layerShown()
-    {
-        return player.r.player_in_map.eq(4) && player.r.in_day.gte(0.5)
-    },
-})
-addLayer("City_1_1",//7
-{
-    symbol: "R", 
-    position: 0,
-    startData()
-    {
-        return{
-            unlocked: true,
-            points: new ExpantaNum(0),
-
-        }
-    },
-    color: "pink",
-    resource: "重置点",
-    type: "normal", 
-    requires:new ExpantaNum(1e308),
-    exponent:1,
-    baseAmount()
-    {
-        return zero
-    },
-    baseResource:"点数",
-    gainMult()
-    {
-        var mult=new ExpantaNum(1)
-        return mult
-    },
-    gainExp()
-    {
-        var exp=new ExpantaNum(1)
-        return exp
-    },
-    tooltip(){return ''},
-    row: 1,
-    grid: {
-        rows: 10,
-        cols: 10,
-        getStartData(id) {
-            return 0
-        },
-        getUnlocked(id) { // Default
-            return player.r.player_in_map.eq(7)
-        },
-        getCanClick(data, id) {
-            var xx=n((id-id%100)/100).sub(1)
-            var yy=n(id%100).sub(1)
-            // if(player.r.map_City_1_1[xx][yy]==0)
-            // {
-            //     return false
-            // }
-            var chax=player.r.player_x.sub(xx),chay=player.r.player_y.sub(yy)
-            chax=chax.abs()
-            chay=chay.abs()
-            return chax.add(chay).gte(0.001) && chax.add(chay).lte(1.001)
-        },
-        getStyle(data,id){
-            const jss={
-                borderRadius:'0px',
-                backgroundColor:'white',
-                height:'50px',
-                width:'50px',
-                transitionDuration:'0s'
-            }
-            var xx=n((id-id%100)/100).sub(1)
-            var yy=n(id%100).sub(1)
-            var tmpcolor=''
-            var chax=player.r.player_x.sub(xx),chay=player.r.player_y.sub(yy)
-            chax=chax.abs()
-            chay=chay.abs()
-            // if(xx==6 && yy==3)
-            // {
-            //     console.log(chax.add(chay))
-            // }
-            if(chax.add(chay).lte(0.001))
-            {
-                tmpcolor='#FFA500'
-            }
-            else
-            {
-                if(player.r.map_City_1_1[xx][yy]==1)
-                {
-                    if(layers.City_1_1.grid.getCanClick(data,id))
-                    {
-                        tmpcolor='#FFFFFF'
-                    }
-                    else
-                    {
-                        tmpcolor='#808080'
-                    }
-                }
-                if(player.r.map_City_1_1[xx][yy]==29)
-                {
-                    tmpcolor='#ADD8E6'
-                }
-                if(player.r.map_City_1_1[xx][yy]==31)
-                {
-                    tmpcolor='#ADD8E6'
-                }
-                if(player.r.map_City_1_1[xx][yy]==32)
-                {
-                    tmpcolor='red'
-                }
-                // if(xx==6 && yy==3)
-                // {
-                //     console.log(player.r.map_City_1_1[xx][yy])
-                //     console.log(tmpcolor)
-                // }
-            }
-            jss.backgroundColor=`${tmpcolor}`
-            // if(xx==6 && yy==3)
-            // {
-            //     console.log(jss.backgroundColor)
-            // }
-            return jss
-        },
-        onClick(data, id) { 
-            var xx=n((id-id%100)/100).sub(1)
-            var yy=n(id%100).sub(1)
-            if(player.r.map_City_1_1[xx][yy]==29)
-            {
-                player.r.player_in_map=n(3)
-                player.r.player_x=n(2)
-                player.r.player_y=n(8)
-                showTab('City_1_0')
-                return
-            }
-            if(player.r.map_City_1_1[xx][yy]==31)
-            {
-                player.r.player_in_map=n(4)
-                player.r.player_x=n(1)
-                player.r.player_y=n(1)
-                showTab('City_0_1')
-                return
-            }
-            if(player.r.map_City_1_1[xx][yy]==32)
-            {
-                if(player.r.body_touch_times.gte(2.5))
-                {
-                    alert('它就是一具尸体罢了'+'\n'+'没啥更多的了')
-                }
-                else if(player.r.body_touch_times.gte(1.5))
-                {
-                    alert('你强忍着恶心'+'\n'+'[ 在尸体身上摸索 ]')
-                    alert('你获得了 一把钥匙(A101)')
-                }
-                else if(player.r.body_touch_times.gte(0.5))
-                {
-                    alert('你确定要触碰它吗')
-                }
-                else
-                {
-                    alert('呕')
-                    alert('这里竟然有一具尸体')
-                    alert('我的天,我要吐了')
-                }
-                player.r.body_touch_times=player.r.body_touch_times.add(1)
-                return
-            }
-            player.r.player_x=xx
-            player.r.player_y=yy
-        },
-        getDisplay(data, id) {
-            var xx=n((id-id%100)/100).sub(1)
-            var yy=n(id%100).sub(1)
-            if(player.r.map_City_1_1[xx][yy]==1)
-            {
-                return ''
-            }
-            if(player.r.map_City_1_1[xx][yy]==29)
-            {
-                return '<h1>←</h1>'
-            }
-            if(player.r.map_City_1_1[xx][yy]==31)
-            {
-                return '<h1>↓</h1>'
-            }
-            if(player.r.map_City_1_1[xx][yy]==32)
-            {
-                return '<h1>血</h1>'
-            }
-        },
-    },
-    tabFormat:{
-        "City_1_1":{
-            buttonStyle()
-            {
-                return {"border-radius":"0px"}
-            },
-            content:[
-                "blank",
-                ["layer-proxy",['City_1_1',["grid"]]],
-            ],
-        },
-    },
-    layerShown()
-    {
-        return player.r.player_in_map.eq(7) && player.r.in_day.gte(0.5)
-    },
-})
 addLayer("Andy_Burg_Home",//2
 {
     symbol: "R", 
@@ -1294,6 +776,417 @@ addLayer("Andy_Burg_Home",//2
     layerShown()
     {
         return player.r.player_in_map.eq(2) && player.r.in_day.gte(0.5)
+    },
+})
+addLayer("City_1_0",//3
+{
+    symbol: "R", 
+    position: 0,
+    startData()
+    {
+        return{
+            unlocked: true,
+            points: new ExpantaNum(0),
+
+        }
+    },
+    color: "pink",
+    resource: "重置点",
+    type: "normal", 
+    requires:new ExpantaNum(1e308),
+    exponent:1,
+    baseAmount()
+    {
+        return zero
+    },
+    baseResource:"点数",
+    gainMult()
+    {
+        var mult=new ExpantaNum(1)
+        return mult
+    },
+    gainExp()
+    {
+        var exp=new ExpantaNum(1)
+        return exp
+    },
+    tooltip(){return ''},
+    row: 1,
+    grid: {
+        rows: 10,
+        cols: 10,
+        getStartData(id) {
+            return 0
+        },
+        getUnlocked(id) { // Default
+            return player.r.player_in_map.eq(3)
+        },
+        getCanClick(data, id) {
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            if(player.r.map_City_1_0[xx][yy]==14)
+            {
+                return false
+            }
+            var chax=player.r.player_x.sub(xx),chay=player.r.player_y.sub(yy)
+            chax=chax.abs()
+            chay=chay.abs()
+            return chax.add(chay).gte(0.001) && chax.add(chay).lte(1.001)
+        },
+        getStyle(data,id){
+            const jss={
+                borderRadius:'0px',
+                backgroundColor:'white',
+                height:'50px',
+                width:'50px',
+                transitionDuration:'0s'
+            }
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            var tmpcolor=''
+            var chax=player.r.player_x.sub(xx),chay=player.r.player_y.sub(yy)
+            chax=chax.abs()
+            chay=chay.abs()
+            // if(xx==6 && yy==3)
+            // {
+            //     console.log(chax.add(chay))
+            // }
+            if(chax.add(chay).lte(0.001))
+            {
+                tmpcolor='#FFA500'
+            }
+            else
+            {
+                if(player.r.map_City_1_0[xx][yy]==1)
+                {
+                    if(layers.City_1_0.grid.getCanClick(data,id))
+                    {
+                        tmpcolor='#FFFFFF'
+                    }
+                    else
+                    {
+                        tmpcolor='#808080'
+                    }
+                }
+                if(player.r.map_City_1_0[xx][yy]==12)
+                {
+                    tmpcolor='#ADD8E6'
+                }
+                if(player.r.map_City_1_0[xx][yy]==14)
+                {
+                    tmpcolor='#973A28'
+                }
+                if(player.r.map_City_1_0[xx][yy]==15)
+                {
+                    tmpcolor='#973A2895'
+                }
+                if(player.r.map_City_1_0[xx][yy]==16)
+                {
+                    tmpcolor='#973A2880'
+                }
+                if(player.r.map_City_1_0[xx][yy]==17)
+                {
+                    tmpcolor='#973A28'
+                }
+                if(player.r.map_City_1_0[xx][yy]==18)
+                {
+                    tmpcolor='#973A28'
+                }
+                if(player.r.map_City_1_0[xx][yy]==28)
+                {
+                    tmpcolor='#ADD8E6'
+                }
+                if(player.r.map_City_1_0[xx][yy]==35)
+                {
+                    tmpcolor='#ADD8E6'
+                }
+                // if(xx==6 && yy==3)
+                // {
+                //     console.log(player.r.map_City_1_0[xx][yy])
+                //     console.log(tmpcolor)
+                // }
+            }
+            jss.backgroundColor=`${tmpcolor}`
+            // if(xx==6 && yy==3)
+            // {
+            //     console.log(jss.backgroundColor)
+            // }
+            return jss
+        },
+        onClick(data, id) { 
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            if(xx.eq(9) && yy.eq(1))
+            {
+                player.r.player_in_map=one
+                player.r.player_x=n(1)
+                player.r.player_y=n(1)
+                showTab('City_0_0')
+                return
+            }
+            if(xx.eq(7) && yy.eq(3))
+            {
+                player.r.player_in_map=five
+                player.r.player_x=n(15)
+                player.r.player_y=n(4)
+                showTab('Office_1F')
+                return
+            }
+            if(xx.eq(2) && yy.eq(5))
+            {
+                player.r.player_in_map=five
+                player.r.player_x=n(3)
+                player.r.player_y=n(7)
+                showTab('Office_1F')
+                return
+            }
+            if(player.r.map_City_1_0[xx][yy]==28)
+            {
+                player.r.player_in_map=n(7)
+                player.r.player_x=n(2)
+                player.r.player_y=n(1)
+                showTab('City_1_1')
+                return
+            }
+            if(player.r.map_City_1_0[xx][yy]==35)
+            {
+                player.r.player_in_map=n(9)
+                player.r.player_x=n(8)
+                player.r.player_y=n(7)
+                showTab('City_2_0')
+                return
+            }
+            player.r.player_x=xx
+            player.r.player_y=yy
+        },
+        getDisplay(data, id) {
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            if(player.r.map_City_1_0[xx][yy]==1)
+            {
+                return ''
+            }
+            if(player.r.map_City_1_0[xx][yy]==12)
+            {
+                return '<h1>↓</h1>'
+            }
+            if(player.r.map_City_1_0[xx][yy]==17)
+            {
+                return '<h1>↑</h1>'
+            }
+            if(player.r.map_City_1_0[xx][yy]==18)
+            {
+                return '<h1>←</h1>'
+            }
+            if(player.r.map_City_1_0[xx][yy]==28)
+            {
+                return '<h1>→</h1>'
+            }
+            if(player.r.map_City_1_0[xx][yy]==35)
+            {
+                return '<h1>↑</h1>'
+            }
+            return ''
+        },
+    },
+    tabFormat:{
+        "City_1_0":{
+            buttonStyle()
+            {
+                return {"border-radius":"0px"}
+            },
+            content:[
+                "blank",
+                ["layer-proxy",['City_1_0',["grid"]]],
+            ],
+        },
+    },
+    layerShown()
+    {
+        return player.r.player_in_map.eq(3) && player.r.in_day.gte(0.5)
+    },
+})
+addLayer("City_0_1",//4
+{
+    symbol: "R", 
+    position: 0,
+    startData()
+    {
+        return{
+            unlocked: true,
+            points: new ExpantaNum(0),
+
+        }
+    },
+    color: "pink",
+    resource: "重置点",
+    type: "normal", 
+    requires:new ExpantaNum(1e308),
+    exponent:1,
+    baseAmount()
+    {
+        return zero
+    },
+    baseResource:"点数",
+    gainMult()
+    {
+        var mult=new ExpantaNum(1)
+        return mult
+    },
+    gainExp()
+    {
+        var exp=new ExpantaNum(1)
+        return exp
+    },
+    tooltip(){return ''},
+    row: 1,
+    grid: {
+        rows: 10,
+        cols: 10,
+        getStartData(id) {
+            return 0
+        },
+        getUnlocked(id) { // Default
+            return player.r.player_in_map.eq(4)
+        },
+        getCanClick(data, id) {
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            // if(player.r.map_City_0_1[xx][yy]==0)
+            // {
+            //     return false
+            // }
+            var chax=player.r.player_x.sub(xx),chay=player.r.player_y.sub(yy)
+            chax=chax.abs()
+            chay=chay.abs()
+            return chax.add(chay).gte(0.001) && chax.add(chay).lte(1.001)
+        },
+        getStyle(data,id){
+            const jss={
+                borderRadius:'0px',
+                backgroundColor:'white',
+                height:'50px',
+                width:'50px',
+                transitionDuration:'0s'
+            }
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            var tmpcolor=''
+            var chax=player.r.player_x.sub(xx),chay=player.r.player_y.sub(yy)
+            chax=chax.abs()
+            chay=chay.abs()
+            // if(xx==6 && yy==3)
+            // {
+            //     console.log(chax.add(chay))
+            // }
+            if(chax.add(chay).lte(0.001))
+            {
+                tmpcolor='#FFA500'
+            }
+            else
+            {
+                if(player.r.map_City_0_1[xx][yy]==1)
+                {
+                    if(layers.City_0_1.grid.getCanClick(data,id))
+                    {
+                        tmpcolor='#FFFFFF'
+                    }
+                    else
+                    {
+                        tmpcolor='#808080'
+                    }
+                }
+                if(player.r.map_City_0_1[xx][yy]==13)
+                {
+                    tmpcolor='#ADD8E6'
+                }
+                if(player.r.map_City_0_1[xx][yy]==30)
+                {
+                    tmpcolor='#ADD8E6'
+                }
+                if(player.r.map_City_0_1[xx][yy]==41)
+                {
+                    tmpcolor='#ADD8E6'
+                }
+                // if(xx==6 && yy==3)
+                // {
+                //     console.log(player.r.map_City_0_1[xx][yy])
+                //     console.log(tmpcolor)
+                // }
+            }
+            jss.backgroundColor=`${tmpcolor}`
+            // if(xx==6 && yy==3)
+            // {
+            //     console.log(jss.backgroundColor)
+            // }
+            return jss
+        },
+        onClick(data, id) { 
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            if(xx.eq(8) && yy.eq(0))
+            {
+                player.r.player_in_map=one
+                player.r.player_x=n(8)
+                player.r.player_y=n(8)
+                showTab('City_0_0')
+                return
+            }
+            if(player.r.map_City_0_1[xx][yy]==30)
+            {
+                player.r.player_in_map=n(7)
+                player.r.player_x=n(8)
+                player.r.player_y=n(1)
+                showTab('City_1_1')
+                return
+            }
+            if(player.r.map_City_0_1[xx][yy]==41)
+            {
+                player.r.player_in_map=n(11)
+                player.r.player_x=n(8)
+                player.r.player_y=n(1)
+                showTab('City_0_2')
+                return
+            }
+            player.r.player_x=xx
+            player.r.player_y=yy
+        },
+        getDisplay(data, id) {
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            if(player.r.map_City_0_1[xx][yy]==1)
+            {
+                return ''
+            }
+            if(player.r.map_City_0_1[xx][yy]==13)
+            {
+                return '<h1>←</h1>'
+            }
+            if(player.r.map_City_0_1[xx][yy]==30)
+            {
+                return '<h1>↑</h1>'
+            }
+            if(player.r.map_City_0_1[xx][yy]==41)
+            {
+                return '<h1>→</h1>'
+            }
+        },
+    },
+    tabFormat:{
+        "City_0_1":{
+            buttonStyle()
+            {
+                return {"border-radius":"0px"}
+            },
+            content:[
+                "blank",
+                ["layer-proxy",['City_0_1',["grid"]]],
+            ],
+        },
+    },
+    layerShown()
+    {
+        return player.r.player_in_map.eq(4) && player.r.in_day.gte(0.5)
     },
 })
 addLayer("Office_1F",//5
@@ -1730,6 +1623,237 @@ addLayer("Office_2F",//6
         return player.r.player_in_map.eq(6) && player.r.in_day.gte(0.5)
     },
 })
+addLayer("City_1_1",//7
+{
+    symbol: "R", 
+    position: 0,
+    startData()
+    {
+        return{
+            unlocked: true,
+            points: new ExpantaNum(0),
+
+        }
+    },
+    color: "pink",
+    resource: "重置点",
+    type: "normal", 
+    requires:new ExpantaNum(1e308),
+    exponent:1,
+    baseAmount()
+    {
+        return zero
+    },
+    baseResource:"点数",
+    gainMult()
+    {
+        var mult=new ExpantaNum(1)
+        return mult
+    },
+    gainExp()
+    {
+        var exp=new ExpantaNum(1)
+        return exp
+    },
+    tooltip(){return ''},
+    row: 1,
+    grid: {
+        rows: 10,
+        cols: 10,
+        getStartData(id) {
+            return 0
+        },
+        getUnlocked(id) { // Default
+            return player.r.player_in_map.eq(7)
+        },
+        getCanClick(data, id) {
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            // if(player.r.map_City_1_1[xx][yy]==0)
+            // {
+            //     return false
+            // }
+            var chax=player.r.player_x.sub(xx),chay=player.r.player_y.sub(yy)
+            chax=chax.abs()
+            chay=chay.abs()
+            return chax.add(chay).gte(0.001) && chax.add(chay).lte(1.001)
+        },
+        getStyle(data,id){
+            const jss={
+                borderRadius:'0px',
+                backgroundColor:'white',
+                height:'50px',
+                width:'50px',
+                transitionDuration:'0s'
+            }
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            var tmpcolor=''
+            var chax=player.r.player_x.sub(xx),chay=player.r.player_y.sub(yy)
+            chax=chax.abs()
+            chay=chay.abs()
+            // if(xx==6 && yy==3)
+            // {
+            //     console.log(chax.add(chay))
+            // }
+            if(chax.add(chay).lte(0.001))
+            {
+                tmpcolor='#FFA500'
+            }
+            else
+            {
+                if(player.r.map_City_1_1[xx][yy]==1)
+                {
+                    if(layers.City_1_1.grid.getCanClick(data,id))
+                    {
+                        tmpcolor='#FFFFFF'
+                    }
+                    else
+                    {
+                        tmpcolor='#808080'
+                    }
+                }
+                if(player.r.map_City_1_1[xx][yy]==29)
+                {
+                    tmpcolor='#ADD8E6'
+                }
+                if(player.r.map_City_1_1[xx][yy]==31)
+                {
+                    tmpcolor='#ADD8E6'
+                }
+                if(player.r.map_City_1_1[xx][yy]==39)
+                {
+                    tmpcolor='#ADD8E6'
+                }
+                if(player.r.map_City_1_1[xx][yy]==45)
+                {
+                    tmpcolor='#ADD8E6'
+                }
+                if(player.r.map_City_1_1[xx][yy]==32)
+                {
+                    tmpcolor='red'
+                }
+                // if(xx==6 && yy==3)
+                // {
+                //     console.log(player.r.map_City_1_1[xx][yy])
+                //     console.log(tmpcolor)
+                // }
+            }
+            jss.backgroundColor=`${tmpcolor}`
+            // if(xx==6 && yy==3)
+            // {
+            //     console.log(jss.backgroundColor)
+            // }
+            return jss
+        },
+        onClick(data, id) { 
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            if(player.r.map_City_1_1[xx][yy]==29)
+            {
+                player.r.player_in_map=n(3)
+                player.r.player_x=n(2)
+                player.r.player_y=n(8)
+                showTab('City_1_0')
+                return
+            }
+            if(player.r.map_City_1_1[xx][yy]==31)
+            {
+                player.r.player_in_map=n(4)
+                player.r.player_x=n(1)
+                player.r.player_y=n(1)
+                showTab('City_0_1')
+                return
+            }
+            if(player.r.map_City_1_1[xx][yy]==39)
+            {
+                player.r.player_in_map=n(10)
+                player.r.player_x=n(8)
+                player.r.player_y=n(2)
+                showTab('City_2_1')
+                return
+            }
+            if(player.r.map_City_1_1[xx][yy]==45)
+            {
+                player.r.player_in_map=n(12)
+                player.r.player_x=n(7)
+                player.r.player_y=n(1)
+                showTab('City_1_2')
+                return
+            }
+            if(player.r.map_City_1_1[xx][yy]==32)
+            {
+                if(player.r.body_touch_times.gte(2.5))
+                {
+                    alert('它就是一具尸体罢了'+'\n'+'没啥更多的了')
+                }
+                else if(player.r.body_touch_times.gte(1.5))
+                {
+                    alert('你强忍着恶心'+'\n'+'[ 在尸体身上摸索 ]')
+                    alert('你获得了 一把钥匙(A101)')
+                }
+                else if(player.r.body_touch_times.gte(0.5))
+                {
+                    alert('你确定要触碰它吗')
+                }
+                else
+                {
+                    alert('呕')
+                    alert('这里竟然有一具尸体')
+                    alert('我的天,我要吐了')
+                }
+                player.r.body_touch_times=player.r.body_touch_times.add(1)
+                return
+            }
+            player.r.player_x=xx
+            player.r.player_y=yy
+        },
+        getDisplay(data, id) {
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            if(player.r.map_City_1_1[xx][yy]==1)
+            {
+                return ''
+            }
+            if(player.r.map_City_1_1[xx][yy]==29)
+            {
+                return '<h1>←</h1>'
+            }
+            if(player.r.map_City_1_1[xx][yy]==31)
+            {
+                return '<h1>↓</h1>'
+            }
+            if(player.r.map_City_1_1[xx][yy]==39)
+            {
+                return '<h1>↑</h1>'
+            }
+            if(player.r.map_City_1_1[xx][yy]==45)
+            {
+                return '<h1>→</h1>'
+            }
+            if(player.r.map_City_1_1[xx][yy]==32)
+            {
+                return '<h1>血</h1>'
+            }
+        },
+    },
+    tabFormat:{
+        "City_1_1":{
+            buttonStyle()
+            {
+                return {"border-radius":"0px"}
+            },
+            content:[
+                "blank",
+                ["layer-proxy",['City_1_1',["grid"]]],
+            ],
+        },
+    },
+    layerShown()
+    {
+        return player.r.player_in_map.eq(7) && player.r.in_day.gte(0.5)
+    },
+})
 addLayer("A101",//8
 {
     symbol: "R", 
@@ -1907,5 +2031,877 @@ addLayer("A101",//8
     layerShown()
     {
         return player.r.player_in_map.eq(8) && player.r.in_day.gte(0.5)
+    },
+})
+addLayer("City_2_0",//9
+{
+    symbol: "R", 
+    position: 0,
+    startData()
+    {
+        return{
+            unlocked: true,
+            points: new ExpantaNum(0),
+
+        }
+    },
+    color: "pink",
+    resource: "重置点",
+    type: "normal", 
+    requires:new ExpantaNum(1e308),
+    exponent:1,
+    baseAmount()
+    {
+        return zero
+    },
+    baseResource:"点数",
+    gainMult()
+    {
+        var mult=new ExpantaNum(1)
+        return mult
+    },
+    gainExp()
+    {
+        var exp=new ExpantaNum(1)
+        return exp
+    },
+    tooltip(){return ''},
+    row: 1,
+    grid: {
+        rows: 10,
+        cols: 10,
+        getStartData(id) {
+            return 0
+        },
+        getUnlocked(id) { // Default
+            return player.r.player_in_map.eq(9)
+        },
+        getCanClick(data, id) {
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            if(player.r.map_City_2_0[xx][yy]==14)
+            {
+                return false
+            }
+            var chax=player.r.player_x.sub(xx),chay=player.r.player_y.sub(yy)
+            chax=chax.abs()
+            chay=chay.abs()
+            return chax.add(chay).gte(0.001) && chax.add(chay).lte(1.001)
+        },
+        getStyle(data,id){
+            const jss={
+                borderRadius:'0px',
+                backgroundColor:'white',
+                height:'50px',
+                width:'50px',
+                transitionDuration:'0s'
+            }
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            var tmpcolor=''
+            var chax=player.r.player_x.sub(xx),chay=player.r.player_y.sub(yy)
+            chax=chax.abs()
+            chay=chay.abs()
+            // if(xx==6 && yy==3)
+            // {
+            //     console.log(chax.add(chay))
+            // }
+            if(chax.add(chay).lte(0.001))
+            {
+                tmpcolor='#FFA500'
+            }
+            else
+            {
+                if(player.r.map_City_2_0[xx][yy]==1)
+                {
+                    if(layers.City_2_0.grid.getCanClick(data,id))
+                    {
+                        tmpcolor='#FFFFFF'
+                    }
+                    else
+                    {
+                        tmpcolor='#808080'
+                    }
+                }
+                if(player.r.map_City_2_0[xx][yy]==36)
+                {
+                    tmpcolor='#ADD8E6'
+                }
+                if(player.r.map_City_2_0[xx][yy]==37)
+                {
+                    tmpcolor='#ADD8E6'
+                }
+                // if(xx==6 && yy==3)
+                // {
+                //     console.log(player.r.map_City_2_0[xx][yy])
+                //     console.log(tmpcolor)
+                // }
+            }
+            jss.backgroundColor=`${tmpcolor}`
+            // if(xx==6 && yy==3)
+            // {
+            //     console.log(jss.backgroundColor)
+            // }
+            return jss
+        },
+        onClick(data, id) { 
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            if(player.r.map_City_2_0[xx][yy]==36)
+            {
+                player.r.player_in_map=n(3)
+                player.r.player_x=n(1)
+                player.r.player_y=n(7)
+                showTab('City_1_0')
+                return
+            }
+            if(player.r.map_City_2_0[xx][yy]==37)
+            {
+                player.r.player_in_map=n(10)
+                player.r.player_x=n(7)
+                player.r.player_y=n(1)
+                showTab('City_2_1')
+                return
+            }
+            player.r.player_x=xx
+            player.r.player_y=yy
+        },
+        getDisplay(data, id) {
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            if(player.r.map_City_2_0[xx][yy]==1)
+            {
+                return ''
+            }
+            if(player.r.map_City_2_0[xx][yy]==36)
+            {
+                return '<h1>↓</h1>'
+            }
+            if(player.r.map_City_2_0[xx][yy]==37)
+            {
+                return '<h1>→</h1>'
+            }
+            return ''
+        },
+    },
+    tabFormat:{
+        "City_2_0":{
+            buttonStyle()
+            {
+                return {"border-radius":"0px"}
+            },
+            content:[
+                "blank",
+                ["layer-proxy",['City_2_0',["grid"]]],
+            ],
+        },
+    },
+    layerShown()
+    {
+        return player.r.player_in_map.eq(9) && player.r.in_day.gte(0.5)
+    },
+})
+addLayer("City_2_1",//10
+{
+    symbol: "R", 
+    position: 0,
+    startData()
+    {
+        return{
+            unlocked: true,
+            points: new ExpantaNum(0),
+
+        }
+    },
+    color: "pink",
+    resource: "重置点",
+    type: "normal", 
+    requires:new ExpantaNum(1e308),
+    exponent:1,
+    baseAmount()
+    {
+        return zero
+    },
+    baseResource:"点数",
+    gainMult()
+    {
+        var mult=new ExpantaNum(1)
+        return mult
+    },
+    gainExp()
+    {
+        var exp=new ExpantaNum(1)
+        return exp
+    },
+    tooltip(){return ''},
+    row: 1,
+    grid: {
+        rows: 10,
+        cols: 10,
+        getStartData(id) {
+            return 0
+        },
+        getUnlocked(id) { // Default
+            return player.r.player_in_map.eq(10)
+        },
+        getCanClick(data, id) {
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            if(player.r.map_City_2_1[xx][yy]==14)
+            {
+                return false
+            }
+            var chax=player.r.player_x.sub(xx),chay=player.r.player_y.sub(yy)
+            chax=chax.abs()
+            chay=chay.abs()
+            return chax.add(chay).gte(0.001) && chax.add(chay).lte(1.001)
+        },
+        getStyle(data,id){
+            const jss={
+                borderRadius:'0px',
+                backgroundColor:'white',
+                height:'50px',
+                width:'50px',
+                transitionDuration:'0s'
+            }
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            var tmpcolor=''
+            var chax=player.r.player_x.sub(xx),chay=player.r.player_y.sub(yy)
+            chax=chax.abs()
+            chay=chay.abs()
+            // if(xx==6 && yy==3)
+            // {
+            //     console.log(chax.add(chay))
+            // }
+            if(chax.add(chay).lte(0.001))
+            {
+                tmpcolor='#FFA500'
+            }
+            else
+            {
+                if(player.r.map_City_2_1[xx][yy]==1)
+                {
+                    if(layers.City_2_1.grid.getCanClick(data,id))
+                    {
+                        tmpcolor='#FFFFFF'
+                    }
+                    else
+                    {
+                        tmpcolor='#808080'
+                    }
+                }
+                if(player.r.map_City_2_1[xx][yy]==38)
+                {
+                    tmpcolor='#ADD8E6'
+                }
+                if(player.r.map_City_2_1[xx][yy]==40)
+                {
+                    tmpcolor='#ADD8E6'
+                }
+                if(player.r.map_City_2_1[xx][yy]==47)
+                {
+                    tmpcolor='#ADD8E6'
+                }
+                // if(xx==6 && yy==3)
+                // {
+                //     console.log(player.r.map_City_2_1[xx][yy])
+                //     console.log(tmpcolor)
+                // }
+            }
+            jss.backgroundColor=`${tmpcolor}`
+            // if(xx==6 && yy==3)
+            // {
+            //     console.log(jss.backgroundColor)
+            // }
+            return jss
+        },
+        onClick(data, id) { 
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            if(player.r.map_City_2_1[xx][yy]==38)
+            {
+                player.r.player_in_map=n(9)
+                player.r.player_x=n(7)
+                player.r.player_y=n(8)
+                showTab('City_2_0')
+                return
+            }
+            if(player.r.map_City_2_1[xx][yy]==40)
+            {
+                player.r.player_in_map=n(7)
+                player.r.player_x=n(1)
+                player.r.player_y=n(2)
+                showTab('City_1_1')
+                return
+            }
+            if(player.r.map_City_2_1[xx][yy]==47)
+            {
+                player.r.player_in_map=n(13)
+                player.r.player_x=n(7)
+                player.r.player_y=n(1)
+                showTab('City_2_2')
+                return
+            }
+            player.r.player_x=xx
+            player.r.player_y=yy
+        },
+        getDisplay(data, id) {
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            if(player.r.map_City_2_1[xx][yy]==1)
+            {
+                return ''
+            }
+            if(player.r.map_City_2_1[xx][yy]==38)
+            {
+                return '<h1>←</h1>'
+            }
+            if(player.r.map_City_2_1[xx][yy]==40)
+            {
+                return '<h1>↓</h1>'
+            }
+            if(player.r.map_City_2_1[xx][yy]==47)
+            {
+                return '<h1>→</h1>'
+            }
+            return ''
+        },
+    },
+    tabFormat:{
+        "City_2_1":{
+            buttonStyle()
+            {
+                return {"border-radius":"0px"}
+            },
+            content:[
+                "blank",
+                ["layer-proxy",['City_2_1',["grid"]]],
+            ],
+        },
+    },
+    layerShown()
+    {
+        return player.r.player_in_map.eq(10) && player.r.in_day.gte(0.5)
+    },
+})
+addLayer("City_0_2",//11
+{
+    symbol: "R", 
+    position: 0,
+    startData()
+    {
+        return{
+            unlocked: true,
+            points: new ExpantaNum(0),
+
+        }
+    },
+    color: "pink",
+    resource: "重置点",
+    type: "normal", 
+    requires:new ExpantaNum(1e308),
+    exponent:1,
+    baseAmount()
+    {
+        return zero
+    },
+    baseResource:"点数",
+    gainMult()
+    {
+        var mult=new ExpantaNum(1)
+        return mult
+    },
+    gainExp()
+    {
+        var exp=new ExpantaNum(1)
+        return exp
+    },
+    tooltip(){return ''},
+    row: 1,
+    grid: {
+        rows: 10,
+        cols: 10,
+        getStartData(id) {
+            return 0
+        },
+        getUnlocked(id) { // Default
+            return player.r.player_in_map.eq(11)
+        },
+        getCanClick(data, id) {
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            if(player.r.map_City_0_2[xx][yy]==14)
+            {
+                return false
+            }
+            var chax=player.r.player_x.sub(xx),chay=player.r.player_y.sub(yy)
+            chax=chax.abs()
+            chay=chay.abs()
+            return chax.add(chay).gte(0.001) && chax.add(chay).lte(1.001)
+        },
+        getStyle(data,id){
+            const jss={
+                borderRadius:'0px',
+                backgroundColor:'white',
+                height:'50px',
+                width:'50px',
+                transitionDuration:'0s'
+            }
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            var tmpcolor=''
+            var chax=player.r.player_x.sub(xx),chay=player.r.player_y.sub(yy)
+            chax=chax.abs()
+            chay=chay.abs()
+            // if(xx==6 && yy==3)
+            // {
+            //     console.log(chax.add(chay))
+            // }
+            if(chax.add(chay).lte(0.001))
+            {
+                tmpcolor='#FFA500'
+            }
+            else
+            {
+                if(player.r.map_City_0_2[xx][yy]==1)
+                {
+                    if(layers.City_0_2.grid.getCanClick(data,id))
+                    {
+                        tmpcolor='#FFFFFF'
+                    }
+                    else
+                    {
+                        tmpcolor='#808080'
+                    }
+                }
+                if(player.r.map_City_0_2[xx][yy]==42)
+                {
+                    tmpcolor='#ADD8E6'
+                }
+                if(player.r.map_City_0_2[xx][yy]==43)
+                {
+                    tmpcolor='#ADD8E6'
+                }
+                // if(xx==6 && yy==3)
+                // {
+                //     console.log(player.r.map_City_0_2[xx][yy])
+                //     console.log(tmpcolor)
+                // }
+            }
+            jss.backgroundColor=`${tmpcolor}`
+            // if(xx==6 && yy==3)
+            // {
+            //     console.log(jss.backgroundColor)
+            // }
+            return jss
+        },
+        onClick(data, id) { 
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            if(player.r.map_City_0_2[xx][yy]==42)
+            {
+                player.r.player_in_map=n(4)
+                player.r.player_x=n(8)
+                player.r.player_y=n(8)
+                showTab('City_0_1')
+                return
+            }
+            if(player.r.map_City_0_2[xx][yy]==43)
+            {
+                player.r.player_in_map=n(12)
+                player.r.player_x=n(8)
+                player.r.player_y=n(8)
+                showTab('City_1_2')
+                return
+            }
+            player.r.player_x=xx
+            player.r.player_y=yy
+        },
+        getDisplay(data, id) {
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            if(player.r.map_City_0_2[xx][yy]==1)
+            {
+                return ''
+            }
+            if(player.r.map_City_0_2[xx][yy]==42)
+            {
+                return '<h1>←</h1>'
+            }
+            if(player.r.map_City_0_2[xx][yy]==43)
+            {
+                return '<h1>↑</h1>'
+            }
+            return ''
+        },
+    },
+    tabFormat:{
+        "City_0_2":{
+            buttonStyle()
+            {
+                return {"border-radius":"0px"}
+            },
+            content:[
+                "blank",
+                ["layer-proxy",['City_0_2',["grid"]]],
+            ],
+        },
+    },
+    layerShown()
+    {
+        return player.r.player_in_map.eq(11) && player.r.in_day.gte(0.5)
+    },
+})
+addLayer("City_1_2",//12
+{
+    symbol: "R", 
+    position: 0,
+    startData()
+    {
+        return{
+            unlocked: true,
+            points: new ExpantaNum(0),
+
+        }
+    },
+    color: "pink",
+    resource: "重置点",
+    type: "normal", 
+    requires:new ExpantaNum(1e308),
+    exponent:1,
+    baseAmount()
+    {
+        return zero
+    },
+    baseResource:"点数",
+    gainMult()
+    {
+        var mult=new ExpantaNum(1)
+        return mult
+    },
+    gainExp()
+    {
+        var exp=new ExpantaNum(1)
+        return exp
+    },
+    tooltip(){return ''},
+    row: 1,
+    grid: {
+        rows: 10,
+        cols: 10,
+        getStartData(id) {
+            return 0
+        },
+        getUnlocked(id) { // Default
+            return player.r.player_in_map.eq(12)
+        },
+        getCanClick(data, id) {
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            if(player.r.map_City_1_2[xx][yy]==14)
+            {
+                return false
+            }
+            var chax=player.r.player_x.sub(xx),chay=player.r.player_y.sub(yy)
+            chax=chax.abs()
+            chay=chay.abs()
+            return chax.add(chay).gte(0.001) && chax.add(chay).lte(1.001)
+        },
+        getStyle(data,id){
+            const jss={
+                borderRadius:'0px',
+                backgroundColor:'white',
+                height:'50px',
+                width:'50px',
+                transitionDuration:'0s'
+            }
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            var tmpcolor=''
+            var chax=player.r.player_x.sub(xx),chay=player.r.player_y.sub(yy)
+            chax=chax.abs()
+            chay=chay.abs()
+            // if(xx==6 && yy==3)
+            // {
+            //     console.log(chax.add(chay))
+            // }
+            if(chax.add(chay).lte(0.001))
+            {
+                tmpcolor='#FFA500'
+            }
+            else
+            {
+                if(player.r.map_City_1_2[xx][yy]==1)
+                {
+                    if(layers.City_1_2.grid.getCanClick(data,id))
+                    {
+                        tmpcolor='#FFFFFF'
+                    }
+                    else
+                    {
+                        tmpcolor='#808080'
+                    }
+                }
+                if(player.r.map_City_1_2[xx][yy]==44)
+                {
+                    tmpcolor='#ADD8E6'
+                }
+                if(player.r.map_City_1_2[xx][yy]==46)
+                {
+                    tmpcolor='#ADD8E6'
+                }
+                if(player.r.map_City_1_2[xx][yy]==49)
+                {
+                    tmpcolor='#ADD8E6'
+                }
+                // if(xx==6 && yy==3)
+                // {
+                //     console.log(player.r.map_City_1_2[xx][yy])
+                //     console.log(tmpcolor)
+                // }
+            }
+            jss.backgroundColor=`${tmpcolor}`
+            // if(xx==6 && yy==3)
+            // {
+            //     console.log(jss.backgroundColor)
+            // }
+            return jss
+        },
+        onClick(data, id) { 
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            if(player.r.map_City_1_2[xx][yy]==44)
+            {
+                player.r.player_in_map=n(11)
+                player.r.player_x=n(1)
+                player.r.player_y=n(8)
+                showTab('City_0_2')
+                return
+            }
+            if(player.r.map_City_1_2[xx][yy]==46)
+            {
+                player.r.player_in_map=n(7)
+                player.r.player_x=n(7)
+                player.r.player_y=n(8)
+                showTab('City_1_1')
+                return
+            }
+            if(player.r.map_City_1_2[xx][yy]==49)
+            {
+                player.r.player_in_map=n(13)
+                player.r.player_x=n(8)
+                player.r.player_y=n(8)
+                showTab('City_2_2')
+                return
+            }
+            player.r.player_x=xx
+            player.r.player_y=yy
+        },
+        getDisplay(data, id) {
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            if(player.r.map_City_1_2[xx][yy]==1)
+            {
+                return ''
+            }
+            if(player.r.map_City_1_2[xx][yy]==44)
+            {
+                return '<h1>↓</h1>'
+            }
+            if(player.r.map_City_1_2[xx][yy]==46)
+            {
+                return '<h1>←</h1>'
+            }
+            if(player.r.map_City_1_2[xx][yy]==49)
+            {
+                return '<h1>↑</h1>'
+            }
+            return ''
+        },
+    },
+    tabFormat:{
+        "City_1_2":{
+            buttonStyle()
+            {
+                return {"border-radius":"0px"}
+            },
+            content:[
+                "blank",
+                ["layer-proxy",['City_1_2',["grid"]]],
+            ],
+        },
+    },
+    layerShown()
+    {
+        return player.r.player_in_map.eq(12) && player.r.in_day.gte(0.5)
+    },
+})
+addLayer("City_2_2",//13
+{
+    symbol: "R", 
+    position: 0,
+    startData()
+    {
+        return{
+            unlocked: true,
+            points: new ExpantaNum(0),
+
+        }
+    },
+    color: "pink",
+    resource: "重置点",
+    type: "normal", 
+    requires:new ExpantaNum(1e308),
+    exponent:1,
+    baseAmount()
+    {
+        return zero
+    },
+    baseResource:"点数",
+    gainMult()
+    {
+        var mult=new ExpantaNum(1)
+        return mult
+    },
+    gainExp()
+    {
+        var exp=new ExpantaNum(1)
+        return exp
+    },
+    tooltip(){return ''},
+    row: 1,
+    grid: {
+        rows: 10,
+        cols: 10,
+        getStartData(id) {
+            return 0
+        },
+        getUnlocked(id) { // Default
+            return player.r.player_in_map.eq(13)
+        },
+        getCanClick(data, id) {
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            if(player.r.map_City_2_2[xx][yy]==14)
+            {
+                return false
+            }
+            var chax=player.r.player_x.sub(xx),chay=player.r.player_y.sub(yy)
+            chax=chax.abs()
+            chay=chay.abs()
+            return chax.add(chay).gte(0.001) && chax.add(chay).lte(1.001)
+        },
+        getStyle(data,id){
+            const jss={
+                borderRadius:'0px',
+                backgroundColor:'white',
+                height:'50px',
+                width:'50px',
+                transitionDuration:'0s'
+            }
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            var tmpcolor=''
+            var chax=player.r.player_x.sub(xx),chay=player.r.player_y.sub(yy)
+            chax=chax.abs()
+            chay=chay.abs()
+            // if(xx==6 && yy==3)
+            // {
+            //     console.log(chax.add(chay))
+            // }
+            if(chax.add(chay).lte(0.001))
+            {
+                tmpcolor='#FFA500'
+            }
+            else
+            {
+                if(player.r.map_City_2_2[xx][yy]==1)
+                {
+                    if(layers.City_2_2.grid.getCanClick(data,id))
+                    {
+                        tmpcolor='#FFFFFF'
+                    }
+                    else
+                    {
+                        tmpcolor='#808080'
+                    }
+                }
+                if(player.r.map_City_2_2[xx][yy]==48)
+                {
+                    tmpcolor='#ADD8E6'
+                }
+                if(player.r.map_City_2_2[xx][yy]==50)
+                {
+                    tmpcolor='#ADD8E6'
+                }
+                // if(xx==6 && yy==3)
+                // {
+                //     console.log(player.r.map_City_2_2[xx][yy])
+                //     console.log(tmpcolor)
+                // }
+            }
+            jss.backgroundColor=`${tmpcolor}`
+            // if(xx==6 && yy==3)
+            // {
+            //     console.log(jss.backgroundColor)
+            // }
+            return jss
+        },
+        onClick(data, id) { 
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            if(player.r.map_City_2_2[xx][yy]==48)
+            {
+                player.r.player_in_map=n(10)
+                player.r.player_x=n(7)
+                player.r.player_y=n(8)
+                showTab('City_2_1')
+                return
+            }
+            if(player.r.map_City_2_2[xx][yy]==50)
+            {
+                player.r.player_in_map=n(12)
+                player.r.player_x=n(1)
+                player.r.player_y=n(8)
+                showTab('City_1_2')
+                return
+            }
+            player.r.player_x=xx
+            player.r.player_y=yy
+        },
+        getDisplay(data, id) {
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            if(player.r.map_City_2_2[xx][yy]==1)
+            {
+                return ''
+            }
+            if(player.r.map_City_2_2[xx][yy]==48)
+            {
+                return '<h1>←</h1>'
+            }
+            if(player.r.map_City_2_2[xx][yy]==50)
+            {
+                return '<h1>↓</h1>'
+            }
+            return ''
+        },
+    },
+    tabFormat:{
+        "City_2_2":{
+            buttonStyle()
+            {
+                return {"border-radius":"0px"}
+            },
+            content:[
+                "blank",
+                ["layer-proxy",['City_2_2',["grid"]]],
+            ],
+        },
+    },
+    layerShown()
+    {
+        return player.r.player_in_map.eq(13) && player.r.in_day.gte(0.5)
     },
 })
