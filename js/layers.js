@@ -2511,12 +2511,12 @@ addLayer("i",
                                        +'<br>无尽 红色 Tube 生产变为 '+format(n(1).add(n(0.025).mul(player.i.complete_times[x])))+' 次方'
                             if(x==2)eff='b 变为 '+format(n(1).add(n(0.1875).mul(player.i.complete_times[x])))+' 次方'
                                         +'<br>无尽 黄色 Tube 生产变为 '+format(n(1).add(n(0.025).mul(player.i.complete_times[x])))+' 次方'
-                            if(x==3)eff=''
+                            if(x==3)eff='没做 , 别打(?'
                             if(x==4)eff='c 变为 '+format(n(1).add(n(0.5).mul(player.i.complete_times[x])))+' 次方'
                                        +'<br>无尽 蓝色 Tube 生产变为 '+format(n(1).add(n(0.025).mul(player.i.complete_times[x])))+' 次方'
-                            if(x==5)eff=''
-                            if(x==6)eff=''
-                            if(x==7)eff=''
+                            if(x==5)eff='没做 , 别打(?'
+                            if(x==6)eff='没做 , 别打(?'
+                            if(x==7)eff='没做 , 别打(?'
                             return '<br>你当前已完成该种挑战 : '+a1+' + '+a2+' + '+a3+' = '+format(player.i.complete_times[x])+' 次'
                             +'<br>'+eff
                         },

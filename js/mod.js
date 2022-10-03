@@ -110,7 +110,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return false
+	return player.r.reality_unlocked.gte(0.5)
 }
 
 
