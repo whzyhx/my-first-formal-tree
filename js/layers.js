@@ -1426,7 +1426,32 @@ addLayer("i",
                 if(x==5)goal=n(1e200)
                 if(x==6)goal=n(1e200)
                 if(x==7)goal=n(1e200)
-                return '完成挑战<br>目标 : '+format(goal)
+                var y=n(1)
+                if(player.i.player_energy_challenge.gte(1.5))y=n(2)
+                if(player.i.player_energy_challenge.gte(2.5))y=n(5)
+                var s='完成挑战<br>目标 : '+format(goal)
+                if(player.i.complete_times[x].eq(1) || player.i.complete_times[x].eq(3) || player.i.complete_times[x].eq(6) || player.i.complete_times[x].eq(8))
+                {
+                    if(y.eq(1))
+                    {
+                        s='已做过'
+                    }
+                }
+                if(player.i.complete_times[x].eq(2) || player.i.complete_times[x].eq(3) || player.i.complete_times[x].eq(7) || player.i.complete_times[x].eq(8))
+                {
+                    if(y.eq(2))
+                    {
+                        s='已做过'
+                    }
+                }
+                if(player.i.complete_times[x].eq(5) || player.i.complete_times[x].eq(6) || player.i.complete_times[x].eq(7) || player.i.complete_times[x].eq(8))
+                {
+                    if(y.eq(5))
+                    {
+                        s='已做过'
+                    }
+                }
+                return s
             },
             unlocked(){return true},
             style(){
@@ -1446,6 +1471,30 @@ addLayer("i",
                 if(x==5)goal=n(1e200)
                 if(x==6)goal=n(1e200)
                 if(x==7)goal=n(1e200)
+                var y=n(1)
+                if(player.i.player_energy_challenge.gte(1.5))y=n(2)
+                if(player.i.player_energy_challenge.gte(2.5))y=n(5)
+                if(player.i.complete_times[x].eq(1) || player.i.complete_times[x].eq(3) || player.i.complete_times[x].eq(6) || player.i.complete_times[x].eq(8))
+                {
+                    if(y.eq(1))
+                    {
+                        return false
+                    }
+                }
+                if(player.i.complete_times[x].eq(2) || player.i.complete_times[x].eq(3) || player.i.complete_times[x].eq(7) || player.i.complete_times[x].eq(8))
+                {
+                    if(y.eq(2))
+                    {
+                        return false
+                    }
+                }
+                if(player.i.complete_times[x].eq(5) || player.i.complete_times[x].eq(6) || player.i.complete_times[x].eq(7) || player.i.complete_times[x].eq(8))
+                {
+                    if(y.eq(5))
+                    {
+                        return false
+                    }
+                }
                 return player.points.gte(goal) && player.i.player_in_challenge.gte(0.5)},
             onClick(){
                 player.i.player_in_challenge=n(0)
