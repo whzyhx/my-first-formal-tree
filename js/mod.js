@@ -1,5 +1,5 @@
 ﻿let modInfo = {
-	name: "我没想好名字",
+	name: "破碎时空",
 	id: "yhxyhxyhx",
 	author: "Ni_Ming",
 	pointsName: "能源",
@@ -102,7 +102,8 @@ function addedPlayerData() { return {
 // Display extra things at the top of the page
 var s=()=>{
 	return ((player.r.in_night.gte(0.5) && hasUpgrade("i","Instability-Upgrade-2-1"))?'<br><h2>你的护盾还剩 : '+format(player.i.shield_time)+'s</h2><br><br>':'')
-	+'Shift - 查看所有公式<br>M - 最大化 普通 Tube'
+	+'Shift - 查看所有公式<br>M - 最大化 普通 Tube<br>'
+	+(player.fire.unlock_fireseed.gte(0.5)?'N - 购买 压缩火':'')
 }
 var displayThings = [
 	s

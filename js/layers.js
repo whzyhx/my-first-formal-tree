@@ -248,7 +248,10 @@ addLayer("i",
             COST()
             {
                 var need=n(10)
-                need=need.mul(n(1.1).pow(player.i.white_num.pow(player.i.d).div(player.i.a).div(player.i.infinity_points_power)))
+                var x=player.i.white_num.pow(player.i.d).div(player.i.a).div(player.i.infinity_points_power)
+                x=x.max(n(0))
+                need=need.mul(n(1.1).pow(x)).div(player.i.infinity_points_power)
+                need=need.max(n('1e-100'))
                 return need
             },
             EFFECT()
@@ -299,7 +302,7 @@ addLayer("i",
                 }
                 else
                 {
-                    var x=player.points.div(10).logBase(1.1).mul(player.i.a).root(player.i.d).mul(player.i.infinity_points_power)
+                    var x=player.points.div(10).add(1).logBase(1.1).mul(player.i.a).root(player.i.d).mul(player.i.infinity_points_power)
                     var y=x.sub(player.i.white_num).div(10).ceil()
                     player.i.white_num=player.i.white_num.add(y)
                     player.points=player.points.div(10).mul(7)
@@ -312,6 +315,7 @@ addLayer("i",
             {
                 var need=n(50)
                 need=need.mul(n(1.2).pow(player.i.red_num)).div(player.i.infinity_points_power)
+                need=need.max(n('1e-300'))
                 return need
             },
             EFFECT()
@@ -366,6 +370,7 @@ addLayer("i",
             {
                 var need=n(50)
                 need=need.mul(n(1.2).pow(player.i.yellow_num)).div(player.i.infinity_points_power)
+                need=need.max(n('1e-300'))
                 return need
             },
             EFFECT()
@@ -423,6 +428,7 @@ addLayer("i",
             {
                 var need=n(50)
                 need=need.mul(n(1.2).pow(player.i.blue_num)).div(player.i.infinity_points_power)
+                need=need.max(n('1e-300'))
                 return need
             },
             EFFECT()
@@ -475,6 +481,7 @@ addLayer("i",
             {
                 var need=n(1e5)
                 need=need.mul(n(2).pow(player.i.orange_num.pow(1.25))).div(player.i.infinity_points_power)
+                need=need.max(n('1e-300'))
                 return need
             },
             EFFECT()
@@ -531,6 +538,7 @@ addLayer("i",
             {
                 var need=n(1e5)
                 need=need.mul(n(2).pow(player.i.purple_num.pow(1.25))).div(player.i.infinity_points_power)
+                need=need.max(n('1e-300'))
                 return need
             },
             EFFECT()
@@ -587,6 +595,7 @@ addLayer("i",
             {
                 var need=n(1e5)
                 need=need.mul(n(2).pow(player.i.green_num.pow(1.25))).div(player.i.infinity_points_power)
+                need=need.max(n('1e-300'))
                 return need
             },
             EFFECT()
@@ -2799,6 +2808,7 @@ addLayer("i",
             ],
         },
     },
+    branches:["fire","life","space"],
     row: 1,
     layerShown()
     {

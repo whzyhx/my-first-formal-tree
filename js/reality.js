@@ -99,12 +99,12 @@ addLayer("r",
             ],
             map_City_1_2:[
             [1,1,1,1,1,1,1,1,49,1],
-            [1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1],
+            [1,1,1,53,53,1,1,1,1,1],
+            [1,1,1,53,53,1,1,1,1,1],
+            [1,1,52,52,52,52,1,1,1,1],
+            [1,1,52,52,52,52,1,1,1,1],
+            [1,51,51,51,51,51,51,1,1,1],
+            [1,51,51,54,51,51,51,1,1,1],
             [46,1,1,1,1,1,1,1,1,1],
             [1,1,1,1,1,1,1,1,1,1],
             [1,1,1,1,1,1,1,1,44,1],
@@ -185,9 +185,27 @@ addLayer("r",
                 [99,99,99,99,99,14,1 ,1 ,14],
                 [99,99,99,99,99,14,26,27,14],
             ],
+            map_Fire:[
+            [52,52,52,52,52,52,52,52,52,52,52,52,52,52,52,],
+            [52,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,52,],
+            [52,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,52,],
+            [52,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,52,],
+            [52,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,52,],
+            [52,1 ,1 ,1 ,1 ,51,51,55,51,51,1 ,1 ,1 ,1 ,52,],
+            [52,1 ,1 ,1 ,1 ,51,51,56,51,51,1 ,1 ,1 ,1 ,52,],
+            [52,1 ,1 ,1 ,1 ,61,62,63,58,57,1 ,1 ,1 ,1 ,52,],
+            [52,1 ,1 ,1 ,1 ,51,51,60,51,51,1 ,1 ,1 ,1 ,52,],
+            [52,1 ,1 ,1 ,1 ,51,51,59,51,51,1 ,1 ,1 ,1 ,52,],
+            [52,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,52,],
+            [52,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,52,],
+            [52,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,52,],
+            [52,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,52,],
+            [52,52,52,52,52,52,52,64,52,52,52,52,52,52,52,],
+            ],
 
             player_in_map:zero,player_x:six,player_y:six,
             body_touch_times:zero,
+            has_key_A102:zero,
         }
     },
     color: "pink",
@@ -2603,6 +2621,18 @@ addLayer("City_1_2",//12
             {
                 return false
             }
+            if(player.r.map_City_1_2[xx][yy]==51)
+            {
+                return false
+            }
+            if(player.r.map_City_1_2[xx][yy]==52)
+            {
+                return false
+            }
+            if(player.r.map_City_1_2[xx][yy]==53)
+            {
+                return false
+            }
             var chax=player.r.player_x.sub(xx),chay=player.r.player_y.sub(yy)
             chax=chax.abs()
             chay=chay.abs()
@@ -2655,6 +2685,22 @@ addLayer("City_1_2",//12
                 {
                     tmpcolor='#ADD8E6'
                 }
+                if(player.r.map_City_1_2[xx][yy]==51)
+                {
+                    tmpcolor='#FF000060'
+                }
+                if(player.r.map_City_1_2[xx][yy]==54)
+                {
+                    tmpcolor='#FF000060'
+                }
+                if(player.r.map_City_1_2[xx][yy]==52)
+                {
+                    tmpcolor='#FF000080'
+                }
+                if(player.r.map_City_1_2[xx][yy]==53)
+                {
+                    tmpcolor='#FF000099'
+                }
                 // if(xx==6 && yy==3)
                 // {
                 //     console.log(player.r.map_City_1_2[xx][yy])
@@ -2695,6 +2741,15 @@ addLayer("City_1_2",//12
                 showTab('City_2_2')
                 return
             }
+            if(player.r.map_City_1_2[xx][yy]==54)
+            {
+                alert('这看起来像一个神庙')
+                player.r.player_in_map=n(14)
+                player.r.player_x=n(13)
+                player.r.player_y=n(7)
+                showTab("Fire")
+                return
+            }
             player.r.player_x=xx
             player.r.player_y=yy
         },
@@ -2714,6 +2769,10 @@ addLayer("City_1_2",//12
                 return '<h1>←</h1>'
             }
             if(player.r.map_City_1_2[xx][yy]==49)
+            {
+                return '<h1>↑</h1>'
+            }
+            if(player.r.map_City_1_2[xx][yy]==54)
             {
                 return '<h1>↑</h1>'
             }
@@ -2903,5 +2962,216 @@ addLayer("City_2_2",//13
     layerShown()
     {
         return player.r.player_in_map.eq(13) && player.r.in_day.gte(0.5)
+    },
+})
+addLayer("Fire",//12
+{
+    symbol: "R", 
+    position: 0,
+    startData()
+    {
+        return{
+            unlocked: true,
+            points: new ExpantaNum(0),
+
+        }
+    },
+    color: "red",
+    resource: "重置点",
+    type: "normal", 
+    requires:new ExpantaNum(1e308),
+    exponent:1,
+    baseAmount()
+    {
+        return zero
+    },
+    baseResource:"点数",
+    gainMult()
+    {
+        var mult=new ExpantaNum(1)
+        return mult
+    },
+    gainExp()
+    {
+        var exp=new ExpantaNum(1)
+        return exp
+    },
+    tooltip(){return ''},
+    row: 1,
+    grid: {
+        rows: 15,
+        cols: 15,
+        getStartData(id) {
+            return 0
+        },
+        getUnlocked(id) { // Default
+            return player.r.player_in_map.eq(14)
+        },
+        getCanClick(data, id) {
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            if(player.r.map_Fire[xx][yy]==14)
+            {
+                return false
+            }
+            if(player.r.map_Fire[xx][yy]==51)
+            {
+                return false
+            }
+            if(player.r.map_Fire[xx][yy]==52)
+            {
+                return false
+            }
+            if(player.r.map_Fire[xx][yy]==53)
+            {
+                return false
+            }
+            var chax=player.r.player_x.sub(xx),chay=player.r.player_y.sub(yy)
+            chax=chax.abs()
+            chay=chay.abs()
+            return chax.add(chay).gte(0.001) && chax.add(chay).lte(1.001)
+        },
+        getStyle(data,id){
+            const jss={
+                borderRadius:'0px',
+                backgroundColor:'white',
+                height:'50px',
+                width:'50px',
+                transitionDuration:'0s'
+            }
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            var tmpcolor=''
+            var chax=player.r.player_x.sub(xx),chay=player.r.player_y.sub(yy)
+            chax=chax.abs()
+            chay=chay.abs()
+            // if(xx==6 && yy==3)
+            // {
+            //     console.log(chax.add(chay))
+            // }
+            if(chax.add(chay).lte(0.001))
+            {
+                tmpcolor='#FFA500'
+            }
+            else
+            {
+                if(
+                    player.r.map_Fire[xx][yy]==1 || (player.r.map_Fire[xx][yy]>=55 && player.r.map_Fire[xx][yy]<=62)
+                )
+                {
+                    if(layers.Fire.grid.getCanClick(data,id))
+                    {
+                        tmpcolor='#FFFFFF'
+                    }
+                    else
+                    {
+                        tmpcolor='#808080'
+                    }
+                }
+                if(player.r.map_Fire[xx][yy]==51)
+                {
+                    tmpcolor='#FF000060'
+                }
+                if(player.r.map_Fire[xx][yy]==52)
+                {
+                    tmpcolor='#FF000080'
+                }
+                if(player.r.map_Fire[xx][yy]==63)
+                {
+                    tmpcolor='#FF0000'
+                }
+                if(player.r.map_Fire[xx][yy]==64)
+                {
+                    tmpcolor='#FF000080'
+                }
+                // if(xx==6 && yy==3)
+                // {
+                //     console.log(player.r.map_Fire[xx][yy])
+                //     console.log(tmpcolor)
+                // }
+            }
+            jss.backgroundColor=`${tmpcolor}`
+            // if(xx==6 && yy==3)
+            // {
+            //     console.log(jss.backgroundColor)
+            // }
+            return jss
+        },
+        onClick(data, id) { 
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            if(player.r.map_Fire[xx][yy]==64)
+            {
+                player.r.player_in_map=n(12)
+                player.r.player_x=n(7)
+                player.r.player_y=n(3)
+                showTab("City_1_2")
+                return
+            }
+            if(player.r.map_Fire[xx][yy]==55 || player.r.map_Fire[xx][yy]==57 || player.r.map_Fire[xx][yy]==59 || player.r.map_Fire[xx][yy]==61)
+            {
+                alert("这看起来是一个巨大的祭坛")
+            }
+            if(player.r.map_Fire[xx][yy]==56 || player.r.map_Fire[xx][yy]==58 || player.r.map_Fire[xx][yy]==60 || player.r.map_Fire[xx][yy]==62)
+            {
+                alert("我的天哪")
+                alert("周围这些黑色")
+                alert("竟然全部都是尸体的焦炭")
+                if(player.r.map_Fire[xx][yy]==56 && player.r.has_key_A102.lte(0.5))
+                {
+                    alert("焦炭之中 , 你看到一抹亮丽的红色")
+                    alert("你获得了一把钥匙(A102)")
+                    player.r.has_key_A102=n(1)
+                }
+            }
+            if(player.r.map_Fire[xx][yy]==63)
+            {
+                alert("唰!")
+                alert("一抹巨大的红色瞬间将你包裹")
+                alert("你昏倒了")
+                player.r.in_night=n(1)
+                player.r.in_day=n(0)
+                player.r.lock_day=n(1)
+                player.fire.unlock_fire=n(1)
+                showTab('none')
+                return
+            }
+            player.r.player_x=xx
+            player.r.player_y=yy
+        },
+        getDisplay(data, id) {
+            var xx=n((id-id%100)/100).sub(1)
+            var yy=n(id%100).sub(1)
+            if(player.r.map_Fire[xx][yy]==1)
+            {
+                return ''
+            }
+            if(player.r.map_Fire[xx][yy]==64)
+            {
+                return '<h1>↓</h1>'
+            }
+            if(player.r.map_Fire[xx][yy]==55 || player.r.map_Fire[xx][yy]==56)return '<h1>↓</h1>'
+            if(player.r.map_Fire[xx][yy]==57 || player.r.map_Fire[xx][yy]==58)return '<h1>←</h1>'
+            if(player.r.map_Fire[xx][yy]==59 || player.r.map_Fire[xx][yy]==60)return '<h1>↑</h1>'
+            if(player.r.map_Fire[xx][yy]==61 || player.r.map_Fire[xx][yy]==62)return '<h1>→</h1>'
+            if(player.r.map_Fire[xx][yy]==63)return '<h1>🏺</h1>'
+            return ''
+        },
+    },
+    tabFormat:{
+        "Fire":{
+            buttonStyle()
+            {
+                return {"border-radius":"0px"}
+            },
+            content:[
+                "blank",
+                ["layer-proxy",['Fire',["grid"]]],
+            ],
+        },
+    },
+    layerShown()
+    {
+        return player.r.player_in_map.eq(14) && player.r.in_day.gte(0.5)
     },
 })
